@@ -12,6 +12,19 @@
                                 Registered Users
                             </a>
 
+                            <!--- Inventory -->
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseInventory" aria-expanded="false" aria-controls="collapseInventory">
+                                <div class="sb-nav-link-icon"><i class="fas fa-boxes-stacked"></i></div>
+                                Inventory
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseInventory" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="inventory-add.php">Add Inventory</a>
+                                    <a class="nav-link" href="inventory-view.php">View Inventory</a>
+                                </nav>
+                            </div>
+
                              <!--- Students -->
                              <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseStudents" aria-expanded="false" aria-controls="collapseStudents">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>

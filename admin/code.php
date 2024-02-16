@@ -1,8 +1,84 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
 include ('authentication.php');
+
+//Add Inventory
+if(isset($_POST['inventory_add_btn']))
+{
+    $id = $_POST['id'];
+    $name = $_POST['name'];
+    $price = $_POST['price'];
+    $quantity = $_POST['quantity'];
+
+    //Insert the Inventory
+    $query = "INSERT INTO inventory (id, name, price, quantity) VALUES ('$id', '$name', '$price', '$quantity')";
+    $query_run = mysqli_query($con, $query);
+
+    if($query_run)
+    {
+        $_SESSION['message'] = "New Inventory has been added";
+        header('Location: inventory-view.php');
+        exit(0);
+    }
+    else
+    {
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: inventory-add.php');
+        exit(0);
+    }
+}
+
+//Edit Inventory
+if(isset($_POST['inventory_edit_btn']))
+{
+    $inventory_id = $_POST['inventory_id'];
+    $id = $_POST['id'];
+    $name = $_POST['name'];
+    $price = $_POST['price'];
+    $quantity = $_POST['quantity'];
+
+    //UPDATE the Inventory
+    $query = "UPDATE inventory SET id = '$id', name = '$name', price = '$price', quantity = '$quantity' WHERE id = '$inventory_id'";
+    $query_run = mysqli_query($con, $query);
+
+    if($query_run)
+    {
+        $_SESSION['message'] = "Inventory has been Updated";
+        header('Location: inventory-view.php');
+        exit(0);
+    }
+    else
+    {
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: inventory-edit.php');
+        exit(0);
+    }
+}
+
+//Delete Inventory
+if(isset($_POST['inventory_delete_btn']))
+{
+    $inventory_id = $_POST['inventory_delete_btn'];
+
+    $query = "DELETE FROM inventory WHERE id = '$inventory_id'";
+    $query_run = mysqli_query($con, $query);
+
+    if($query_run)
+    {
+        $_SESSION['message'] = "Inventory has been deleted";
+        header('Location: inventory-view.php');
+        exit(0);
+    }
+    else
+    {
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: inventory-view.php');
+        exit(0);
+    }
+}
+
+
 //Add Department
 if(isset($_POST['add_department']))
 {

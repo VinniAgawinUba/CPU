@@ -16,7 +16,8 @@
             $('#myFaculty').DataTable();
             $('#myPartner').DataTable();
             $('#myPost').DataTable();
-           
+            $('#myUsers').DataTable();
+            $('#myInventory').DataTable();
             $('#myProject').DataTable();
             $('#mySchoolyear').DataTable();
             $('#myStudent').DataTable();
