@@ -15,9 +15,7 @@
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
         
-        <!-- Include datetimepicker scripts & CSS -->
-        <link rel="stylesheet" href="../admin/css/jquery.datetimepicker.min.css">
-        <script src="../admin/js/jquery.datetimepicker.full.min.js"></script>
+        
 
         
 

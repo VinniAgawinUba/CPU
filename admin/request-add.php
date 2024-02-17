@@ -106,7 +106,7 @@ include('includes/header.php');
                             <div class="col-md-6 mb-3">
                                     <label for="">Status</label>
                                     <select name="status" required class="form-control">
-                                        <option value="">--Select Role--</option>
+                                        <option value="">--Select Status--</option>
                                         <option value="0">Received by CPU</option>
                                         <option value="1">Left CPU office</option>
                                         <option value="2">Received by Registrar</option>

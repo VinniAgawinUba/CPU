@@ -54,18 +54,21 @@
 
 <!-- JavaScript for Delete Button Confirmation (Buttons Should have id of deleteButton) -->
 <script>
-    document.getElementById("deleteButton").addEventListener("click", function(event) {
-        if (confirm("Are you sure you want to delete this document?")) {
-            document.getElementById("deleteForm").submit();
-        } else {
-            event.preventDefault(); // Prevent form submission
-        }
+    // Select all elements with the class 'deleteButton'
+    var deleteButtons = document.querySelectorAll(".deleteButton");
+    
+    // Iterate over each delete button and attach event listener
+    deleteButtons.forEach(function(button) {
+        button.addEventListener("click", function(event) {
+            if (confirm("Are you sure you want to delete this document?")) {
+                // Find the closest form and submit it
+                this.closest(".deleteForm").submit();
+            } else {
+                event.preventDefault(); // Prevent form submission
+            }
+        });
     });
 </script>
-
-<!-- Include datetimepicker scripts & CSS -->
-<link rel="stylesheet" href="../admin/css/jquery.datetimepicker.min.css">
-        <script src="../admin/js/jquery.datetimepicker.full.min.js"></script>
 
 
 

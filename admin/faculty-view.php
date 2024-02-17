@@ -127,7 +127,7 @@ include('includes/header.php');
                                         <td>
                                             <form action="code.php" method="POST">
                                                 <input type="hidden" name="id" value="<?= $row['id']; ?>">
-                                                <button type="submit" name="faculty_delete_btn" value="<?=$post['id']?>" class="btn btn-danger">Delete</button>
+                                                <button type="submit" name="faculty_delete_btn" value="<?=$post['id']?>" class="btn btn-danger deleteButton">Delete</button>
                                             </form>
                                         </td>
                                     </tr>

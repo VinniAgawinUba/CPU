@@ -73,7 +73,7 @@ include('includes/header.php');
                                             <td><a href="department-edit.php?id=<?=$row['id'];?>" class="btn btn-success">Edit</a></td>
                                             <td>
                                                 <form action="code.php" method="POST">
-                                                <button type="submit" name="department_delete" value="<?=$row['id'];?>" class="btn btn-danger">Delete</button>
+                                                <button type="submit" name="department_delete" value="<?=$row['id'];?>" class="btn btn-danger deleteButton">Delete</button>
                                                 </form>
                                             </td>
                                         </tr>

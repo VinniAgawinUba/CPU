@@ -1,6 +1,7 @@
 <?php
 include('authentication.php');
 include('includes/header.php');
+include('includes/scripts.php');
 ?>
 
 
@@ -46,8 +47,22 @@ include('includes/header.php');
                             $request_run = mysqli_query($con, $request);
                             if (mysqli_num_rows($request_run) > 0) {
                                 foreach ($request_run as $row) {
+                                     // Check if request_received_date is older than x day day from current day
+                                     $received_date = strtotime($row['request_received_date']);
+                                     $current_date = strtotime(date('Y-m-d'));
+                                     $difference = ($current_date - $received_date) / (60 * 60 * 23); // Difference in days
+                                     //(60 * 60 * 24) represents the number of seconds in a day: 60 seconds * 60 minutes * 24 hours = 86400 seconds.
+ 
+                                    // Add a CSS class based on the condition
+                                    $row_class = '';
+                                    if ($difference > 1 && $row['status'] != 8) {
+                                        $row_class = 'bg-danger'; // Older than 1 day, set background to red
+                                    } elseif ($row['status'] == 8) {
+                                        $row_class = 'bg-success'; // Status is 8 (Approved), set background to green
+                                    }
+                                     
                                     ?>
-                                    <tr>
+                                    <tr class="<?= $row_class ?>">
                                         <td><?= $row['id']; ?></td>
                                         <td>
                                                 <?php 
@@ -197,10 +212,11 @@ include('includes/header.php');
                                             <a href="request-edit.php?id=<?= $row['id']; ?>" class="btn btn-primary">Edit</a>
                                         </td>
                                         <td>
-                                            <form action="code.php" method="POST">
-                                                <input type="hidden" name="id" value="<?= $row['id']; ?>">
-                                                <button type="submit" name="request_delete_btn" value="<?=$row['id']?>" class="btn btn-danger" id="deleteButton">Delete</button>
-                                            </form>
+                                        <form id="deleteForm" action="code.php" method="POST">
+                                            <input type="hidden" name="id" value="<?= $row['id']; ?>">
+                                            <button type="submit" name="request_delete_btn" value="<?=$row['id']?>" class="btn btn-danger deleteButton" id="deleteButton">Delete</button>
+                                        </form>
+
                                         </td>
                                     </tr>
                                     <?php
@@ -218,5 +234,5 @@ include('includes/header.php');
         
 <?php
 include('includes/footer.php');
-include('includes/scripts.php');
+
 ?>

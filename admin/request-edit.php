@@ -193,7 +193,7 @@ include('includes/header.php');
                             </div>
 
                             <div class="col-md-12 mb-3">
-                                <button type="submit" name="request_add_btn" class="btn btn-primary ">Add Request</button>
+                                <button type="submit" name="request_edit_btn" class="btn btn-primary ">Edit Request</button>
                             </div>
 
                         </div>

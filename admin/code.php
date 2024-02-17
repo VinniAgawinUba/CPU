@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include ('authentication.php');
-
+include('includes/scripts.php');
 
 
 // Add Request
@@ -64,6 +64,26 @@ if(isset($_POST['request_edit_btn'])) {
         // If there was an error in executing the query
         $_SESSION['message'] = "Something went wrong";
         header('Location: request-edit.php?id='.$request_id);
+    }
+}
+
+// Delete Request
+if(isset($_POST['request_delete_btn'])) {
+    $request_id = $_POST['request_delete_btn'];
+
+    // Your SQL query to delete data from the database
+    $delete_query = "DELETE FROM requests WHERE id = '$request_id'";
+    // Executing the query
+    $query_run = mysqli_query($con, $delete_query);
+
+    if($query_run) {
+        // If query executed successfully
+        $_SESSION['message'] = "Request deleted successfully!";
+        header('Location: request-view.php');
+    } else {
+        // If there was an error in executing the query
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: request-view.php');
     }
 }
 
