@@ -38,18 +38,6 @@
                                 </nav>
                             </div>
 
-                             <!--- Students -->
-                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseStudents" aria-expanded="false" aria-controls="collapseStudents">
-                                <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
-                                Students
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseStudents" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="student-add.php">Add Students</a>
-                                    <a class="nav-link" href="student-view.php">View Students</a>
-                                </nav>
-                            </div>
 
                             <!--- Faculty -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseFaculty" aria-expanded="false" aria-controls="collapseFaculty">
@@ -70,31 +58,7 @@
                             <div class="sb-sidenav-menu-heading">Interface</div>
                             
 
-                             <!--- Post Interface -->
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePosts" aria-expanded="false" aria-controls="collapsePosts">
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                                Posts
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapsePosts" aria-labelledby="Posts" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="post-add.php">Add Post</a>
-                                    <a class="nav-link" href="post-view.php">View Post</a>
-                                </nav>
-                            </div>
-
-                             <!--- Project Interface -->
-                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProjects" aria-expanded="false" aria-controls="collapseProjects">
-                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Projects
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseProjects" aria-labelledby="Projects" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="project-add.php">Add Project</a>
-                                    <a class="nav-link" href="project-view.php">View Project</a>
-                                </nav>
-                            </div>
+                            
 
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseColleges" aria-expanded="false" aria-controls="collapseColleges">
                                 <div class="sb-nav-link-icon"><i class="fas fa-school"></i></div>
