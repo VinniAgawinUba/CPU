@@ -34,14 +34,20 @@ include('authentication.php');
                         {
                             foreach($query_run as $item)
                             {
-                                // Check if request_received_date is older than 1 day from current day
-                                $received_date = strtotime($item['request_received_date']);
-                                $current_date = strtotime(date('Y-m-d'));
-                                $difference = ($current_date - $received_date) / (60 * 60 * 24); // Difference in days 
-                                //(60 * 60 * 24) represents the number of seconds in a day: 60 seconds * 60 minutes * 24 hours = 86400 seconds.
+                                // Check if request_received_date is older than 30 days from the current day
+                                    $received_date = strtotime($item['request_received_date']);
+                                    $current_date = strtotime(date('Y-m-d'));
+                                    $difference = ($current_date - $received_date) / (60 * 60 * 24); // Difference in days
 
-                                // Add a CSS class based on the condition
-                                $card_class = ($difference > 1) ? 'bg-danger' : '';
+                                    // Add a CSS class based on the condition
+                                    $card_class = '';
+                                    if ($difference >= 30) {
+                                        $card_class = 'bg-danger'; // Older than or equal to 30 days, set background to red
+                                    } elseif ($difference >= 15) {
+                                        $card_class = 'bg-warning'; // Older than or equal to 15 days but less than 30, set background to yellow
+                                    } elseif ($item['status'] == 8) {
+                                        $card_class = 'bg-success'; // Status is 8 (Approved), set background to green
+                                    }
 
                             ?>
                             <div class="col-md-4 mb-4">
