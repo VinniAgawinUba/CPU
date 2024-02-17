@@ -25,6 +25,19 @@
                                 </nav>
                             </div>
 
+                            <!--- Requests -->
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRequests" aria-expanded="false" aria-controls="collapseRequests">
+                                <div class="sb-nav-link-icon"><i class="fas fa-sheet-plastic"></i></div>
+                                Requests
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseRequests" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="request-add.php">Add Requests</a>
+                                    <a class="nav-link" href="request-view.php">View Requests</a>
+                                </nav>
+                            </div>
+
                              <!--- Students -->
                              <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseStudents" aria-expanded="false" aria-controls="collapseStudents">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
@@ -51,34 +64,11 @@
                                 </nav>
                             </div>
 
-                            <!--- Partners -->
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePartners" aria-expanded="false" aria-controls="collapsePartners">
-                                <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                                Partners
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapsePartners" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="partner-add.php">Add Partners</a>
-                                    <a class="nav-link" href="partner-view.php">View Partners</a>
-                                </nav>
-                            </div>
+                            
 
 
                             <div class="sb-sidenav-menu-heading">Interface</div>
-                            <!--- Category Interface -->
-
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                                Category
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="category-add.php">Add Category</a>
-                                    <a class="nav-link" href="category-view.php">View Category</a>
-                                </nav>
-                            </div>
+                            
 
                              <!--- Post Interface -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePosts" aria-expanded="false" aria-controls="collapsePosts">
@@ -151,18 +141,23 @@
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
                         <?php if(isset($_SESSION['auth_user'])) : ?>
-
-                        <a class="small" style="color:white;letter-spacing:3px" aria-expanded="false">
+                        <div class="small">Logged in as:  <a class="small" style="color:white;letter-spacing:3px" aria-expanded="false">
                             <?= $_SESSION['auth_user']['user_name']; ?>
-                        </a>
-                           
-                            
+                        </a></div>
+                        
 
                        
 
+                        <a class="small" href="../index.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-home"></i>Return to Front Page</div>
+                           
+                        </a>
+
+                        
                         <?php endif; ?>
+                        
                     </div>
+                    
                 </nav>
             </div>

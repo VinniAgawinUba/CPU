@@ -18,6 +18,7 @@
             $('#myPost').DataTable();
             $('#myUsers').DataTable();
             $('#myInventory').DataTable();
+            $('#myRequests').DataTable();
             $('#myProject').DataTable();
             $('#mySchoolyear').DataTable();
             $('#myStudent').DataTable();
@@ -61,6 +62,14 @@
         }
     });
 </script>
+
+<!-- Include datetimepicker scripts & CSS -->
+<link rel="stylesheet" href="../admin/css/jquery.datetimepicker.min.css">
+        <script src="../admin/js/jquery.datetimepicker.full.min.js"></script>
+
+
+
+
 
 </body>
 </html>

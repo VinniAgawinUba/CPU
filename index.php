@@ -4,6 +4,8 @@ session_start();
 include('includes/header.php');
 include('includes/navbar.php');
 include('config/dbcon.php');
+include('authentication.php');
+
 ?>
 <link rel="stylesheet" href="assets/css/custom.css">
 
@@ -26,7 +28,7 @@ include('config/dbcon.php');
                         </div>
                     <div class="row">
                         <?php
-                        $query = "SELECT * FROM categories";
+                        $query = "SELECT * FROM requests";
                         $query_run = mysqli_query($con, $query);
                         if(mysqli_num_rows($query_run) > 0)
                         {
@@ -36,8 +38,8 @@ include('config/dbcon.php');
                             <div class="col-md-4 mb-4">
                                 <div class="card h-100">
                                     <div class="card-body">
-                                        <h5 class="card-title"><?= $item['id']; ?></h5>
-                                        <p class="card-text"><?= $item['name']; ?></p>
+                                        <h5 class="card-title"><?= $item['name']; ?></h5>
+                                        <p class="card-text"><?= $item['id']; ?></p>
                                         <!-- You can add more project details here -->
                                     </div>
                                 </div>

@@ -3,6 +3,71 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include ('authentication.php');
 
+
+
+// Add Request
+if(isset($_POST['request_add_btn'])) {
+    // Retrieving form data
+    $name = $_POST['name'];
+    $inventory_id = $_POST['inventory_id'];
+    $college_id = $_POST['college_id'];
+    $department_id = $_POST['department_id'];
+    $status = $_POST['status'];
+    $request_received_date = date('Y-m-d', strtotime(str_replace('-', '/', $_POST['request_received_date'])));
+    $expected_delivery_date = date('Y-m-d', strtotime(str_replace('-', '/', $_POST['expected_delivery_date'])));
+    $actual_delivery_date = date('Y-m-d', strtotime(str_replace('-', '/', $_POST['actual_delivery_date'])));
+    $semester = $_POST['semester'];
+    $school_year_id = $_POST['school_year_id'];
+
+    // Your SQL query to insert data into the database
+    $insert_query = "INSERT INTO requests (name, inventory_id, college_id, department_id, status, request_received_date, expected_delivery_date, actual_delivery_date, semester, school_year_id) 
+                     VALUES ('$name', '$inventory_id', '$college_id', '$department_id', '$status', '$request_received_date', '$expected_delivery_date', '$actual_delivery_date', '$semester', '$school_year_id')";
+    // Executing the query
+    $query_run = mysqli_query($con, $insert_query);
+
+    if($query_run) {
+        // If query executed successfully
+        $_SESSION['message'] = "Request added successfully!";
+        header('Location: request-view.php');
+    } else {
+        // If there was an error in executing the query
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: request-add.php');
+    }
+}
+
+// Update Request
+if(isset($_POST['request_edit_btn'])) {
+    // Retrieving form data
+    $request_id = $_POST['request_id'];
+    $name = $_POST['name'];
+    $inventory_id = $_POST['inventory_id'];
+    $college_id = $_POST['college_id'];
+    $department_id = $_POST['department_id'];
+    $status = $_POST['status'];
+    $request_received_date = date('Y-m-d', strtotime(str_replace('-', '/', $_POST['request_received_date'])));
+    $expected_delivery_date = date('Y-m-d', strtotime(str_replace('-', '/', $_POST['expected_delivery_date'])));
+    $actual_delivery_date = date('Y-m-d', strtotime(str_replace('-', '/', $_POST['actual_delivery_date'])));
+    $semester = $_POST['semester'];
+    $school_year_id = $_POST['school_year_id'];
+
+    // Your SQL query to update data in the database
+    $update_query = "UPDATE requests SET name = '$name', inventory_id = '$inventory_id', college_id = '$college_id', department_id = '$department_id', status = '$status', request_received_date = '$request_received_date', expected_delivery_date = '$expected_delivery_date', actual_delivery_date = '$actual_delivery_date', semester = '$semester', school_year_id = '$school_year_id' WHERE id = '$request_id'";
+    // Executing the query
+    $query_run = mysqli_query($con, $update_query);
+
+    if($query_run) {
+        // If query executed successfully
+        $_SESSION['message'] = "Request updated successfully!";
+        header('Location: request-view.php');
+    } else {
+        // If there was an error in executing the query
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: request-edit.php?id='.$request_id);
+    }
+}
+
+
 //Add Inventory
 if(isset($_POST['inventory_add_btn']))
 {
