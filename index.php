@@ -23,7 +23,7 @@ include('authentication.php');
                     <div class="col-md-12">
                         <?php include('message.php'); ?>
                         <div class="card-header">
-                            <h4 class="card-title text-center customHome">Requests In Progress</h4>
+                            <h4 class="card-title text-center customHome">Home</h4>
                         </div>
                     </div>
                     <div class="row">

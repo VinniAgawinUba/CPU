@@ -266,8 +266,9 @@ if(isset($_GET['id'])) {
                     </div>
                     
                 </div>
-                
+                <?php include('includes/footer.php'); ?>
             </div>
+            
         <?php } else {
             // If project details are not found
             echo "Project not found.";
@@ -281,9 +282,7 @@ if(isset($_GET['id'])) {
     echo "No project ID provided.";
 }
 
-// Footer
 
-echo '<div class="footer">';
-include('includes/footer.php');
-echo '</div>';
+
+
 ?>
