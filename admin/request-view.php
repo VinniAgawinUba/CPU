@@ -47,16 +47,17 @@ include('includes/scripts.php');
                             $request_run = mysqli_query($con, $request);
                             if (mysqli_num_rows($request_run) > 0) {
                                 foreach ($request_run as $row) {
-                                     // Check if request_received_date is older than x day day from current day
-                                     $received_date = strtotime($row['request_received_date']);
-                                     $current_date = strtotime(date('Y-m-d'));
-                                     $difference = ($current_date - $received_date) / (60 * 60 * 23); // Difference in days
-                                     //(60 * 60 * 24) represents the number of seconds in a day: 60 seconds * 60 minutes * 24 hours = 86400 seconds.
- 
+                                     // Check if request_received_date is older than 30 days from the current day
+                                    $received_date = strtotime($row['request_received_date']);
+                                    $current_date = strtotime(date('Y-m-d'));
+                                    $difference = ($current_date - $received_date) / (60 * 60 * 24); // Difference in days
+
                                     // Add a CSS class based on the condition
                                     $row_class = '';
-                                    if ($difference > 1 && $row['status'] != 8) {
-                                        $row_class = 'bg-danger'; // Older than 1 day, set background to red
+                                    if ($difference >= 30) {
+                                        $row_class = 'bg-danger'; // Older than or equal to 30 days, set background to red
+                                    } elseif ($difference >= 15) {
+                                        $row_class = 'bg-warning'; // Older than or equal to 15 days but less than 30, set background to yellow
                                     } elseif ($row['status'] == 8) {
                                         $row_class = 'bg-success'; // Status is 8 (Approved), set background to green
                                     }
