@@ -194,12 +194,12 @@ include('includes/header.php');
                                             </td>
                                         
                                         <td>
-                                            <a href="inventory-edit.php?id=<?= $row['id']; ?>" class="btn btn-primary">Edit</a>
+                                            <a href="request-edit.php?id=<?= $row['id']; ?>" class="btn btn-primary">Edit</a>
                                         </td>
                                         <td>
                                             <form action="code.php" method="POST">
                                                 <input type="hidden" name="id" value="<?= $row['id']; ?>">
-                                                <button type="submit" name="inventory_delete_btn" value="<?=$row['id']?>" class="btn btn-danger" id="deleteButton">Delete</button>
+                                                <button type="submit" name="request_delete_btn" value="<?=$row['id']?>" class="btn btn-danger" id="deleteButton">Delete</button>
                                             </form>
                                         </td>
                                     </tr>
