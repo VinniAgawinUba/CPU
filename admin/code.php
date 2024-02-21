@@ -4,6 +4,12 @@ ini_set('display_errors', 1);
 include ('authentication.php');
 include('includes/scripts.php');
 
+//PHPMailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require_once __DIR__ . '/vendor/autoload.php';
+
+
 
 // Add Request
 if(isset($_POST['request_add_btn'])) {
@@ -50,6 +56,114 @@ if(isset($_POST['request_edit_btn'])) {
     $actual_delivery_date = date('Y-m-d', strtotime(str_replace('-', '/', $_POST['actual_delivery_date'])));
     $semester = $_POST['semester'];
     $school_year_id = $_POST['school_year_id'];
+
+    
+
+     // Send Email Notification
+     $mail = new PHPMailer(true); // Passing `true` enables exceptions
+     try {
+         // Server settings
+         $mail->isSMTP(); // Set mailer to use SMTP
+         $mail->Host = 'smtp.gmail.com'; // Specify main and backup SMTP servers
+         $mail->SMTPAuth = true; // Enable SMTP authentication
+         $mail->Username = 'vinniuba1@gmail.com'; // SMTP username (your Gmail email address)TO BE REPLACED WITH WEBSITE EMAIL
+         $mail->Password = 'buqn wpcc yhlx lvoz'; // SMTP password USE APP PASSWORD FOUND IN GOOGLE SETTINGS
+         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
+         $mail->Port = 587; // TCP port to connect to
+ 
+         // Sender and recipient
+         $mail->setFrom('vinniuba1@gmail.com', 'EMAIL BOT :)'); // Sender's email address and name
+         $mail->addAddress('vinniuba2@gmail.com'); // Recipient's email address
+ 
+         // Define a variable to hold the status text
+$status_text = '';
+
+  // Determine the status text based on the status number
+  if ($status === '0') {
+    $status_text = "Received by CPU";
+} elseif ($status === '1') {
+    $status_text = "Left CPU office";
+} elseif ($status === '2') {
+    $status_text = "Received by Registrar";
+} elseif ($status === '3') {
+    $status_text = "Left Registrar office";
+} elseif ($status === '4') {
+    $status_text = "Received by VPadmin";
+} elseif ($status === '5') {
+    $status_text = "Left VPadmin office";
+} elseif ($status === '6') {
+    $status_text = "Received by President";
+} elseif ($status === '7') {
+    $status_text = "Left President office";
+} elseif ($status === '8') {
+    $status_text = "Approved";
+} else {
+    $status_text = "Unknown Status";
+}
+
+// Email content
+$mail->isHTML(true); // Set email format to HTML
+$mail->Subject = 'Request Status Update';
+
+// Constructing HTML email body
+$body = '
+    <html>
+    <head>
+        <title>Request Status Update</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+            }
+            h1 {
+                color: #007bff;
+            }
+            p {
+                line-height: 1.6;
+            }
+            .footer {
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid #ccc;
+            }
+            .footer p {
+                font-size: 12px;
+                color: #777;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Request Status Update</h1>
+            <p>Your request status has been updated to: <strong>' . $status_text . '</strong></p>
+            <div class="footer">
+                <p>This is an automated email notification. Please do not reply.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+';
+
+$mail->Body = $body;
+
+// Send email
+$mail->send();
+
+ 
+         // Send email
+         $mail->send();
+         echo 'Message has been sent';
+     } catch (Exception $e) {
+         echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+     }
+
+     
 
     // Your SQL query to update data in the database
     $update_query = "UPDATE requests SET name = '$name', inventory_id = '$inventory_id', college_id = '$college_id', department_id = '$department_id', status = '$status', request_received_date = '$request_received_date', expected_delivery_date = '$expected_delivery_date', actual_delivery_date = '$actual_delivery_date', semester = '$semester', school_year_id = '$school_year_id' WHERE id = '$request_id'";
