@@ -274,7 +274,7 @@ include('includes/scripts.php');
                             if (mysqli_num_rows($request_history_run) > 0) {
                                 foreach ($request_history_run as $row) {
                                     ?>
-                                    <tr class="<?= $row_class ?>">
+                                    <tr>
                                         <td><?= $row['id']; ?></td>
                                         <td><?= $row['request_id']; ?></td>
                                         <td>
