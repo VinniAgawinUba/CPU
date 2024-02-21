@@ -252,7 +252,7 @@ include('includes/scripts.php');
 
                     <!-- Request History Card -->
                     <div class="card-header">
-                        <h4>Request History
+                        <h4>History Logs
                         </h4>
                         <div class="btn-group float-end" role="group" aria-label="Basic example">
     
