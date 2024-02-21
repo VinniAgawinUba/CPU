@@ -132,7 +132,7 @@ include('includes/header.php');
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Actual Delivery Date:</label>
-                                <input type="date" class="form-control" name="actual_delivery_date" required>
+                                <input type="date" class="form-control" name="actual_delivery_date">
                             </div>
 
                             <div class="col-md-6 mb-3">

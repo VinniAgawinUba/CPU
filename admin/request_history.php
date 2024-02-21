@@ -6,51 +6,33 @@ include('includes/scripts.php');
 
 
 <div class="container-fluid px-4">
-        <h4 class="mt-4">Requests</h4>
+        <h4 class="mt-4">Request History</h4>
             <ol class="breadcrumb mb-4">
                 <li class="breadcrumb-item active">Dashboard</li>
-                <li class="breadcrumb-item">Requests</li>
+                <li class="breadcrumb-item">Request History</li>
             </ol>
             <div class="row">
 
             <div class="col-md-12">
                 <?php include('message.php'); ?>
                 <div class="card">
+                    <!-- Request Details Card -->
                     <div class="card-header">
-                        <h4>View Requests
-                        <a href="request-add.php" class="btn btn-primary float-end">Add Request</a>
+                        <h4>Request Details
+                        <a href="request-view.php" class="btn btn-danger float-end">Back</a>
                         </h4>
                         <div class="btn-group float-end" role="group" aria-label="Basic example">
     
 
                     </div>
                     <div class="card-body">
-                        <div class="dropdown">
-                                <button class="btn btn-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Filter by Status
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="filterDropdown">
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="all">All</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="not approved">Not Approved</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="Received by CPU">Received by CPU</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="Left CPU office">Left CPU office</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="Received by Registrar">Received by Registrar</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="Left Registrar office">Left Registrar office</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="Received by VPadmin">Received by VPadmin</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="Left VPadmin office">Left VPadmin office</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="Received by President">Received by President</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="Left President office">Left President office</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="Approved">Approved</a></li>
-                                    <!-- Add more items for other statuses as needed -->
-                                </ul>
-                                
-                        </div>
+                        
                     </div>
 
 
 
-
-                    <table id="myRequests" class="table table-bordered table-striped">
+                    <!-- Request Details Table -->
+                    <table  class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -70,7 +52,7 @@ include('includes/scripts.php');
                         </thead>
                         <tbody>
                             <?php
-                            $request = "SELECT * FROM requests";
+                            $request = "SELECT * FROM requests WHERE id = $_GET[request_id]";
                             $request_run = mysqli_query($con, $request);
                             if (mysqli_num_rows($request_run) > 0) {
                                 foreach ($request_run as $row) {
@@ -91,15 +73,8 @@ include('includes/scripts.php');
                                      
                                     ?>
                                     <tr class="<?= $row_class ?>">
+                                        <td><?= $row['id']; ?></td>
                                         <td>
-                                            <a href="request_history.php?request_id=<?= $row['id']; ?>">
-                                                <?= $row['id']; ?> 
-                                            </a>
-                                        
-                                        </td>
-                                        
-                                        <td>
-                                            
                                                 <?php 
                                                 if($row['inventory_id'] > 0)
                                                 {
@@ -123,6 +98,7 @@ include('includes/scripts.php');
                                                 }
                                                 
                                                 ?>
+                                            
                                             </td>
                                         <td><?= $row['name']; ?></td>
                                         <td>
@@ -260,7 +236,137 @@ include('includes/scripts.php');
                             
                         </tbody>
                     </table>
+
+
+                    
+                    
+                    </div>
+
+                    <!-- Request History Card -->
+                    <div class="card-header">
+                        <h4>Request History
+                        </h4>
+                        <div class="btn-group float-end" role="group" aria-label="Basic example">
+    
+
+                    </div>
+                    <div class="card-body">
                         
+                    </div>
+
+
+
+                    <!-- Request History Table -->
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Request ID</th>
+                                <th>Old Status</th>
+                                <th>New Status</th>
+                                <th>Change Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $request_history = "SELECT * FROM request_status_history WHERE request_id = $_GET[request_id]";
+                            $request_history_run = mysqli_query($con, $request_history);
+                            if (mysqli_num_rows($request_history_run) > 0) {
+                                foreach ($request_history_run as $row) {
+                                    ?>
+                                    <tr class="<?= $row_class ?>">
+                                        <td><?= $row['id']; ?></td>
+                                        <td><?= $row['request_id']; ?></td>
+                                        <td>
+                                            <?php 
+                                            if ($row['old_status']==0) {
+                                                echo "Received by CPU";
+                                            } elseif ($row['old_status'] == 1) {
+                                                echo "Left CPU office";
+                                            } elseif ($row['old_status'] == 2) {
+                                                echo "Received by Registrar";
+                                            } elseif ($row['old_status'] == 3) {
+                                                echo "Left Registrar office";
+                                                
+                                            }elseif ($row['old_status'] == 4) {
+                                                echo "Received by VPadmin";
+                                                
+                                                
+                                            }elseif ($row['old_status'] == 5) {
+                                                echo "Left VPadmin office";
+                                                
+                                                
+                                            }elseif ($row['old_status'] == 6) {
+                                                echo "Received by President";
+                                                
+                                                
+                                            }elseif ($row['old_status'] == 7) {
+                                                echo "Left President office";
+                                                
+                                                
+                                            }elseif ($row['old_status'] == 8) {
+                                                echo "Approved";
+                                                
+                                            } else {
+                                                echo "Unknown Status";
+                                            }
+                                            ?>
+                                        </td>
+
+                                        <td>
+                                            <?php 
+                                            if ($row['new_status']==0) {
+                                                echo "Received by CPU";
+                                            } elseif ($row['new_status'] == 1) {
+                                                echo "Left CPU office";
+                                            } elseif ($row['new_status'] == 2) {
+                                                echo "Received by Registrar";
+                                            } elseif ($row['new_status'] == 3) {
+                                                echo "Left Registrar office";
+                                                
+                                            }elseif ($row['new_status'] == 4) {
+                                                echo "Received by VPadmin";
+                                                
+                                                
+                                            }elseif ($row['new_status'] == 5) {
+                                                echo "Left VPadmin office";
+                                                
+                                                
+                                            }elseif ($row['new_status'] == 6) {
+                                                echo "Received by President";
+                                                
+                                                
+                                            }elseif ($row['new_status'] == 7) {
+                                                echo "Left President office";
+                                                
+                                                
+                                            }elseif ($row['new_status'] == 8) {
+                                                echo "Approved";
+                                                
+                                            } else {
+                                                echo "Unknown Status";
+                                            }
+                                            ?>
+
+                                        </td>
+                                        <td><?= $row['change_date']; ?></td>
+                                        
+                                            
+                                        
+                                     
+                                    </tr>
+                                    <?php
+                                }
+                            }
+                            else{echo "No Request History Found";} 
+                            ?>
+                            
+                        </tbody>
+                    </table>
+
+
+                    
+                    
                     </div>
             </div>
         </div>

@@ -70,6 +70,30 @@
     });
 </script>
 
+<!-- JavaScript for Filter Buttons -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const tableRows = document.querySelectorAll('#myRequests tbody tr');
+
+        filterButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const status = this.getAttribute('data-status');
+
+                tableRows.forEach(function (row) {
+                    // If the status is 'all' or the row status matches the button status
+                    if (status === 'all' || row.cells[5].textContent.trim() === status || (status === 'not approved' && row.cells[5].textContent.trim() !== 'Approved') ){
+                        row.style.display = '';
+                    }
+                    
+                    else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
 
 
 
