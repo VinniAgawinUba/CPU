@@ -187,9 +187,9 @@ include('includes/scripts.php');
                                             }
                                             ?>
                                         </td>
-                                        <td><?= $row['request_received_date']; ?></td>
-                                        <td><?= $row['expected_delivery_date']; ?></td>
-                                        <td><?= $row['actual_delivery_date']; ?></td>
+                                        <td><?= date('F j, Y', strtotime($row['request_received_date'])); ?></td>
+                                        <td><?= date('F j, Y', strtotime($row['expected_delivery_date'])); ?></td>
+                                        <td><?= date('F j, Y', strtotime($row['actual_delivery_date'])); ?></td>
                                         <td><?= $row['semester']; ?></td>
                                         <td>
                                                 <?php 
@@ -232,6 +232,14 @@ include('includes/scripts.php');
                                     <?php
                                 }
                             } 
+                            if ($difference >= 30 && $row['status'] != 8) {
+                                echo "<tr><td colspan='13' class='text-center text-white bg-danger'>This request is older than 30 days and has not been approved</td></tr>";
+                            } elseif ($difference >= 15 && $row['status'] != 8) {
+                                echo "<tr><td colspan='13' class='text-center text-white bg-warning'>This request is older than 15 days and has not been approved</td></tr>";
+                            } elseif ($row['status'] == 8) {
+                                echo "<tr><td colspan='13' class='text-center text-white bg-success'>This request has been approved</td></tr>";
+                            }
+                            else{echo "No Request Found";}
                             ?>
                             
                         </tbody>
@@ -269,7 +277,7 @@ include('includes/scripts.php');
                         </thead>
                         <tbody>
                             <?php
-                            $request_history = "SELECT * FROM request_status_history WHERE request_id = $_GET[request_id]";
+                            $request_history = "SELECT * FROM request_status_history WHERE request_id = $_GET[request_id] ORDER BY change_date DESC";
                             $request_history_run = mysqli_query($con, $request_history);
                             if (mysqli_num_rows($request_history_run) > 0) {
                                 foreach ($request_history_run as $row) {
@@ -349,7 +357,7 @@ include('includes/scripts.php');
                                             ?>
 
                                         </td>
-                                        <td><?= $row['change_date']; ?></td>
+                                        <td><?= date('F j Y h:i:s A', strtotime($row['change_date'])); ?></td>
                                         
                                             
                                         
