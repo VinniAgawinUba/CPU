@@ -417,6 +417,7 @@ elseif($_SESSION['auth_role']==3)
 
                                         </td>
                                         <td><?= date('F j Y h:i:s A', strtotime($row['change_date'])); ?></td>
+
                                         <td>
                                             <?php 
                                             if($row['edited_by'] > 0)

@@ -183,7 +183,7 @@ $mail->send();
 
     // Update the request_status_history table edited_by column
     $edited_by = $_SESSION['auth_user']['user_id'];
-    $history_query = "UPDATE request_status_history SET edited_by = '$edited_by' WHERE request_id = '$request_id'";
+    $history_query = "INSERT INTO request_status_history (request_id, old_status, new_status, change_date, edited_by) VALUES ('$request_id', '$old_status', '$status', NOW(), '$edited_by')";
     //Executing the history query
     $history_query_run = mysqli_query($con, $history_query);
     if($history_query_run) {
