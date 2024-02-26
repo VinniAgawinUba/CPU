@@ -20,15 +20,15 @@ if(isset($_POST['login_btn']))
             $role_as = $data['role_as'];
         }
         $_SESSION['auth'] = "true";
-        $_SESSION['auth_role'] = "$role_as"; //1=admin, 0=user
+        $_SESSION['auth_role'] = "$role_as"; //2=Super Admin, 1=admin, 0=user, 3 = Department Editor
         $_SESSION['auth_user'] = [
             'user_id' => $user_id,
             'user_name' => $user_name,
             'user_email' => $user_email
 
         ];
-        //IF ADMIN
-        if($_SESSION['auth_role']==1)
+        //IF ADMIN OR SUPER USER
+        if($_SESSION['auth_role']==1 || $_SESSION['auth_role']==2 || $_SESSION['auth_role']==3)
         {
             $_SESSION['message'] = "Welcome $user_name";
             header('Location: admin/index.php');

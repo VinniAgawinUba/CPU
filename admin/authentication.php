@@ -9,7 +9,8 @@ if(!isset($_SESSION['auth']))
 }
 else
 {
-    if($_SESSION['auth_role'] != "1")
+    //IF NOT ADMIN OR SUPER USER OR DEPARTMENT EDITOR THEN REDIRECT TO LOGIN PAGE
+    if($_SESSION['auth_role'] != "1" && $_SESSION['auth_role'] != "2" && $_SESSION['auth_role'] != "3")
     {
         $_SESSION['message'] = "You are not authorized as Admin";
         header('location: ../login.php');

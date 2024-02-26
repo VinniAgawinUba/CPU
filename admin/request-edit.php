@@ -1,6 +1,31 @@
 <?php
 include('authentication.php');
 include('includes/header.php');
+
+
+//Initialize Variable
+$admin = null;
+$super_user = null;
+$department_editor = null;
+//Check level
+if($_SESSION['auth_role']==1)
+{
+    $admin = true;
+    $super_user = false;
+    $department_editor = false;
+}
+elseif($_SESSION['auth_role']==2)
+{
+    $admin = false;
+    $super_user = true;
+    $department_editor = false;
+}
+elseif($_SESSION['auth_role']==3)
+{
+    $admin = false;
+    $super_user = false;
+    $department_editor = true;
+}
 ?>
 
 
@@ -192,8 +217,45 @@ include('includes/header.php');
                                 ?>
                             </div>
 
+                            <?php if ($super_user) { ?>
+                                <div class="col-md-6 mb-3">
+                            <label for="">Assign User:</label>
+                                <?php
+                                $user_query = "SELECT * FROM users";
+                                $user_query_run = mysqli_query($con, $user_query);
+                                if(mysqli_num_rows($user_query_run) > 0) {
+                                ?>
+                                    <select name="user_id" required class="form-control select2">
+                                        <option value="">Assign User:</option>
+                                        <?php
+                                        foreach($user_query_run as $user_list) {
+                                        ?>
+                                            <option value="<?=$user_list['id']; ?>" <?=$user_list['id'] == $request_row['assigned_user'] ? 'selected' : '' ?> >
+                                                <?= $user_list['fname'];?>  <?= $user_list['lname'];?>
+                                        
+                                            </option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                <?php
+                                } else {
+                                    echo "No Department Found";
+                                }
+                                ?>
+                            </div>
+                                            <?php }
+                                            else
+                                            {
+                                                ?>
+                                                <input type="hidden" name="user_id" value="<?= $_SESSION['auth_user']['user_id']?>">
+                                                <?php
+                                            }
+                                            
+                                            ?>
+
                             <div class="col-md-12 mb-3">
-                                <button type="submit" name="request_edit_btn" class="btn btn-primary ">Edit Request</button>
+                                <button type="submit" name="request_edit_btn" class="btn btn-primary ">Save Request</button>
                             </div>
 
                         </div>

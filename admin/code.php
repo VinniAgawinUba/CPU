@@ -24,10 +24,11 @@ if(isset($_POST['request_add_btn'])) {
     $actual_delivery_date = date('Y-m-d', strtotime(str_replace('-', '/', $_POST['actual_delivery_date'])));
     $semester = $_POST['semester'];
     $school_year_id = $_POST['school_year_id'];
+    $assigned_to = $_POST['user_id'];
 
     // Your SQL query to insert data into the database
-    $insert_query = "INSERT INTO requests (name, inventory_id, college_id, department_id, status, request_received_date, expected_delivery_date, actual_delivery_date, semester, school_year_id) 
-                     VALUES ('$name', '$inventory_id', '$college_id', '$department_id', '$status', '$request_received_date', '$expected_delivery_date', '$actual_delivery_date', '$semester', '$school_year_id')";
+    $insert_query = "INSERT INTO requests (name, inventory_id, college_id, department_id, status, request_received_date, expected_delivery_date, actual_delivery_date, semester, school_year_id, assigned_user) 
+                     VALUES ('$name', '$inventory_id', '$college_id', '$department_id', '$status', '$request_received_date', '$expected_delivery_date', '$actual_delivery_date', '$semester', '$school_year_id', '$assigned_to')";
     // Executing the query
     $query_run = mysqli_query($con, $insert_query);
 
@@ -56,10 +57,19 @@ if(isset($_POST['request_edit_btn'])) {
     $actual_delivery_date = date('Y-m-d', strtotime(str_replace('-', '/', $_POST['actual_delivery_date'])));
     $semester = $_POST['semester'];
     $school_year_id = $_POST['school_year_id'];
+    $assigned_to = $_POST['user_id'];
 
-    
-
-     // Send Email Notification
+      //  SQL query to fetch the old status from request_status_history table
+      $history_query = "SELECT new_status FROM request_status_history WHERE request_id = '$request_id' ORDER BY change_date DESC LIMIT 1";
+      $history_result = mysqli_query($con, $history_query);
+  
+      if ($history_result && mysqli_num_rows($history_result) > 0) {
+          $row = mysqli_fetch_assoc($history_result);
+          $old_status = $row['new_status'];
+  
+          // Check if the old status is different from the new status
+          if ($old_status != $status) {
+               // Send Email Notification
      $mail = new PHPMailer(true); // Passing `true` enables exceptions
      try {
          // Server settings
@@ -158,13 +168,36 @@ $mail->send();
      } catch (Exception $e) {
          echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
      }
+          }
+        }
+    
+
+    
 
      
 
     // Your SQL query to update data in the database
-    $update_query = "UPDATE requests SET name = '$name', inventory_id = '$inventory_id', college_id = '$college_id', department_id = '$department_id', status = '$status', request_received_date = '$request_received_date', expected_delivery_date = '$expected_delivery_date', actual_delivery_date = '$actual_delivery_date', semester = '$semester', school_year_id = '$school_year_id' WHERE id = '$request_id'";
+    $update_query = "UPDATE requests SET name = '$name', inventory_id = '$inventory_id', college_id = '$college_id', department_id = '$department_id', status = '$status', request_received_date = '$request_received_date', expected_delivery_date = '$expected_delivery_date', actual_delivery_date = '$actual_delivery_date', semester = '$semester', school_year_id = '$school_year_id',assigned_user = '$assigned_to 'WHERE id = '$request_id'";
     // Executing the query
     $query_run = mysqli_query($con, $update_query);
+
+    // Update the request_status_history table edited_by column
+    $edited_by = $_SESSION['auth_user']['user_id'];
+    $history_query = "UPDATE request_status_history SET edited_by = '$edited_by' WHERE request_id = '$request_id'";
+    //Executing the history query
+    $history_query_run = mysqli_query($con, $history_query);
+    if($history_query_run) {
+        // If query executed successfully
+        $_SESSION['message'] = "Request updated successfully!";
+        header('Location: request-view.php');
+    } else {
+        // If there was an error in executing the query
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: request-edit.php?id='.$request_id);
+    }
+
+
+    
 
     if($query_run) {
         // If query executed successfully

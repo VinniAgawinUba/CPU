@@ -38,7 +38,7 @@
             <li><a class="dropdown-item customfont" href="#">My Profile</a></li>
             <li>
               <!-- If logged in show shortcut to admin panel -->
-              <?php if($_SESSION['auth_role'] == '1'){
+              <?php if($_SESSION['auth_role'] == '1' || $_SESSION['auth_role'] == '2'){
                 ?>
               <a class="dropdown-item customfont" href="admin/index.php">Admin Panel</a>
               <?php
