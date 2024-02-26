@@ -51,17 +51,21 @@ include('includes/header.php');
                                             <td><?= $row['email']; ?></td>
                                             <td>
                                                 <?php
-                                                if($row['role_as'] == '1')
-                                                {
-                                                    echo "Admin";
-                                                }
-                                                else if($row['role_as'] == '0')
+                                                if($row['role_as'] == '0')
                                                 {
                                                     echo "User";
                                                 }
-                                                else if($row['role_as'] == '3')
+                                                else if($row['role_as'] == '1')
+                                                {
+                                                    echo "Admin";
+                                                }
+                                                else if($row['role_as'] == '2')
                                                 {
                                                     echo "Super Admin";
+                                                }
+                                                else if($row['role_as'] == '3')
+                                                {
+                                                    echo "Department Editor";
                                                 }
                                                 else
                                                 {
