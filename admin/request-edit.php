@@ -248,7 +248,7 @@ elseif($_SESSION['auth_role']==3)
                                             else
                                             {
                                                 ?>
-                                                <input type="hidden" name="user_id" value="<?= $_SESSION['auth_user']['user_id']?>">
+                                                <input type="hidden" name="user_id" value="<?= $request_row['assigned_user']?>">
                                                 <?php
                                             }
                                             
