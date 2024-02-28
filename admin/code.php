@@ -79,7 +79,7 @@ if ($query_run) {
 
     // Redirect or do whatever you want after adding event
      // If query executed successfully
-     $_SESSION['message'] = "Request updated successfully!";
+     $_SESSION['message'] = "Request Added successfully!";
      header('Location: request-view.php');
 } else {
     // Handle error
