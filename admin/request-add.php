@@ -202,12 +202,12 @@ elseif($_SESSION['auth_role']==3)
                             <label for="">Assign user:</label>
                                           
                                             <?php
-                                                $user_query = "SELECT * FROM users WHERE role_as = 2";
+                                                $user_query = "SELECT * FROM users WHERE role_as = 1";
                                                 $user_query_run = mysqli_query($con, $user_query);
                                                 if(mysqli_num_rows($user_query_run) > 0) {
                                                 ?>
                                                     <select name="user_id" required class="form-control select2">
-                                                        <option value="">Assign User</option>
+                                                        <option value="">--Assign User--</option>
                                                         <?php
                                                         foreach($user_query_run as $user_list) {
                                                         ?>

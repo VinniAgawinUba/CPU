@@ -9,6 +9,14 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require_once __DIR__ . '/vendor/autoload.php';
 
+//Google Calendar API
+use Google\Client;
+use Google\Service\Calendar as Google_Service_Calendar;
+use Google\Service\Calendar\Event as Google_Service_Calendar_Event;
+$credentials = __DIR__ . '/vendor/credentials.json';
+require_once __DIR__ . '/vendor/autoload.php';
+
+
 
 
 // Add Request
@@ -32,15 +40,52 @@ if(isset($_POST['request_add_btn'])) {
     // Executing the query
     $query_run = mysqli_query($con, $insert_query);
 
-    if($query_run) {
-        // If query executed successfully
-        $_SESSION['message'] = "Request added successfully!";
-        header('Location: request-view.php');
-    } else {
-        // If there was an error in executing the query
-        $_SESSION['message'] = "Something went wrong";
-        header('Location: request-add.php');
-    }
+
+    // After executing the database insertion successfully
+if ($query_run) {
+    // Insert event into Google Calendar
+    $client = new Google_Client();
+    $client->setAuthConfig($credentials);
+    $client->addScope(Google_Service_Calendar::CALENDAR_EVENTS);
+    $client->setAccessType('offline');
+    $client->getAccessToken();
+    $client->getRefreshToken(); 
+
+    $service = new Google_Service_Calendar($client);
+
+    // Create event
+    $event = new Google_Service_Calendar_Event(array(
+        'summary' => $name,
+        'description' => 'Your event description here',
+        'start' => array(
+            'date' => $request_received_date, // Assuming date format is 'Y-m-d'
+            'timeZone' => 'Asia/Manila', // Example: 'America/New_York'
+        ),
+        'end' => array(
+            'date' => $expected_delivery_date,
+            'timeZone' => 'Asia/Manila', // Example: 'America/New_York'
+        ),
+        'reminders' => array(
+            'useDefault' => false,
+            'overrides' => array(
+                array('method' => 'email', 'minutes' => 24 * 60),
+                array('method' => 'popup', 'minutes' => 30),
+            ),
+        ),
+    ));    
+
+    $calendarId = '946eec7b8e94a06ab78f828e340cdcc7e013e06e1474c361cdaef7912c08875c@group.calendar.google.com'; // INPUT Calendar ID of the user's primary calendar
+    $event = $service->events->insert($calendarId, $event);
+
+    // Redirect or do whatever you want after adding event
+     // If query executed successfully
+     $_SESSION['message'] = "Request updated successfully!";
+     header('Location: request-view.php');
+} else {
+    // Handle error
+    $_SESSION['message'] = "Something went wrong";
+    header('Location: request-add.php');
+}
 }
 
 // Update Request
