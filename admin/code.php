@@ -180,6 +180,11 @@ if(isset($_POST['request_edit_btn'])) {
         // Call the update method to update the event in Google Calendar
         $updated_event = $service->events->update($calendar_id, $event_id, $event);
     }
+    else {
+        // Handle error
+        $_SESSION['message'] = "Event ID not found, Could Not Update Google Calendar";
+        header('Location: request-edit.php?id='.$request_id);
+    }
   
       if ($history_result && mysqli_num_rows($history_result) > 0) {
           $row = mysqli_fetch_assoc($history_result);

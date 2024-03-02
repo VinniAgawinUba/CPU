@@ -28,10 +28,23 @@ $query_run = mysqli_query($con, $query);
 
 <div class="container">
     <!-- Request Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mx-auto">
+    <div class="grid grid-cols-3 gap-10">
         <?php
         if(mysqli_num_rows($query_run) > 0) {
             foreach($query_run as $item) {
+                //statuses
+                $statuses = [
+                    0 => "Received by CPU",
+                    1 => "Left CPU office",
+                    2 => "Received by Registrar",
+                    3 => "Left Registrar office",
+                    4 => "Received by VPadmin",
+                    5 => "Left VPadmin office",
+                    6 => "Received by President",
+                    7 => "Left President office",
+                    8 => "Approved",
+                ];
+
                 // Fetch college name
                 $college_query = "SELECT name FROM college WHERE id = {$item['college_id']}";
                 $college_result = mysqli_query($con, $college_query);
@@ -51,24 +64,29 @@ $query_run = mysqli_query($con, $query);
 
                 // Add a CSS class based on the condition
                 $card_class = '';
-                if ($difference >= 30) {
+                if ($difference >= 30 && $item['status'] != 8) {
                     $card_class = 'bg-red-500'; // Older than or equal to 30 days, set background to red
-                } elseif ($difference >= 15) {
+                    $text_color = 'text-white';
+                } elseif ($difference >= 15 && $item['status'] != 8) {
                     $card_class = 'bg-yellow-500'; // Older than or equal to 15 days but less than 30, set background to yellow
+                    $text_color = 'text-white';
                 } elseif ($item['status'] == 8) {
-                    $card_class = 'bg-green-500'; // Status is 8 (Approved), set background to green
+                    $card_class = 'bg-green-500 text-white'; // Status is 8 (Approved), set background to green
+                    $text_color = 'text-white';
                 }
 
                 ?>
-                <div class="max-w-sm rounded overflow-hidden shadow-lg hover:scale-105 hover:outline-dotted hover:text-purple-800<?= $card_class ?>">
-                    <div class="px-6 py-4">
-                        <div class="font-bold text-xl mb-2">Request: <?= $item['name']; ?></div>
-                        <p class="text-gray-700 text-base mb-2">ID: <?= $item['id']; ?></p>
-                        <p class="text-gray-700 text-base mb-2">College: <?= $college_name; ?></p>
-                        <p class="text-gray-700 text-base mb-2">Department: <?= $department_name; ?></p>
-                        <p class="text-gray-700 text-base mb-2">Received Date: <?= $item['request_received_date']; ?></p>
-                        <p class="text-gray-700 text-base mb-2">Expected Delivery Date: <?= $item['expected_delivery_date']; ?></p>
-                        <p class="text-gray-700 text-base mb-2">Actual Delivery Date: <?= $item['actual_delivery_date']; ?></p>
+                <div class="max-w-sm rounded overflow-hidden shadow-lg hover:scale-105 hover:outline-dotted hover:text-purple-800 <?= $card_class ?>">
+                    <div class="px-6 py-4 <?= $text_color ?>">
+                    <div class="font-bold text-xl mb-2 text-current">Request: <?= $item['name']; ?></div>
+                        <p class="text-current text-base mb-2">ID: <?= $item['id']; ?></p>
+                        <p class="text-current text-base mb-2">College: <?= $college_name; ?></p>
+                        <p class="text-current text-base mb-2">Department: <?= $department_name; ?></p>
+                        <p class="text-current text-base mb-2">Received Date: <?= $item['request_received_date']; ?></p>
+                        <p class="text-current text-base mb-2">Expected Delivery Date: <?= $item['expected_delivery_date']; ?></p>
+                        <p class="text-current text-base mb-2">
+                         Status: <?= $statuses[$item['status']] ?? "Unknown Status"; ?>
+                        </p>
                         <!-- You can add more project details here -->
                     </div>
                 </div>
