@@ -286,15 +286,7 @@ $mail->send();
      } catch (Exception $e) {
          echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
      }
-          }
-        }
-    
-    // Your SQL query to update data in the database
-    $update_query = "UPDATE requests SET name = '$name', inventory_id = '$inventory_id', college_id = '$college_id', department_id = '$department_id', status = '$status', request_received_date = '$request_received_date', expected_delivery_date = '$expected_delivery_date', actual_delivery_date = '$actual_delivery_date', semester = '$semester', school_year_id = '$school_year_id',assigned_user = '$assigned_to 'WHERE id = '$request_id'";
-    // Executing the query
-    $query_run = mysqli_query($con, $update_query);
-
-    // Update the request_status_history table edited_by column
+      // Update the request_status_history table edited_by column
     $edited_by = $_SESSION['auth_user']['user_id'];
     $history_query = "INSERT INTO request_status_history (request_id, old_status, new_status, change_date, edited_by) VALUES ('$request_id', '$old_status', '$status', NOW(), '$edited_by')";
     //Executing the history query
@@ -308,6 +300,15 @@ $mail->send();
         $_SESSION['message'] = "Something went wrong";
         header('Location: request-edit.php?id='.$request_id);
     }
+          }
+        }
+    
+    // Your SQL query to update data in the database
+    $update_query = "UPDATE requests SET name = '$name', inventory_id = '$inventory_id', college_id = '$college_id', department_id = '$department_id', status = '$status', request_received_date = '$request_received_date', expected_delivery_date = '$expected_delivery_date', actual_delivery_date = '$actual_delivery_date', semester = '$semester', school_year_id = '$school_year_id',assigned_user = '$assigned_to 'WHERE id = '$request_id'";
+    // Executing the query
+    $query_run = mysqli_query($con, $update_query);
+
+   
 
     if($query_run) {
         // If query executed successfully

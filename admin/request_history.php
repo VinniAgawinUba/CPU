@@ -310,7 +310,7 @@ elseif($_SESSION['auth_role']==3)
 
                     <!-- Request History Card -->
                     <div class="card-header">
-                        <h4>History Logs
+                        <h4>Status History Logs
                         </h4>
                         <div class="btn-group float-end" role="group" aria-label="Basic example">
     
