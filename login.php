@@ -32,15 +32,14 @@ include('includes/navbar.php');
                         <input required type="password" name="password" placeholder="Enter Password" class="form-control">
                     </div>
                     <div class="form-group mb-3">
-                        <button required type="submit" name="login_btn" class="btn btn-primary">Login Now</button>
+                        <button required type="submit" name="login_btn" class="btn bg-blue-500 text-cyan-50 hover:bg-blue-300 hover:text-cyan-50">Login Now</button>
                     </div>
                     </form>
 
                 </div>
                </div>
             </div>
+        </div>
+    </div>
 </div>
-
-<?php
-include('includes/footer.php');
-?>
+<?php include('includes/footer.php');?>

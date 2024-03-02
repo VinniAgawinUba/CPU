@@ -11,32 +11,38 @@ $results_per_page = 9;
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $results_per_page;
 
-// Query to fetch requests with pagination
-$query = "SELECT * FROM requests ORDER BY id DESC LIMIT $offset, $results_per_page";
+// Retrieve search query
+$search_query = isset($_GET['search_query']) ? $_GET['search_query'] : '';
+
+// Modify SQL query to include search condition
+$query_condition = "";
+if (!empty($search_query)) {
+    $query_condition = "WHERE name LIKE '%$search_query%'";
+}
+
+// Query to fetch requests with pagination and search
+$query = "SELECT * FROM requests $query_condition ORDER BY id DESC LIMIT $offset, $results_per_page";
 $query_run = mysqli_query($con, $query);
 
 ?>
 
-
 <div class="container">
-    
+    <!-- Request Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mx-auto">
         <?php
-        if(mysqli_num_rows($query_run) > 0)
-        {
-            foreach($query_run as $item)
-            {
-                 // Fetch college name
-                 $college_query = "SELECT name FROM college WHERE id = {$item['college_id']}";
-                 $college_result = mysqli_query($con, $college_query);
-                 $college_data = mysqli_fetch_assoc($college_result);
-                 $college_name = $college_data['name'];
- 
-                 // Fetch department name
-                 $department_query = "SELECT name FROM department WHERE id = {$item['department_id']}";
-                 $department_result = mysqli_query($con, $department_query);
-                 $department_data = mysqli_fetch_assoc($department_result);
-                 $department_name = $department_data['name'];
+        if(mysqli_num_rows($query_run) > 0) {
+            foreach($query_run as $item) {
+                // Fetch college name
+                $college_query = "SELECT name FROM college WHERE id = {$item['college_id']}";
+                $college_result = mysqli_query($con, $college_query);
+                $college_data = mysqli_fetch_assoc($college_result);
+                $college_name = $college_data['name'];
+
+                // Fetch department name
+                $department_query = "SELECT name FROM department WHERE id = {$item['department_id']}";
+                $department_result = mysqli_query($con, $department_query);
+                $department_data = mysqli_fetch_assoc($department_result);
+                $department_name = $department_data['name'];
 
                 // Check if request_received_date is older than 30 days from the current day
                 $received_date = strtotime($item['request_received_date']);
@@ -62,29 +68,42 @@ $query_run = mysqli_query($con, $query);
                         <p class="text-gray-700 text-base mb-2">Department: <?= $department_name; ?></p>
                         <p class="text-gray-700 text-base mb-2">Received Date: <?= $item['request_received_date']; ?></p>
                         <p class="text-gray-700 text-base mb-2">Expected Delivery Date: <?= $item['expected_delivery_date']; ?></p>
+                        <p class="text-gray-700 text-base mb-2">Actual Delivery Date: <?= $item['actual_delivery_date']; ?></p>
                         <!-- You can add more project details here -->
                     </div>
                 </div>
                 <?php
             }
+        } else {
+            echo "<p>No results found.</p>";
         }
         ?>
     </div>
-
     <!-- Pagination links -->
-    <div class="flex justify-center mt-4">
-        <?php
-        $query = "SELECT COUNT(*) AS total FROM requests";
-        $result = mysqli_query($con, $query);
-        $row = mysqli_fetch_assoc($result);
-        $total_pages = ceil($row['total'] / $results_per_page);
+<div class="flex justify-center mt-4">
+    <?php
+    // Include search query parameter in pagination links
+    $pagination_url = "index_search.php";
+    if (!empty($search_query)) {
+        $pagination_url .= "?search_query=$search_query&page=";
+    } else {
+        $pagination_url .= "?page=";
+    }
 
-        for ($i = 1; $i <= $total_pages; $i++) {
-            echo "<a href='index.php?page=$i' class='m-2 px-4 py-2 bg-blue-500 text-blue-50 rounded-full hover:bg-blue-400'>$i</a>";
-        }
-        ?>
-    </div>
+    $query = "SELECT COUNT(*) AS total FROM requests $query_condition";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_assoc($result);
+    $total_pages = ceil($row['total'] / $results_per_page);
+
+    for ($i = 1; $i <= $total_pages; $i++) {
+        echo "<a href='$pagination_url$i' class='m-2 px-4 py-2 bg-blue-500 text-blue-50 rounded-full hover:bg-blue-400'>$i</a>";
+    }
+    ?>
+</div>
+
 </div>
 
 <!-- Footer -->
 <?php include('includes/footer.php'); ?>
+
+

@@ -12,10 +12,10 @@
   </a>
   
    <!-- Search Bar -->
-   <form class="flex justify-center">
-    <input class="form-control me-2 custom-search" type="search" placeholder="Search" aria-label="Search">
+   <form class="flex justify-center" action="index_search.php" method="GET"> <!-- Update action to index.php -->
+    <input class="form-control me-2 custom-search" type="search" name="search_query" placeholder="Search" aria-label="Search"> <!-- Add name attribute -->
     <button class="btn btn-outline-primary" type="submit">Search</button>
-  </form>
+</form>
       <!-- Navbar Links -->
       <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
 
