@@ -56,6 +56,21 @@ elseif($_SESSION['auth_role']==3)
                                 <input type="text" name="name" required class="form-control">
                             </div>
 
+                            <!-- <div class="col-md-6 mb-3">
+                                RADIO BUTTONS TEMPLATE
+                                <label for="">Radio Buttons</label>
+                                <div>
+                                    <input type="radio" name="radio_type" value="option1" required> Option 1
+                                </div>
+                                <div>
+                                    <input type="radio" name="radio_type" value="option2" required> Option 2
+                                </div>
+                                <div>
+                                    <input type="radio" name="radio_type" value="option3" required> Option 3
+                                </div>
+                            </div> -->
+                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="">Inventory</label>
                                 <?php

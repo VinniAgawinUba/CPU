@@ -3,11 +3,7 @@
  <!-- Navbar Top Right -->
 <nav class="navbar navbar-expand-lg">
   
-    <a class="navbar-brand d=block d-sm-none d-md-none" href="#"></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    
       <!-- XU Logo -->
 
   <a href="index.php" style="width:400px;"> 
@@ -16,15 +12,15 @@
   </a>
   
    <!-- Search Bar -->
-   <form class="d-flex justify-content-center">
+   <form class="flex justify-center">
     <input class="form-control me-2 custom-search" type="search" placeholder="Search" aria-label="Search">
     <button class="btn btn-outline-primary" type="submit">Search</button>
   </form>
       <!-- Navbar Links -->
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
 
         <li class="nav-item text-center customfont">
-          <a class="nav-link customfont" href="#">About Us</a>
+          <a class="nav-link customfont text-nowrap" href="#">About Us</a>
         </li>
         
 
@@ -66,17 +62,10 @@
 
    
 
-<div class="container">
-  
-  
- 
-  
-</div>
-
 
 
 <!-- Nav Center -->
-<ul class="nav justify-content-center">
+<ul class="nav justify-center">
   <li class="nav-item">
     <a class="nav-link active customfont" href="index.php">HOME</a>
   </li>
@@ -85,4 +74,3 @@
   </li>
   
 </ul>
-

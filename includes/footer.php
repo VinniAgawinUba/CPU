@@ -2,70 +2,43 @@
 <script src="assets/js/bootstrap5.bundle.min.js"></script>
 <script src="assets/js/scripts.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.1/viewer.min.js"></script>
+<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
                                         
-
-<!-- Page Content-->
-<section class="pt-4 bg-light bg-gradient">
-            <div class="container px-lg-5">
-                <!-- Page Features-->
-                <div class="row gx-lg-5">
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-collection"></i></div>
-                                <h2 class="fs-4 fw-bold">Fresh new layout</h2>
-                                <p class="mb-0">With Bootstrap 5, we've created a fresh new layout for this template!</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-cloud-download"></i></div>
-                                <h2 class="fs-4 fw-bold">Free to download</h2>
-                                <p class="mb-0">As always, Start Bootstrap has a powerful collectin of free templates.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-card-heading"></i></div>
-                                <h2 class="fs-4 fw-bold">Jumbotron hero header</h2>
-                                <p class="mb-0">The heroic part of this template is the jumbotron hero header!</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-bootstrap"></i></div>
-                                <h2 class="fs-4 fw-bold">Feature boxes</h2>
-                                <p class="mb-0">We've created some custom feature boxes using Bootstrap icons!</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-code"></i></div>
-                                <h2 class="fs-4 fw-bold">Simple clean code</h2>
-                                <p class="mb-0">We keep our dependencies up to date and squash bugs as they come!</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-patch-check"></i></div>
-                                <h2 class="fs-4 fw-bold">A name you trust</h2>
-                                <p class="mb-0">Start Bootstrap has been the leader in free Bootstrap templates since 2013!</p>
-                            </div>
-                        </div>
-                    </div>
+<footer class="bg-dark text-white py-5">
+    <div class="container">
+        <div class="flex items-center flex-row justify-between">
+            <div class="m-4">
+                <h2 class="h5 mb-3">About Xavier University's Central Procurment Unit</h2>
+                <p class="py-4">The Central Procurement Unit (CPU) at Xavier University 
+                    plays a crucial role in managing the acquisition of goods and services 
+                    for various departments and units within the university. As a central entity 
+                    responsible for procurement activities, the CPU ensures compliance with regulations, 
+                    maximizes cost-effectiveness, and maintains transparency in purchasing processes.</p>
+            </div>
+           
+            <div class="m-3">
+                <h2 class="h5 mb-3">Help Desk</h2>
+                <p class="py-2">For assistance, contact:</p>
+                <div class="flex items-center">
+                    <span class="text-gray-400 mr-2"><i class="fas fa-envelope"></i></span><p class="py-2 mb-0">ciso@xu.edu.ph</p>
+                </div>
+                <div class="flex items-center mt-2">
+                    <span class="text-gray-400 mr-2"><i class="fas fa-phone-alt"></i></span><p class="py-2 mb-0 text-nowrap">(088) 853-9800</p>
                 </div>
             </div>
-        </section>
+
+        </div>
+        <div class="flex items-center flex-row justify-center">
+            <div class="pt-3">
+                <p class="text-center mb-0">© <?php echo date('Y'); ?> Xavier University - Ateneo de Cagayan Corrales Avenue, Cagayan de Oro City, Philippines.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
 
 </body>
 </html>
