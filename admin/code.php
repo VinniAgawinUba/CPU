@@ -4,6 +4,30 @@ ini_set('display_errors', 1);
 include ('authentication.php');
 include('includes/scripts.php');
 
+//Initialize Variable
+$admin = null;
+$super_user = null;
+$department_editor = null;
+//Check level
+if($_SESSION['auth_role']==1)
+{
+    $admin = true;
+    $super_user = false;
+    $department_editor = false;
+}
+elseif($_SESSION['auth_role']==2)
+{
+    $admin = false;
+    $super_user = true;
+    $department_editor = false;
+}
+elseif($_SESSION['auth_role']==3)
+{
+    $admin = false;
+    $super_user = false;
+    $department_editor = true;
+}
+
 //PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -41,8 +65,11 @@ if(isset($_POST['request_add_btn'])) {
     $query_run = mysqli_query($con, $insert_query);
 
 
-    // After executing the database insertion successfully
-if ($query_run) {
+    // After executing the database insertion successfully, if the user is an admin or super user, add the event to Google Calendar
+if ($query_run && ($admin || $super_user)) {
+    // Get the ID of the newly added request
+    $request_id = $con->insert_id;
+
     // Insert event into Google Calendar
     $client = new Google_Client();
     $client->setAuthConfig($credentials);
@@ -77,10 +104,17 @@ if ($query_run) {
     $calendarId = '946eec7b8e94a06ab78f828e340cdcc7e013e06e1474c361cdaef7912c08875c@group.calendar.google.com'; // INPUT Calendar ID of the user's primary calendar
     $event = $service->events->insert($calendarId, $event);
 
+    // Store the event ID in your database along with other request details
+    $event_id = $event->getId(); // Assuming this retrieves the ID of the newly added event
+    // Store $event_id in your database
+    $event_id_query = "UPDATE requests SET gcalendar_eventID = '$event_id' WHERE id = '$request_id'";
+    $event_id_query_run = mysqli_query($con, $event_id_query);
+    
+
     // Redirect or do whatever you want after adding event
      // If query executed successfully
-     $_SESSION['message'] = "Request Added successfully!";
-     header('Location: request-view.php');
+    $_SESSION['message'] = "Request Added successfully!";
+    header('Location: request-add.php');
 } else {
     // Handle error
     $_SESSION['message'] = "Something went wrong";
@@ -103,10 +137,49 @@ if(isset($_POST['request_edit_btn'])) {
     $semester = $_POST['semester'];
     $school_year_id = $_POST['school_year_id'];
     $assigned_to = $_POST['user_id'];
+    $event_id = $_POST['gcalendar_eventID']; // Retrieve the event ID from the form
 
       //  SQL query to fetch the old status from request_status_history table
       $history_query = "SELECT new_status FROM request_status_history WHERE request_id = '$request_id' ORDER BY change_date DESC LIMIT 1";
       $history_result = mysqli_query($con, $history_query);
+
+
+        // If the event ID is found, update the event in Google Calendar
+    if (!empty($event_id)) {
+        $client = new Google_Client();
+        $client->setAuthConfig($credentials);
+        $client->addScope(Google_Service_Calendar::CALENDAR_EVENTS);
+        $client->setAccessType('offline');
+        $client->getAccessToken();
+        $client->getRefreshToken(); 
+
+        $service = new Google_Service_Calendar($client);
+
+       
+        
+        // Retrieve the event from Google Calendar
+        $calendar_id = '946eec7b8e94a06ab78f828e340cdcc7e013e06e1474c361cdaef7912c08875c@group.calendar.google.com';
+        $event = $service->events->get($calendar_id, $event_id);
+
+        // Update the event details
+        $event->setSummary($name);
+        $event->setDescription('Your event description here');
+        // Update the start and end dates
+        $eventStart = new Google\Service\Calendar\EventDateTime();
+        $eventStart->setDate($request_received_date);
+        $eventStart->setTimeZone('Asia/Manila');
+        $event->setStart($eventStart);
+
+        $eventEnd = new Google\Service\Calendar\EventDateTime();
+        $eventEnd->setDate($expected_delivery_date);
+        $eventEnd->setTimeZone('Asia/Manila');
+        $event->setEnd($eventEnd);
+
+        
+        
+        // Call the update method to update the event in Google Calendar
+        $updated_event = $service->events->update($calendar_id, $event_id, $event);
+    }
   
       if ($history_result && mysqli_num_rows($history_result) > 0) {
           $row = mysqli_fetch_assoc($history_result);
@@ -216,11 +289,6 @@ $mail->send();
           }
         }
     
-
-    
-
-     
-
     // Your SQL query to update data in the database
     $update_query = "UPDATE requests SET name = '$name', inventory_id = '$inventory_id', college_id = '$college_id', department_id = '$department_id', status = '$status', request_received_date = '$request_received_date', expected_delivery_date = '$expected_delivery_date', actual_delivery_date = '$actual_delivery_date', semester = '$semester', school_year_id = '$school_year_id',assigned_user = '$assigned_to 'WHERE id = '$request_id'";
     // Executing the query
@@ -240,9 +308,6 @@ $mail->send();
         $_SESSION['message'] = "Something went wrong";
         header('Location: request-edit.php?id='.$request_id);
     }
-
-
-    
 
     if($query_run) {
         // If query executed successfully
@@ -1149,4 +1214,5 @@ if(isset($_POST['logout_btn'])){
     header('location: ../login.php');
     exit(0);
 }
+
 ?>
