@@ -3,6 +3,7 @@ session_start();
 //Header
 include('includes/header.php');
 include('includes/navbar.php');
+include('message.php');
 include('config/dbcon.php');
 include('authentication.php');
 

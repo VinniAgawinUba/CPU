@@ -142,26 +142,21 @@ include('includes/navbar.php');
                         <button required type="submit" name="login_btn" class="btn bg-blue-500 text-cyan-50 hover:bg-blue-300 hover:text-cyan-50">Login Now</button>
                     </div>
 
-                    <div class="">
                      <!-- Google login button -->
                      <?php
-                     
-                    // Include Google login template
-                    
+                                         
                     ?>
                     <div class="form-group mb-3">
                         <?php
                             
-                        echo '<h4 class="btn bg-blue-500 text-cyan-50 hover:bg-blue-300 hover:text-cyan-50"><a href='.$google_client->createAuthUrl().'>Login with Google</a></h4>';
-                        if (isset($_SESSION['user_email_address'])) {
-                            echo 'Still ALive Nigga';
-                            echo $_SESSION['user_email_address'];
+                        echo $login_button;
+                        if (isset($_SESSION['access_token'])) {
+                            $authUrl = $google_client->createAuthUrl();
+                            echo '<h4 class="btn bg-blue-500 text-cyan-50 hover:bg-blue-300 hover:text-cyan-50" onclick="openPopup(\'' . $authUrl . '\')">Login with Google</h4>';
                             }
-                        //Logout
-                        echo '<h4><a href="logout.php">Logout</h4>';
+                        
                         ?>
                         
-                    </div>
                     </div>
                     
                     </form>
