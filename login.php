@@ -104,7 +104,8 @@ if(isset($_SESSION['access_token'])) {
     $_SESSION['auth'] = "true";
     $_SESSION['auth_user'] = [
         'user_name' => $fname . ' ' . $lname,
-        'user_email' => $email
+        'user_email' => $email,
+        'user_id' => $user_id
     ];
     $_SESSION['auth_role'] = $role_as;
 

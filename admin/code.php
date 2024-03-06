@@ -1216,6 +1216,8 @@ if(isset($_POST['logout_btn'])){
     unset($_SESSION['auth_user']);
     unset($_SESSION['auth_role']);
 
+    session_destroy();
+
     $_SESSION['message'] = "Logged Out Successfully";
     header('location: ../login.php');
     exit(0);
