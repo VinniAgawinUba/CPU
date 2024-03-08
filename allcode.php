@@ -33,6 +33,21 @@ if(isset($_POST['request_add_btn_front'])){
   $unit_dept_college = $_POST['unit_dept_college'];
   $iptel_email = $_POST['iptel_email'];
 
+   // Signatures
+   $signatures = array(
+    "signed_Requestor", // Add more signature fields as needed, e.g., signed_1, signed_2, etc.
+    "signed_1",
+    "signed_2",
+    "signed_3",
+    "signed_4",
+    "signed_5"
+);
+
+ // Signature Settings
+ $folderPath = "uploads/signatures/";
+
+ 
+
   // Purchase Types
   $purchase_types = isset($_POST['purchase_type']) ? implode(',', $_POST['purchase_type']) : '';
 
@@ -79,6 +94,37 @@ if(isset($_POST['request_add_btn_front'])){
   if ($con->query($sql_purchase_request) === TRUE) {
       // Get the ID of the last inserted purchase request
       $purchase_request_id = $con->insert_id;
+      
+// Save each signature to the server and database
+foreach ($signatures as $signature_field) {
+  if (isset($_POST[$signature_field])) {
+      // Process each signature
+      $image_parts = explode(";base64,", $_POST[$signature_field]);
+      $image_type_aux = explode("image/", $image_parts[0]);
+      $image_type = $image_type_aux[1];
+      $image_base64 = base64_decode($image_parts[1]);
+      $filename = uniqid() . ".$image_type";
+      $file = $folderPath . $filename;
+
+      // Save the signature to the server
+      if (file_put_contents($file, $image_base64) !== false) {
+          // Signature saved successfully
+          echo "Signature saved successfully: $file<br>";
+
+          // Insert filename and request ID into the database
+          $request_id = $purchase_request_id;
+          $sql = "INSERT INTO signatures (request_id, filename) VALUES ('$request_id', '$filename')";
+          if ($con->query($sql)) {
+              echo "Signature filename and request ID inserted into database.<br>";
+          } else {
+              echo "Error inserting signature filename and request ID into database: " . $con->error . "<br>";
+          }
+      } else {
+          // Error saving signature
+          echo "Error saving signature.<br>";
+      }
+ }
+}
 
       // Insert Items into the database
       for ($i = 0; $i < count($item_qty); $i++) {
@@ -91,10 +137,11 @@ if(isset($_POST['request_add_btn_front'])){
           }
       }
 
-      $_SESSION['message'] = "Something went wrong";
+      $_SESSION['message'] = "Successfully added a new request";
       header('location: requests1.php');
       exit(0);
   } else {
+    $_SESSION['message'] = "Error: " . $sql_purchase_request . "<br>" . $con->error;
       echo "Error: " . $sql_purchase_request . "<br>" . $con->error;
   } 
 }
