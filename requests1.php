@@ -26,8 +26,9 @@
 </head>
 <body class="bg-gray-100">
   <div class="container mx-auto p-6">
+    <?php include('message.php'); ?>
     <h1 class="text-3xl font-bold mt-8 mb-4">XAVIER UNIVERSITY CENTRAL PURCHASING UNIT</h1>
-    <form action="/submit_request" method="post">
+    <form action="allcode.php" method="post">
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Purchase Request</legend>
         <div class="mb-3">
@@ -67,13 +68,24 @@
         <button type="button" class="btn btn-primary btn-add-item">Add Item</button>
       </fieldset>
 
+
+      <!-- Requesting Person Information -->
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Requesting Person Information</legend>
         <p class="italic m-3">Requesting person will be contacted if more information is needed</p>
         <div class="mb-3">
           <label for="printed_name" class="form-label">Requested by:</label>
-          <input type="text" id="printed_name" name="printed_name" class="form-control" required placeholder="Printed Name & Signature">
+          <input type="text" id="printed_name" name="printed_name" class="form-control" required placeholder="Printed Name">
         </div>
+        
+        <!-- Signature Requestor-->
+        <div class="mb-3">
+          <label for="signatureRequestor">Signature:</label>
+          <div id="sigRequestor"></div>
+          <button id="clearRequestor" class="btn btn-primary">Clear Signature</button>
+          <textarea id="signature64_Requestor" name="signed_Requestor" style="display:none"></textarea>
+        </div>
+
         <div class="mb-3">
           <label for="unit_dept_college" class="form-label">Unit/Dept/College:</label>
           <input type="text" id="unit_dept_college" name="unit_dept_college" class="form-control">
@@ -113,7 +125,7 @@
           <div class="mb-3">
             <label for="signature1">Signature:</label>
             <div id="sig1"></div>
-            <button id="clear1">Clear Signature</button>
+            <button id="clear1" class="btn btn-primary">Clear Signature</button>
             <textarea id="signature64_1" name="signed_1" style="display:none"></textarea>
           </div>
         </div>
@@ -129,7 +141,7 @@
           <div class="mb-3">
             <label for="signature2">Signature:</label>
             <div id="sig2"></div>
-            <button id="clear2">Clear Signature</button>
+            <button id="clear2" class="btn btn-primary">Clear Signature</button>
             <textarea id="signature64_2" name="signed_2" style="display:none"></textarea>
           </div>
         </div>
@@ -147,7 +159,7 @@
           <div class="mb-3">
             <label for="signature3">Signature:</label>
             <div id="sig3"></div>
-            <button id="clear3">Clear Signature</button>
+            <button id="clear3" class="btn btn-primary">Clear Signature</button>
             <textarea id="signature64_3" name="signed_3" style="display:none"></textarea>
           </div>
 
@@ -162,7 +174,7 @@
             <div class="mb-3">
             <label for="signature4">Signature:</label>
             <div id="sig4"></div>
-            <button id="clear4">Clear Signature</button>
+            <button id="clear4" class="btn btn-primary">Clear Signature</button>
             <textarea id="signature64_4" name="signed_4" style="display:none"></textarea>
             </div>
 
@@ -177,7 +189,7 @@
             <div class="mb-3">
             <label for="signature5">Signature:</label>
             <div id="sig5"></div>
-            <button id="clear5">Clear Signature</button>
+            <button id="clear5" class="btn btn-primary">Clear Signature</button>
             <textarea id="signature64_5" name="signed_5" style="display:none"></textarea>
             </div>
         <!-- Add more approval sections as needed -->
@@ -199,35 +211,43 @@
         const itemRow = document.createElement('div');
         itemRow.classList.add('item-row', 'mb-2');
         itemRow.innerHTML = `
-          <label class="form-label">Item #:</label>
-          <div class="row">
+        <label class="form-label">Item:</label>
+        <div class="row">
             <div class="col">
-              <input type="text" name="item_qty[]" class="form-control" placeholder="Qty/Unit">
+                <label for="item_qty">Qty/Unit:</label>
+                <input type="text" name="item_qty[]" id="item_qty" class="form-control" placeholder="Qty/Unit">
             </div>
             <div class="col">
-              <input type="text" name="item_type[]" class="form-control" placeholder="ITEMS">
+                <label for="item_type">Item:</label>
+                <textarea name="item_type[]" id="item_type" class="form-control" placeholder="ITEMS -Please include complete specifications/details -CPU will refuse to receive request without complete specifications or details"></textarea>
             </div>
             <div class="col">
-              <div class="form-check">
-                <input type="radio" id="additional" name="item_justification[]" value="additional" class="form-check-input">
-                <label for="additional" class="form-check-label">Additional</label>
-              </div>
-              <div class="form-check">
-                <input type="radio" id="replacement" name="item_justification[]" value="replacement" class="form-check-input">
-                <label for="replacement" class="form-check-label">Replacement</label>
-              </div>
-              <div class="form-check">
-                <input type="radio" id="new" name="item_justification[]" value="new" class="form-check-input">
-                <label for="new" class="form-check-label">New</label>
-              </div>
-              <div>
-                <input type="text" name="item_date_condition[]" class="form-control mt-1" placeholder="Indicate date purchased & condition if replacement">
-              </div>
+                <label for="item_type">Justification:</label>
+                <div class="form-check">
+                    <input type="checkbox" id="additional" name="item_justification[]" value="additional" class="form-check-input">
+                    <label for="additional" class="form-check-label">Additional</label>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" id="replacement" name="item_justification[]" value="replacement" class="form-check-input">
+                    <label for="replacement" class="form-check-label">Replacement</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="new" name="item_justification[]" value="new" class="form-check-input">
+                    <label for="new" class="form-check-label">New</label>
+                </div>
+                <div>
+                    <label for="item_reason">Reason for request:</label>
+                    <input type="text" name="item_reason[]" id="item_reason" class="form-control mt-1" placeholder="Pls specify needs & reasons">
+                <div>
+                    <label for="item_date_condition">Date Purchased & Condition (if replacement):</label>
+                    <input type="text" name="item_date_condition[]" id="item_date_condition" class="form-control mt-1" placeholder="Indicate date purchased & condition if replacement">
+                </div>
             </div>
             <div class="col-auto">
-              <button type="button" class="btn btn-danger btn-remove-item">Remove</button>
+                <button type="button" class="btn btn-danger btn-remove-item">Remove</button>
             </div>
-          </div>
+        </div>
         `;
         itemRows.appendChild(itemRow);
       });
@@ -272,6 +292,13 @@
         e.preventDefault();
         sig5.signature('clear');
         $("#signature64_5").val('');
+        });
+
+    var sigRequestor = $('#sigRequestor').signature({syncField: '#signature64_Requestor', syncFormat:'PNG'});
+    $('#clearRequestor').click(function(e){
+        e.preventDefault();
+        sigRequestor.signature('clear');
+        $("#signature64_Requestor").val('');
         });
 
       // Add more signature scripts as needed
