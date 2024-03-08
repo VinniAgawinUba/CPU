@@ -140,6 +140,8 @@
           <input type="text" id="budget_controller" name="budget_controller" class="form-control" placeholder="Remarks">
           <label for="budget_controller" class="form-label">Approved By:</label>
           <input type="text" id="budget_controller_approved" name="budget_controller_approved" class="form-control">
+          <label for="budget_controller" class="form-label">Acct. Code:</label>
+          <input type="text" id="budget_controller_code" name="budget_controller_code" class="form-control" placeholder="Input Acct. Code">
           
           <!-- Signature -->
           <div class="mb-3">
@@ -148,6 +150,36 @@
             <button id="clear3">Clear Signature</button>
             <textarea id="signature64_3" name="signed_3" style="display:none"></textarea>
           </div>
+
+        <!--University Treasurer-->
+        <div class="mb-3">
+            <label for="university_treasurer" class="form-label">4-UNIVERSITY TREASURER:</label>
+            <input type="text" id="university_treasurer" name="university_treasurer" class="form-control" placeholder="Remarks">
+            <label for="university_treasurer" class="form-label">Approved By:</label>
+            <input type="text" id="university_treasurer_approved" name="university_treasurer_approved" class="form-control">
+            
+            <!-- Signature -->
+            <div class="mb-3">
+            <label for="signature4">Signature:</label>
+            <div id="sig4"></div>
+            <button id="clear4">Clear Signature</button>
+            <textarea id="signature64_4" name="signed_4" style="display:none"></textarea>
+            </div>
+
+        <!--OFFICE OF THE PRESIDENT (for budget re-alignment only) :-->
+        <div class="mb-3">
+            <label for="office_of_the_president" class="form-label">5-OFFICE OF THE PRESIDENT (for budget re-alignment only) :</label>
+            <input type="text" id="office_of_the_president" name="office_of_the_president" class="form-control" placeholder="Remarks">
+            <label for="office_of_the_president" class="form-label">Approved By:</label>
+            <input type="text" id="office_of_the_president_approved" name="office_of_the_president_approved" class="form-control">
+            
+            <!-- Signature -->
+            <div class="mb-3">
+            <label for="signature5">Signature:</label>
+            <div id="sig5"></div>
+            <button id="clear5">Clear Signature</button>
+            <textarea id="signature64_5" name="signed_5" style="display:none"></textarea>
+            </div>
         <!-- Add more approval sections as needed -->
         
       </fieldset>
@@ -206,7 +238,7 @@
         }
       });
 
-      // Signature Script
+      // Signatures Script (Add var sig per Approval person and button id per approval person)
       var sig1 = $('#sig1').signature({syncField: '#signature64_1', syncFormat:'PNG'});
       $('#clear1').click(function(e){
         e.preventDefault();
@@ -226,6 +258,20 @@
         e.preventDefault();
         sig3.signature('clear');
         $("#signature64_3").val('');
+        });
+
+    var sig4 = $('#sig4').signature({syncField: '#signature64_4', syncFormat:'PNG'});
+    $('#clear4').click(function(e){
+        e.preventDefault();
+        sig4.signature('clear');
+        $("#signature64_4").val('');
+        });
+
+    var sig5 = $('#sig5').signature({syncField: '#signature64_5', syncFormat:'PNG'});
+    $('#clear5').click(function(e){
+        e.preventDefault();
+        sig5.signature('clear');
+        $("#signature64_5").val('');
         });
 
       // Add more signature scripts as needed
