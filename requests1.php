@@ -20,7 +20,7 @@
 
   <!--Signature Styles-->
   <style>
-    .kbw-signature { width: 400px; height: 200px; }
+    .kbw-signature { width: 800px; height: 200px; }
     #sig canvas { width: 100% !important; height: auto; }
   </style>
 
@@ -82,7 +82,7 @@
         <!-- Signature Requestor-->
         <div class="mb-3">
           <label for="signatureRequestor">Signature:</label>
-          <div id="sigRequestor"></div>
+          <div id="sigRequestor" class="kbw-signature"></div>
           <button id="clearRequestor" class="btn btn-primary">Clear Signature</button>
           <textarea id="signature64_Requestor" name="signed_Requestor" style="display:none"></textarea>
         </div>

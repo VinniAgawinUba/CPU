@@ -118,6 +118,13 @@ foreach ($signatures as $signature_field) {
           $sql = "INSERT INTO signatures (request_id, filename) VALUES ('$request_id', '$filename')";
           if ($con->query($sql)) {
               echo "Signature filename and request ID inserted into database.<br>";
+              //Update the purchase request with the signature filename
+              $sql_update = "UPDATE purchase_requests SET $signature_field = '$filename' WHERE id = $purchase_request_id";
+              if ($con->query($sql_update)) {
+                  echo "Purchase request updated with signature filename.<br>";
+              } else {
+                  echo "Error updating purchase request with signature filename: " . $con->error . "<br>";
+              }
           } else {
               echo "Error inserting signature filename and request ID into database: " . $con->error . "<br>";
           }
@@ -125,13 +132,7 @@ foreach ($signatures as $signature_field) {
           // Error saving signature
           echo "Error saving signature.<br>";
       }
-        //Update the purchase request with the signature filename
-        $sql_update = "UPDATE purchase_requests SET $signature_field = '$filename' WHERE id = $purchase_request_id";
-        if ($con->query($sql_update)) {
-            echo "Purchase request updated with signature filename.<br>";
-        } else {
-            echo "Error updating purchase request with signature filename: " . $con->error . "<br>";
-        }
+        
  }
 }
 
