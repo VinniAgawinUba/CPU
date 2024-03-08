@@ -8,6 +8,21 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <!--Include the jQuery and jQuery UI libraries so that Signatures work-->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
+  <link type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet"> 
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+  <script type="text/javascript" src="assets/js/jquery.signature.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="assets/css/jquery.signature.css"></link>
+
+  <!--Signature Styles-->
+  <style>
+    .kbw-signature { width: 400px; height: 200px; }
+    #sig canvas { width: 100% !important; height: auto; }
+  </style>
+
 </head>
 <body class="bg-gray-100">
   <div class="container mx-auto p-6">
@@ -83,6 +98,7 @@
         </div>
       </fieldset>
 
+      <!-- Signatures for Approvals -->
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Approvals</legend>
         <div class="mb-3">
@@ -90,6 +106,14 @@
           <input type="text" id="vice_president_remarks" name="vice_president_remarks" class="form-control" placeholder="Remarks">
           <label for="vice_president" class="form-label">Approved By:</label>
           <input type="text" id="vice_president_approved" name="vice_president_approved" class="form-control">
+          
+          <!-- Signature -->
+          <div class="mb-3">
+            <label for="signature1">Signature:</label>
+            <div id="sig1"></div>
+            <button id="clear1">Clear Signature</button>
+            <textarea id="signature64_1" name="signed_1" style="display:none"></textarea>
+          </div>
         </div>
         
         <div class="mb-3">
@@ -97,28 +121,21 @@
           <input type="text" id="vice_president_administration" name="vice_president_administration" class="form-control" placeholder="Remarks">
           <label for="vice_president_administration" class="form-label">Approved By:</label>
           <input type="text" id="vice_president_administration_approved" name="vice_president_administration_approved" class="form-control">
+          
+          <!-- Signature -->
+          <div class="mb-3">
+            <label for="signature2">Signature:</label>
+            <div id="sig2"></div>
+            <button id="clear2">Clear Signature</button>
+            <textarea id="signature64_2" name="signed_2" style="display:none"></textarea>
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="budget_controller" class="form-label">3-BUDGET CONTROLLER:</label>
-          <input type="text" id="budget_controller" name="budget_controller" class="form-control" placeholder="Remarks">
-          <label for="budget_controller" class="form-label">Approved By:</label>
-          <input type="text" id="budget_controller_approved" name="budget_controller_approved" class="form-control">
-        </div>
-        <div class="mb-3">
-          <label for="university_treasurer" class="form-label">4-UNIVERSITY TREASURER:</label>
-          <input type="text" id="university_treasurer" name="university_treasurer" class="form-control" placeholder="Remarks">
-          <label for="university_treasurer" class="form-label">Approved By:</label>
-          <input type="text" id="university_treasurer_approved" name="university_treasurer_approved" class="form-control">
-        </div>
-        <div class="mb-3">
-          <label for="office_of_president" class="form-label">OFFICE OF THE PRESIDENT (for budget re-alignment only):</label>
-          <input type="text" id="office_of_president" name="office_of_president" class="form-control" placeholder="Remarks">
-          <label for="office_of_president" class="form-label">Approved By:</label>
-          <input type="text" id="office_of_president_approved" name="office_of_president_approved" class="form-control">
-        </div>
+
+        <!-- Add more approval sections as needed -->
+        
       </fieldset>
 
-      <button type="submit" class="btn btn-primary">Submit Request</button>
+      <button type="submit" name="request_add_btn_front" class="btn btn-primary">Submit Request</button>
     </form>
   </div>
 
@@ -171,6 +188,24 @@
           event.target.closest('.item-row').remove();
         }
       });
+
+      // Signature Script
+      var sig1 = $('#sig1').signature({syncField: '#signature64_1', syncFormat:'PNG'});
+      $('#clear1').click(function(e){
+        e.preventDefault();
+        sig1.signature('clear');
+        $("#signature64_1").val('');
+      });
+
+      var sig2 = $('#sig2').signature({syncField: '#signature64_2', syncFormat:'PNG'});
+      $('#clear2').click(function(e){
+        e.preventDefault();
+        sig2.signature('clear');
+        $("#signature64_2").val('');
+      });
+
+      // Add more signature scripts as needed
+
     });
   </script>
 

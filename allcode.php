@@ -23,4 +23,9 @@ $_SESSION['message'] = "Logged Out Successfully";
   header('location: login.php');
   exit(0);
 }
+
+if(isset($_POST['request_add_btn_front'])){
+  header('location: login.php');
+  exit(0);
+}
 ?>
