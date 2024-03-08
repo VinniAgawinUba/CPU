@@ -101,6 +101,8 @@
       <!-- Signatures for Approvals -->
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Approvals</legend>
+
+        <!-- Vice President -->
         <div class="mb-3">
           <label for="vice_president" class="form-label">1-VICE PRESIDENT (CLUSTER):</label>
           <input type="text" id="vice_president_remarks" name="vice_president_remarks" class="form-control" placeholder="Remarks">
@@ -116,6 +118,7 @@
           </div>
         </div>
         
+        <!-- Vice President for Administration -->
         <div class="mb-3">
           <label for="vice_president_administration" class="form-label">2-VICE PRESIDENT FOR ADMINISTRATION:</label>
           <input type="text" id="vice_president_administration" name="vice_president_administration" class="form-control" placeholder="Remarks">
@@ -131,6 +134,20 @@
           </div>
         </div>
 
+        <!--Budget Controller-->
+        <div class="mb-3">
+          <label for="budget_controller" class="form-label">3-BUDGET CONTROLLER:</label>
+          <input type="text" id="budget_controller" name="budget_controller" class="form-control" placeholder="Remarks">
+          <label for="budget_controller" class="form-label">Approved By:</label>
+          <input type="text" id="budget_controller_approved" name="budget_controller_approved" class="form-control">
+          
+          <!-- Signature -->
+          <div class="mb-3">
+            <label for="signature3">Signature:</label>
+            <div id="sig3"></div>
+            <button id="clear3">Clear Signature</button>
+            <textarea id="signature64_3" name="signed_3" style="display:none"></textarea>
+          </div>
         <!-- Add more approval sections as needed -->
         
       </fieldset>
@@ -203,6 +220,13 @@
         sig2.signature('clear');
         $("#signature64_2").val('');
       });
+
+    var sig3 = $('#sig3').signature({syncField: '#signature64_3', syncFormat:'PNG'});
+    $('#clear3').click(function(e){
+        e.preventDefault();
+        sig3.signature('clear');
+        $("#signature64_3").val('');
+        });
 
       // Add more signature scripts as needed
 
