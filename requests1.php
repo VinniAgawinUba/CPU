@@ -213,16 +213,16 @@
         itemRow.classList.add('item-row', 'mb-2');
         itemRow.innerHTML = `
         <label class="form-label">Item:</label>
-        <div class="row">
-            <div class="col">
+        <div class="row bg-gray-100">
+            <div class="col-md-3">
                 <label for="item_qty">Qty/Unit:</label>
                 <input type="text" name="item_qty[]" id="item_qty" class="form-control" placeholder="Qty/Unit">
             </div>
-            <div class="col">
+            <div class="col-md-3">
                 <label for="item_type">Item:</label>
                 <textarea name="item_type[]" id="item_type" class="form-control" placeholder="ITEMS -Please include complete specifications/details -CPU will refuse to receive request without complete specifications or details"></textarea>
             </div>
-            <div class="col">
+            <div class="col-md-5">
                 <label for="item_type">Justification:</label>
                 <div class="form-check">
                     <input type="checkbox" id="additional" name="item_justification[]" value="additional" class="form-check-input">
@@ -240,6 +240,7 @@
                 <div>
                     <label for="item_reason">Reason for request:</label>
                     <input type="text" name="item_reason[]" id="item_reason" class="form-control mt-1" placeholder="Pls specify needs & reasons">
+                </div>
                 <div>
                     <label for="item_date_condition">Date Purchased & Condition (if replacement):</label>
                     <input type="text" name="item_date_condition[]" id="item_date_condition" class="form-control mt-1" placeholder="Indicate date purchased & condition if replacement">
