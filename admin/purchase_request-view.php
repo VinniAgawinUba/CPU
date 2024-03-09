@@ -166,7 +166,7 @@ elseif($_SESSION['auth_role']==3)
                                         
                                         
                                         <td>
-                                            <a href="request-edit.php?id=<?= $row['id']; ?>" class="btn btn-primary">Edit</a>
+                                            <a href="purchase_request-edit.php?id=<?= $row['id']; ?>" class="btn btn-primary">Edit</a>
                                         </td>
 
                                         <!-- If Super User, see Delete Button -->
