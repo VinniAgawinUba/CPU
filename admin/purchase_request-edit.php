@@ -152,37 +152,25 @@ if(mysqli_num_rows($request_query_run) > 0)
         </div>
         
         <!-- Signature Requestor-->
-<div class="mb-3">
-    <label for="signatureRequestor">Signature:</label>
-    <div id="sigRequestor" class="kbw-signature"></div>
-    <button id="clearRequestor" class="btn btn-primary">Clear Signature</button>
-    <textarea id="signature64_Requestor" name="signed_Requestor" style="display:none"></textarea>
-</div>
-
-<!-- Fetch and display signatures -->
-<?php
-// Fetch signatures associated with the purchase request
-$sql_signatures = "SELECT * FROM signatures WHERE request_id = $request_id";
-$result_signatures = $con->query($sql_signatures);
-
-// Check if there are any signatures
-if ($result_signatures->num_rows > 0) {
-    // Output data of each row
-    while($row_signature = $result_signatures->fetch_assoc()) {
-        // Display the signature image
-        $signature_filename = $row_signature['filename'];
-        ?>
-        <div class="mb-3">
-            <label for="signature<?= $signature_filename ?>">Signature:</label>
-            <img src="../uploads/signatures/<?= $signature_filename ?>" alt="Signature" id="signature<?= $signature_filename ?>">
-        </div>
         <?php
-    }
-} else {
-    // No signatures found message
-    echo "No signatures found.";
-}
-?>
+        //if the requestor has already signed, display the signature else display the signature pad
+        if($request_row['signed_Requestor'] != '')
+        {
+            echo '<div class="mb-3 kbw-signature">
+            <label for="signed_Requestor">Signature:</label>
+            <img src="../uploads/signatures/'.$request_row['signed_Requestor'].'" alt="signature" class="img-fluid">
+            </div>';
+        }
+        else
+        {
+            echo '<div class="mb-3">
+            <label for="signed_Requestor">Signature:</label>
+            <div id="sigRequestor" class="kbw-signature"></div>
+            <button id="clearRequestor" class="btn btn-primary">Clear Signature</button>
+            <textarea id="signature64_Requestor" name="signed_Requestor" style="display:none"></textarea>
+            </div>';
+        }
+        ?>
 
         <div class="mb-3">
           <label for="unit_dept_college" class="form-label">Unit/Dept/College:</label>
@@ -197,14 +185,14 @@ if ($result_signatures->num_rows > 0) {
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Remarks by College Dean/Principal</legend>
         <div class="mb-3">
-          <textarea id="remarks_dean" name="remarks_dean" class="form-control" rows="4"></textarea>
+          <textarea id="remarks_dean" name="remarks_dean" class="form-control" rows="4"><?=$request_row['remarks_dean']?></textarea>
         </div>
       </fieldset>
 
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Endorsed by: College Dean/Principal</legend>
         <div class="mb-3">
-          <input type="text" id="endorsed_by_dean" name="endorsed_by_dean" class="form-control">
+          <input type="text" id="endorsed_by_dean" name="endorsed_by_dean" class="form-control" value="<?=$request_row['endorsed_by_dean']?>">
         </div>
       </fieldset>
 
@@ -215,86 +203,149 @@ if ($result_signatures->num_rows > 0) {
         <!-- Vice President -->
         <div class="mb-3">
           <label for="vice_president" class="form-label">1-VICE PRESIDENT (CLUSTER):</label>
-          <input type="text" id="vice_president_remarks" name="vice_president_remarks" class="form-control" placeholder="Remarks">
+          <input type="text" id="vice_president_remarks" name="vice_president_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['vice_president_remarks']?>">
           <label for="vice_president" class="form-label">Approved By:</label>
-          <input type="text" id="vice_president_approved" name="vice_president_approved" class="form-control">
+          <input type="text" id="vice_president_approved" name="vice_president_approved" class="form-control" value="<?=$request_row['vice_president_approved']?>">
           
           <!-- Signature -->
-          <div class="mb-3">
-            <label for="signature1">Signature:</label>
-            <div id="sig1"></div>
-            <button id="clear1" class="btn btn-primary">Clear Signature</button>
-            <textarea id="signature64_1" name="signed_1" style="display:none"></textarea>
-          </div>
-        </div>
+          <?php
+          //if the vice president has already signed, display the signature else display the signature pad
+            if($request_row['signed_1'] != '')
+            {
+                echo '<div class="mb-3 kbw-signature">
+                <label for="signed_1">Signature:</label>
+                <img src="../uploads/signatures/'.$request_row['signed_1'].'" alt="signature" class="img-fluid">
+                </div>';
+            }
+            else
+            {
+                echo '<div class="mb-3">
+                <label for="signed_1">Signature:</label>
+                <div id="sig1" class="kbw-signature"></div>
+                <button id="clear1" class="btn btn-primary">Clear Signature</button>
+                <textarea id="signature64_1" name="signed_1" style="display:none"></textarea>
+                </div>';
+            }
+          ?>
         
         <!-- Vice President for Administration -->
         <div class="mb-3">
           <label for="vice_president_administration" class="form-label">2-VICE PRESIDENT FOR ADMINISTRATION:</label>
-          <input type="text" id="vice_president_administration" name="vice_president_administration" class="form-control" placeholder="Remarks">
+          <input type="text" id="vice_president_administration_remarks" name="vice_president_administration_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['vice_president_administration_remarks']?>">
           <label for="vice_president_administration" class="form-label">Approved By:</label>
-          <input type="text" id="vice_president_administration_approved" name="vice_president_administration_approved" class="form-control">
+          <input type="text" id="vice_president_administration_approved" name="vice_president_administration_approved" class="form-control" value="<?=$request_row['vice_president_administration_approved']?>">
           
           <!-- Signature -->
-          <div class="mb-3">
-            <label for="signature2">Signature:</label>
-            <div id="sig2"></div>
-            <button id="clear2" class="btn btn-primary">Clear Signature</button>
-            <textarea id="signature64_2" name="signed_2" style="display:none"></textarea>
-          </div>
-        </div>
+            <?php
+            //if the vice president for administration has already signed, display the signature else display the signature pad
+            if($request_row['signed_2'] != '')
+            {
+                echo '<div class="mb-3 kbw-signature">
+                <label for="signed_2">Signature:</label>
+                <img src="../uploads/signatures/'.$request_row['signed_2'].'" alt="signature" class="img-fluid">
+                </div>';
+            }
+            else
+            {
+                echo '<div class="mb-3">
+                <label for="signed_2">Signature:</label>
+                <div id="sig2" class="kbw-signature"></div>
+                <button id="clear2" class="btn btn-primary">Clear Signature</button>
+                <textarea id="signature64_2" name="signed_2" style="display:none"></textarea>
+                </div>';
+            }
+            ?>
 
         <!--Budget Controller-->
         <div class="mb-3">
           <label for="budget_controller" class="form-label">3-BUDGET CONTROLLER:</label>
-          <input type="text" id="budget_controller" name="budget_controller" class="form-control" placeholder="Remarks">
+          <input type="text" id="budget_controller_remarks" name="budget_controller_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['budget_controller_remarks']?>">
           <label for="budget_controller" class="form-label">Approved By:</label>
-          <input type="text" id="budget_controller_approved" name="budget_controller_approved" class="form-control">
+          <input type="text" id="budget_controller_approved" name="budget_controller_approved" class="form-control" value="<?=$request_row['budget_controller_approved']?>">
           <label for="budget_controller" class="form-label">Acct. Code:</label>
-          <input type="text" id="budget_controller_code" name="budget_controller_code" class="form-control" placeholder="Input Acct. Code">
+          <input type="text" id="budget_controller_code" name="budget_controller_code" class="form-control" placeholder="Input Acct. Code" value="<?=$request_row['budget_controller_code']?>">
           
           <!-- Signature -->
-          <div class="mb-3">
-            <label for="signature3">Signature:</label>
-            <div id="sig3"></div>
-            <button id="clear3" class="btn btn-primary">Clear Signature</button>
-            <textarea id="signature64_3" name="signed_3" style="display:none"></textarea>
-          </div>
+          <?php
+            //if the budget controller has already signed, display the signature else display the signature pad
+                if($request_row['signed_3'] != '')
+                {
+                    echo '<div class="mb-3 kbw-signature">
+                    <label for="signed_3">Signature:</label>
+                    <img src="../uploads/signatures/'.$request_row['signed_3'].'" alt="signature" class="img-fluid">
+                    </div>';
+                }
+                else
+                {
+                    echo '<div class="mb-3">
+                    <label for="signed_3">Signature:</label>
+                    <div id="sig3" class="kbw-signature"></div>
+                    <button id="clear3" class="btn btn-primary">Clear Signature</button>
+                    <textarea id="signature64_3" name="signed_3" style="display:none"></textarea>
+                    </div>';
+                }
+            ?>
 
         <!--University Treasurer-->
         <div class="mb-3">
             <label for="university_treasurer" class="form-label">4-UNIVERSITY TREASURER:</label>
-            <input type="text" id="university_treasurer" name="university_treasurer" class="form-control" placeholder="Remarks">
+            <input type="text" id="university_treasurer_remarks" name="university_treasurer_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['university_treasurer_remarks']?>">
             <label for="university_treasurer" class="form-label">Approved By:</label>
-            <input type="text" id="university_treasurer_approved" name="university_treasurer_approved" class="form-control">
+            <input type="text" id="university_treasurer_approved" name="university_treasurer_approved" class="form-control" value="<?=$request_row['university_treasurer_approved']?>">
             
             <!-- Signature -->
-            <div class="mb-3">
-            <label for="signature4">Signature:</label>
-            <div id="sig4"></div>
-            <button id="clear4" class="btn btn-primary">Clear Signature</button>
-            <textarea id="signature64_4" name="signed_4" style="display:none"></textarea>
-            </div>
+            <?php
+            //if the university treasurer has already signed, display the signature else display the signature pad
+                if($request_row['signed_4'] != '')
+                {
+                    echo '<div class="mb-3 kbw-signature">
+                    <label for="signed_4">Signature:</label>
+                    <img src="../uploads/signatures/'.$request_row['signed_4'].'" alt="signature" class="img-fluid">
+                    </div>';
+                }
+                else
+                {
+                    echo '<div class="mb-3">
+                    <label for="signed_4">Signature:</label>
+                    <div id="sig4" class="kbw-signature"></div>
+                    <button id="clear4" class="btn btn-primary">Clear Signature</button>
+                    <textarea id="signature64_4" name="signed_4" style="display:none"></textarea>
+                    </div>';
+                }
+            ?>
 
         <!--OFFICE OF THE PRESIDENT (for budget re-alignment only) :-->
         <div class="mb-3">
             <label for="office_of_the_president" class="form-label">5-OFFICE OF THE PRESIDENT (for budget re-alignment only) :</label>
-            <input type="text" id="office_of_the_president" name="office_of_the_president" class="form-control" placeholder="Remarks">
+            <input type="text" id="office_of_the_president_remarks" name="office_of_the_president_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['office_of_the_president_remarks']?>">
             <label for="office_of_the_president" class="form-label">Approved By:</label>
-            <input type="text" id="office_of_the_president_approved" name="office_of_the_president_approved" class="form-control">
+            <input type="text" id="office_of_the_president_approved" name="office_of_the_president_approved" class="form-control" value="<?=$request_row['office_of_the_president_approved']?>">
             
             <!-- Signature -->
-            <div class="mb-3">
-            <label for="signature5">Signature:</label>
-            <div id="sig5"></div>
-            <button id="clear5" class="btn btn-primary">Clear Signature</button>
-            <textarea id="signature64_5" name="signed_5" style="display:none"></textarea>
-            </div>
+            <?php
+            //if the office of the president has already signed, display the signature else display the signature pad
+                if($request_row['signed_5'] != '')
+                {
+                    echo '<div class="mb-3 kbw-signature">
+                    <label for="signed_5">Signature:</label>
+                    <img src="../uploads/signatures/'.$request_row['signed_5'].'" alt="signature" class="img-fluid">
+                    </div>';
+                }
+                else
+                {
+                    echo '<div class="mb-3">
+                    <label for="signed_5">Signature:</label>
+                    <div id="sig5" class="kbw-signature"></div>
+                    <button id="clear5" class="btn btn-primary">Clear Signature</button>
+                    <textarea id="signature64_5" name="signed_5" style="display:none"></textarea>
+                    </div>';
+                }
+            ?>
         <!-- Add more approval sections as needed -->
         
       </fieldset>
 
-      <button type="submit" name="request_add_btn_front" class="btn btn-primary">Submit Request</button>
+      <button type="submit" name="request_add_btn_front" class="btn btn-primary">Save Request</button>
     </form>
   </div>
 
@@ -407,29 +458,7 @@ if ($result_signatures->num_rows > 0) {
 
     });
   </script>
-  <script>
-    // Load existing signatures onto the drawing space from Signatures table in db
-    <?php
-    // Fetch signatures associated with the purchase request
-    $sql_signatures = "SELECT * FROM signatures WHERE request_id = $request_id";
-    $result_signatures = $con->query($sql_signatures);
-
-    // Check if there are any signatures
-    if ($result_signatures->num_rows > 0) {
-        // Output data of each row
-        while($row_signature = $result_signatures->fetch_assoc()) {
-            // Display the signature image
-            $signature_filename = $row_signature['filename'];
-            ?>
-            const sigRequestor = document.getElementById('sigRequestor');
-            const signatureImg = new Image();
-            signatureImg.src = "../uploads/signatures/<?= $signature_filename ?>";
-            sigRequestor.appendChild(signatureImg);
-            <?php
-        }
-    }
-    ?>
-  </script>
+  
 
 <?php
 include('includes/footer.php');

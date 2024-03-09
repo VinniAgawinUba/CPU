@@ -151,7 +151,7 @@ elseif($_SESSION['auth_role']==3)
         <!-- Vice President for Administration -->
         <div class="mb-3">
           <label for="vice_president_administration" class="form-label">2-VICE PRESIDENT FOR ADMINISTRATION:</label>
-          <input type="text" id="vice_president_administration" name="vice_president_administration" class="form-control" placeholder="Remarks">
+          <input type="text" id="vice_president_administration_remarks" name="vice_president_administration_remarks" class="form-control" placeholder="Remarks">
           <label for="vice_president_administration" class="form-label">Approved By:</label>
           <input type="text" id="vice_president_administration_approved" name="vice_president_administration_approved" class="form-control">
           
@@ -167,7 +167,7 @@ elseif($_SESSION['auth_role']==3)
         <!--Budget Controller-->
         <div class="mb-3">
           <label for="budget_controller" class="form-label">3-BUDGET CONTROLLER:</label>
-          <input type="text" id="budget_controller" name="budget_controller" class="form-control" placeholder="Remarks">
+          <input type="text" id="budget_controller_remarks" name="budget_controller_remarks" class="form-control" placeholder="Remarks">
           <label for="budget_controller" class="form-label">Approved By:</label>
           <input type="text" id="budget_controller_approved" name="budget_controller_approved" class="form-control">
           <label for="budget_controller" class="form-label">Acct. Code:</label>
@@ -184,7 +184,7 @@ elseif($_SESSION['auth_role']==3)
         <!--University Treasurer-->
         <div class="mb-3">
             <label for="university_treasurer" class="form-label">4-UNIVERSITY TREASURER:</label>
-            <input type="text" id="university_treasurer" name="university_treasurer" class="form-control" placeholder="Remarks">
+            <input type="text" id="university_treasurer_remarks" name="university_treasurer_remarks" class="form-control" placeholder="Remarks">
             <label for="university_treasurer" class="form-label">Approved By:</label>
             <input type="text" id="university_treasurer_approved" name="university_treasurer_approved" class="form-control">
             
@@ -199,7 +199,7 @@ elseif($_SESSION['auth_role']==3)
         <!--OFFICE OF THE PRESIDENT (for budget re-alignment only) :-->
         <div class="mb-3">
             <label for="office_of_the_president" class="form-label">5-OFFICE OF THE PRESIDENT (for budget re-alignment only) :</label>
-            <input type="text" id="office_of_the_president" name="office_of_the_president" class="form-control" placeholder="Remarks">
+            <input type="text" id="office_of_the_president_remarks" name="office_of_the_president_remarks" class="form-control" placeholder="Remarks">
             <label for="office_of_the_president" class="form-label">Approved By:</label>
             <input type="text" id="office_of_the_president_approved" name="office_of_the_president_approved" class="form-control">
             
@@ -256,7 +256,7 @@ elseif($_SESSION['auth_role']==3)
                 </div>
                 <div>
                     <label for="item_reason">Reason for request:</label>
-                    <input type="text" name="item_reason[]" id="item_reason" class="form-control mt-1" placeholder="Pls specify needs & reasons">
+                    <input type="text" name="item_reason[]" id="item_reason" class="form-control mt-1" placeholder="Pls specify needs & reasons" required>
                 </div>
                 <div>
                     <label for="item_date_condition">Date Purchased & Condition (if replacement):</label>

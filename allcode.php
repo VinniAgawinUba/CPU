@@ -71,20 +71,20 @@ if(isset($_POST['request_add_btn_front'])){
   $vice_president_approved = $_POST['vice_president_approved'];
   $vice_president_signature = $_POST['signed_1'];
 
-  $vice_president_administration_remarks = $_POST['vice_president_administration'];
+  $vice_president_administration_remarks = $_POST['vice_president_administration_remarks'];
   $vice_president_administration_approved = $_POST['vice_president_administration_approved'];
   $vice_president_administration_signature = $_POST['signed_2'];
 
-  $budget_controller_remarks = $_POST['budget_controller'];
+  $budget_controller_remarks = $_POST['budget_controller_remarks'];
   $budget_controller_approved = $_POST['budget_controller_approved'];
   $budget_controller_code = $_POST['budget_controller_code'];
   $budget_controller_signature = $_POST['signed_3'];
 
-  $university_treasurer_remarks = $_POST['university_treasurer'];
+  $university_treasurer_remarks = $_POST['university_treasurer_remarks'];
   $university_treasurer_approved = $_POST['university_treasurer_approved'];
   $university_treasurer_signature = $_POST['signed_4'];
 
-  $office_of_the_president_remarks = $_POST['office_of_the_president'];
+  $office_of_the_president_remarks = $_POST['office_of_the_president_remarks'];
   $office_of_the_president_approved = $_POST['office_of_the_president_approved'];
   $office_of_the_president_signature = $_POST['signed_5'];
 

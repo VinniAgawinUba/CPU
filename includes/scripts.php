@@ -6,21 +6,50 @@
 <script src="js/scripts.js"></script>
 <script src="js/datatables-simple-demo.js"></script>
 
-        <script>
+<script>
             $(document).ready( function () {
-            $('#myCategory').DataTable();
-            $('#myCollege').DataTable();
-            $('#myProject').DataTable();
-            $('#myDepartment').DataTable();
-            $('#myFaculty').DataTable();
-            $('#myPartner').DataTable();
-            $('#myPost').DataTable();
-            $('#myUsers').DataTable();
-            $('#myInventory').DataTable();
-            $('#myRequests').DataTable();
-            $('#myProject').DataTable();
-            $('#mySchoolyear').DataTable();
-            $('#myStudent').DataTable();
+            $('#myCategory').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myCollege').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myProject').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myDepartment').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myFaculty').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myPartner').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myPost').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myUsers').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myInventory').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myRequests').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myProject').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#mySchoolyear').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myStudent').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myPurchaseRequests').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
 
             } );
         </script>

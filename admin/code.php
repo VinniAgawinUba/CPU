@@ -1,9 +1,6 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-include ('authentication.php');
-include('includes/scripts.php');
-
+include('config/dbcon.php');
+session_start();
 //Initialize Variable
 $admin = null;
 $super_user = null;
@@ -49,7 +46,16 @@ if(isset($_POST['request_add_btn_front'])){
     $iptel_email = $_POST['iptel_email'];
     $requestor_signature = $_POST['signed_Requestor'];
   
-     
+     // Signatures
+     $signatures = array(
+      // Add more signature fields as needed, e.g.,signed_1, signed_2, etc.
+      "signed_Requestor", // Requestor's signature
+      "signed_1", // Vice President's signature
+      "signed_2", // Vice President for Administration's signature
+      "signed_3", // Budget Controller's signature
+      "signed_4", // University Treasurer's signature
+      "signed_5" // Office of the President's signature
+  );
   
    // Signature Settings
    $folderPath = "../uploads/signatures/";
@@ -77,33 +83,22 @@ if(isset($_POST['request_add_btn_front'])){
     $vice_president_approved = $_POST['vice_president_approved'];
     $vice_president_signature = $_POST['signed_1'];
   
-    $vice_president_administration_remarks = $_POST['vice_president_administration'];
+    $vice_president_administration_remarks = $_POST['vice_president_administration_remarks'];
     $vice_president_administration_approved = $_POST['vice_president_administration_approved'];
     $vice_president_administration_signature = $_POST['signed_2'];
   
-    $budget_controller_remarks = $_POST['budget_controller'];
+    $budget_controller_remarks = $_POST['budget_controller_remarks'];
     $budget_controller_approved = $_POST['budget_controller_approved'];
     $budget_controller_code = $_POST['budget_controller_code'];
     $budget_controller_signature = $_POST['signed_3'];
   
-    $university_treasurer_remarks = $_POST['university_treasurer'];
+    $university_treasurer_remarks = $_POST['university_treasurer_remarks'];
     $university_treasurer_approved = $_POST['university_treasurer_approved'];
     $university_treasurer_signature = $_POST['signed_4'];
   
-    $office_of_the_president_remarks = $_POST['office_of_the_president'];
+    $office_of_the_president_remarks = $_POST['office_of_the_president_remarks'];
     $office_of_the_president_approved = $_POST['office_of_the_president_approved'];
     $office_of_the_president_signature = $_POST['signed_5'];
-
-    // Signatures
-    $signatures = array(
-        // Add more signature fields as needed, e.g.,signed_1, signed_2, etc.
-        "signed_Requestor", // Requestor's signature
-        "signed_1", // Vice President's signature
-        "signed_2", // Vice President for Administration's signature
-        "signed_3", // Budget Controller's signature
-        "signed_4", // University Treasurer's signature
-        "signed_5" // Office of the President's signature
-    );
   
     // Insert Purchase Request into the database
     $sql_purchase_request = "INSERT INTO purchase_requests (purchase_request_number, printed_name, signed_Requestor, unit_dept_college, iptel_email, purchase_types, remarks_dean, endorsed_by_dean, vice_president_remarks, vice_president_approved, signed_1, vice_president_administration_remarks, vice_president_administration_approved, signed_2, budget_controller_remarks, budget_controller_approved, budget_controller_code, signed_3, university_treasurer_remarks, university_treasurer_approved, signed_4, office_of_the_president_remarks, office_of_the_president_approved, signed_5) 
@@ -128,32 +123,31 @@ if(isset($_POST['request_add_btn_front'])){
         // Save the signature to the server
         if (file_put_contents($file, $image_base64) !== false) {
             // Signature saved successfully
-
+           
+  
             // Insert filename and request ID into the signatures table
             $request_id = $purchase_request_id;
             $sql = "INSERT INTO signatures (request_id, filename) VALUES ('$request_id', '$filename')";
             if ($con->query($sql)) {
+                // Signature filename and request ID inserted into database
+
                 //Update the purchase request with the signature filename
                 $sql_update = "UPDATE purchase_requests SET $signature_field = '$filename' WHERE id = $purchase_request_id";
                 if ($con->query($sql_update)) {
-                    $_SESSION['message'] = "Successfully added a new request";
-                    header('location: purchase_request-view.php');
-                    exit(0);
+                    // Signature filename updated successfully
                 } else {
                     $_SESSION['message'] = "Error updating purchase request with signature filename: " . $con->error;
-                    header('location: purchase_request-view.php');
-                    exit(0);
+                    header('Location: purchase_request-view.php');
                 }
             } else {
-                $_SESSION['message'] = "Error inserting signature filename and request ID into database: " . $con->error;
-                header('location: purchase_request-view.php');
-                exit(0);
+               $_SESSION['message'] = "Error inserting signature filename and request ID into database: " . $con->error;
+                header('Location: purchase_request-view.php');
             }
         } else {
             // Error saving signature
-            $_SESSION['message'] = "Error saving signature: $file";
-            header('location: purchase_request-view.php');
-            exit(0);
+            $_SESSION['message'] = "Warning Some Signature fields are still empty";
+            header('Location: purchase_request-view.php');
+
         }
           
    }
@@ -166,9 +160,7 @@ if(isset($_POST['request_add_btn_front'])){
             
             // Execute Item query
             if ($con->query($sql_item) !== TRUE) {
-                $_SESSION['message'] = "Error inserting items into the database: " . $con->error;
-                header('location: purchase_request-view.php');
-                exit(0);
+                echo "Error: " . $sql_item . "<br>" . $con->error;
             }
         }
   
@@ -176,9 +168,8 @@ if(isset($_POST['request_add_btn_front'])){
         header('location: purchase_request-view.php');
         exit(0);
     } else {
-      $_SESSION['message'] = "Something went wrong";
-        header('location: purchase_request-view.php');
-        exit(0);
+      $_SESSION['message'] = "Error: " . $sql_purchase_request . "<br>" . $con->error;
+        echo "Error: " . $sql_purchase_request . "<br>" . $con->error;
     } 
   }
 
