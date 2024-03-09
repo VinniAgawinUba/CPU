@@ -319,6 +319,45 @@ foreach ($signatures as $signature_field) {
 
 
 
+// Select signature fields from the purchase_requests table (TO UPDATE sign_status)
+$sql_select_sigs = "SELECT * FROM purchase_requests WHERE id = $purchase_request_id";
+$result_select_sigs = $con->query($sql_select_sigs);
+
+if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
+    $row = $result_select_sigs->fetch_assoc();
+    
+    // Check if any of the signature fields are not '' and update sign_status accordingly
+    $sign_status = '0';
+    if ($row['signed_1'] && $row['signed_1'] != '') {
+        $sign_status = 'Signed by Vice President ';
+    }
+    if ($row['signed_2'] && $row['signed_2'] != '') {
+        $sign_status = 'Signed by Vice President Administration';
+    }
+    if ($row['signed_3'] && $row['signed_3'] != '') {
+        $sign_status = 'Signed by budget controller';
+    }
+    if ($row['signed_4'] && $row['signed_4'] != '') {
+        $sign_status = 'Signed by university treasurer';
+    }
+    if ($row['signed_5'] && $row['signed_5'] != '') {
+        $sign_status = 'Signed by president';
+    }
+
+    // Update the sign_status in the purchase_requests table
+    $sql_update_sign_status = "UPDATE purchase_requests SET sign_status = '$sign_status' WHERE id = $purchase_request_id";
+    if ($con->query($sql_update_sign_status)) {
+        // sign_status updated successfully
+    } else {
+        $_SESSION['message'] = "Error updating sign_status in purchase_requests: " . $con->error;
+        header('Location: purchase_request-view.php');
+        exit; // Terminate script execution
+    }
+} else {
+    $_SESSION['message'] = "Error selecting signature fields from purchase_requests: " . $con->error;
+    header('Location: purchase_request-view.php');
+    exit; // Terminate script execution
+}
 
 
 
@@ -357,6 +396,9 @@ foreach ($signatures as $signature_field) {
             }
         }
     }
+    //SQL query to Check if each signature field 1 to 5 is empty
+
+   
 
     $_SESSION['message'] = "Successfully Updated request";
     header('location: purchase_request-view.php');

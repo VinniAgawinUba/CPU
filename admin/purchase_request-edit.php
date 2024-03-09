@@ -61,7 +61,11 @@ if(mysqli_num_rows($request_query_run) > 0)
     <?php include('message.php'); ?>
     <h1 class="text-3xl font-bold mt-8 mb-4">XAVIER UNIVERSITY CENTRAL PURCHASING UNIT<a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a></h1>
     <form action="code.php" method="post">
+      <!-- Hidden input to store the request ID -->
         <input type="hidden" name="request_id" value="<?=$request_id?>">
+        <!-- Hidden input to store the user name -->
+        <input type="hidden" name="user_name" value="<?=$_SESSION['auth_user']['user_name']?>">
+        
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Purchase Request</legend>
         <div class="mb-3">
