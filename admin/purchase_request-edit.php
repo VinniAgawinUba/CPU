@@ -157,7 +157,8 @@ if(mysqli_num_rows($request_query_run) > 0)
         //if the requestor has already signed, display the signature else display the signature pad
         if($request_row['signed_Requestor'] != '')
         {
-
+          //hidden input to store the signature (DO NOT DELETE IF YOU DO, WHEN UPDATING FORMS, THE SIGNATURE WILL BE OVERWRITTEN TO BLANK)
+          echo '<input type="hidden" name="signed_Requestor" value="'.$request_row['signed_Requestor'].'">';
             echo '<div class="mb-3 kbw-signature">
             <label for="signed_Requestor">Signature:</label>
             <img src="../uploads/signatures/'.$request_row['signed_Requestor'].'" alt="signature" class="img-fluid">
@@ -214,6 +215,8 @@ if(mysqli_num_rows($request_query_run) > 0)
           //if the vice president has already signed, display the signature else display the signature pad
             if($request_row['signed_1'] != '')
             {
+               //hidden input to store the signature (DO NOT DELETE IF YOU DO, WHEN UPDATING FORMS, THE SIGNATURE WILL BE OVERWRITTEN TO BLANK)
+                echo '<input type="hidden" name="signed_1" value="'.$request_row['signed_1'].'">';
                 echo '<div class="mb-3 kbw-signature">
                 <label for="signed_1">Signature:</label>
                 <img src="../uploads/signatures/'.$request_row['signed_1'].'" alt="signature" class="img-fluid">
@@ -242,6 +245,8 @@ if(mysqli_num_rows($request_query_run) > 0)
             //if the vice president for administration has already signed, display the signature else display the signature pad
             if($request_row['signed_2'] != '')
             {
+               //hidden input to store the signature (DO NOT DELETE IF YOU DO, WHEN UPDATING FORMS, THE SIGNATURE WILL BE OVERWRITTEN TO BLANK)
+                echo '<input type="hidden" name="signed_2" value="'.$request_row['signed_2'].'">';
                 echo '<div class="mb-3 kbw-signature">
                 <label for="signed_2">Signature:</label>
                 <img src="../uploads/signatures/'.$request_row['signed_2'].'" alt="signature" class="img-fluid">
@@ -272,6 +277,8 @@ if(mysqli_num_rows($request_query_run) > 0)
             //if the budget controller has already signed, display the signature else display the signature pad
                 if($request_row['signed_3'] != '')
                 {
+                   //hidden input to store the signature (DO NOT DELETE IF YOU DO, WHEN UPDATING FORMS, THE SIGNATURE WILL BE OVERWRITTEN TO BLANK)
+                    echo '<input type="hidden" name="signed_3" value="'.$request_row['signed_3'].'">';
                     echo '<div class="mb-3 kbw-signature">
                     <label for="signed_3">Signature:</label>
                     <img src="../uploads/signatures/'.$request_row['signed_3'].'" alt="signature" class="img-fluid">
@@ -300,6 +307,8 @@ if(mysqli_num_rows($request_query_run) > 0)
             //if the university treasurer has already signed, display the signature else display the signature pad
                 if($request_row['signed_4'] != '')
                 {
+                   //hidden input to store the signature (DO NOT DELETE IF YOU DO, WHEN UPDATING FORMS, THE SIGNATURE WILL BE OVERWRITTEN TO BLANK)
+                    echo '<input type="hidden" name="signed_4" value="'.$request_row['signed_4'].'">';
                     echo '<div class="mb-3 kbw-signature">
                     <label for="signed_4">Signature:</label>
                     <img src="../uploads/signatures/'.$request_row['signed_4'].'" alt="signature" class="img-fluid">
@@ -328,6 +337,8 @@ if(mysqli_num_rows($request_query_run) > 0)
             //if the office of the president has already signed, display the signature else display the signature pad
                 if($request_row['signed_5'] != '')
                 {
+                   //hidden input to store the signature (DO NOT DELETE IF YOU DO, WHEN UPDATING FORMS, THE SIGNATURE WILL BE OVERWRITTEN TO BLANK)
+                    echo '<input type="hidden" name="signed_5" value="'.$request_row['signed_5'].'">';
                     echo '<div class="mb-3 kbw-signature">
                     <label for="signed_5">Signature:</label>
                     <img src="../uploads/signatures/'.$request_row['signed_5'].'" alt="signature" class="img-fluid">
