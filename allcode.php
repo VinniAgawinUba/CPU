@@ -25,7 +25,7 @@ $_SESSION['message'] = "Logged Out Successfully";
   exit(0);
 }
 
-//Add Request
+//Add Purchase Request
 if(isset($_POST['request_add_btn_front'])){
   // Purchase Request Information
   $purchase_request_number = $_POST['purchase_request_number'];

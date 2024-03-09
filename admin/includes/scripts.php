@@ -22,6 +22,7 @@
             $('#myProject').DataTable();
             $('#mySchoolyear').DataTable();
             $('#myStudent').DataTable();
+            $('#myPurchaseRequests').DataTable();
 
             } );
         </script>
@@ -74,7 +75,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const filterButtons = document.querySelectorAll('.filter-btn');
-        const tableRows = document.querySelectorAll('#myRequests tbody tr');
+        const tableRows = document.querySelectorAll('#myPurchaseRequests tbody tr');
 
         filterButtons.forEach(function (button) {
             button.addEventListener('click', function () {
@@ -82,7 +83,7 @@
 
                 tableRows.forEach(function (row) {
                     // If the status is 'all' or the row status matches the button status
-                    if (status === 'all' || row.cells[5].textContent.trim() === status || (status === 'not approved' && row.cells[5].textContent.trim() !== 'Approved') ){
+                    if (status === 'all' || row.cells[8].textContent.trim() === status  ){
                         row.style.display = '';
                     }
                     
@@ -94,8 +95,6 @@
         });
     });
 </script>
-
-
 
 
 </body>
