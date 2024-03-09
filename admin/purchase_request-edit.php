@@ -60,7 +60,8 @@ if(mysqli_num_rows($request_query_run) > 0)
 <div class="container mx-auto p-6 bg-yellow-100 shadow-black">
     <?php include('message.php'); ?>
     <h1 class="text-3xl font-bold mt-8 mb-4">XAVIER UNIVERSITY CENTRAL PURCHASING UNIT<a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a></h1>
-    <form action="../allcode.php" method="post">
+    <form action="code.php" method="post">
+        <input type="hidden" name="request_id" value="<?=$request_id?>">
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Purchase Request</legend>
         <div class="mb-3">
@@ -156,6 +157,7 @@ if(mysqli_num_rows($request_query_run) > 0)
         //if the requestor has already signed, display the signature else display the signature pad
         if($request_row['signed_Requestor'] != '')
         {
+
             echo '<div class="mb-3 kbw-signature">
             <label for="signed_Requestor">Signature:</label>
             <img src="../uploads/signatures/'.$request_row['signed_Requestor'].'" alt="signature" class="img-fluid">
@@ -345,7 +347,7 @@ if(mysqli_num_rows($request_query_run) > 0)
         
       </fieldset>
 
-      <button type="submit" name="request_add_btn_front" class="btn btn-primary">Save Request</button>
+      <button type="submit" name="request_update_btn_front" class="btn btn-primary">Save Request</button>
     </form>
   </div>
 
