@@ -92,6 +92,7 @@ if(mysqli_num_rows($request_query_run) > 0)
       </fieldset>
       
 
+        <!-- ITEMS -->
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
     <legend class="font-bold">Items</legend>
     <p class="mb-2">Please include complete specifications/details or attach additional information on items. Use the back of this sheet if needed.</p>
@@ -147,24 +148,49 @@ if(mysqli_num_rows($request_query_run) > 0)
         <p class="italic m-3">Requesting person will be contacted if more information is needed</p>
         <div class="mb-3">
           <label for="printed_name" class="form-label">Requested by:</label>
-          <input type="text" id="printed_name" name="printed_name" class="form-control" required placeholder="Printed Name">
+          <input type="text" id="printed_name" name="printed_name" class="form-control" required placeholder="Printed Name" value="<?=$request_row['printed_name']?>">
         </div>
         
         <!-- Signature Requestor-->
+<div class="mb-3">
+    <label for="signatureRequestor">Signature:</label>
+    <div id="sigRequestor" class="kbw-signature"></div>
+    <button id="clearRequestor" class="btn btn-primary">Clear Signature</button>
+    <textarea id="signature64_Requestor" name="signed_Requestor" style="display:none"></textarea>
+</div>
+
+<!-- Fetch and display signatures -->
+<?php
+// Fetch signatures associated with the purchase request
+$sql_signatures = "SELECT * FROM signatures WHERE request_id = $request_id";
+$result_signatures = $con->query($sql_signatures);
+
+// Check if there are any signatures
+if ($result_signatures->num_rows > 0) {
+    // Output data of each row
+    while($row_signature = $result_signatures->fetch_assoc()) {
+        // Display the signature image
+        $signature_filename = $row_signature['filename'];
+        ?>
         <div class="mb-3">
-          <label for="signatureRequestor">Signature:</label>
-          <div id="sigRequestor" class="kbw-signature"></div>
-          <button id="clearRequestor" class="btn btn-primary">Clear Signature</button>
-          <textarea id="signature64_Requestor" name="signed_Requestor" style="display:none"></textarea>
+            <label for="signature<?= $signature_filename ?>">Signature:</label>
+            <img src="../uploads/signatures/<?= $signature_filename ?>" alt="Signature" id="signature<?= $signature_filename ?>">
         </div>
+        <?php
+    }
+} else {
+    // No signatures found message
+    echo "No signatures found.";
+}
+?>
 
         <div class="mb-3">
           <label for="unit_dept_college" class="form-label">Unit/Dept/College:</label>
-          <input type="text" id="unit_dept_college" name="unit_dept_college" class="form-control">
+          <input type="text" id="unit_dept_college" name="unit_dept_college" class="form-control" value="<?=$request_row['unit_dept_college']?>">
         </div>
         <div class="mb-3">
           <label for="iptel_email" class="form-label">IPTel#/E-mail Address:</label>
-          <input type="text" id="iptel_email" name="iptel_email" class="form-control">
+          <input type="text" id="iptel_email" name="iptel_email" class="form-control" value="<?=$request_row['iptel_email']?>">
         </div>
       </fieldset>
 
@@ -376,7 +402,33 @@ if(mysqli_num_rows($request_query_run) > 0)
 
       // Add more signature scripts as needed
 
+
+      
+
     });
+  </script>
+  <script>
+    // Load existing signatures onto the drawing space from Signatures table in db
+    <?php
+    // Fetch signatures associated with the purchase request
+    $sql_signatures = "SELECT * FROM signatures WHERE request_id = $request_id";
+    $result_signatures = $con->query($sql_signatures);
+
+    // Check if there are any signatures
+    if ($result_signatures->num_rows > 0) {
+        // Output data of each row
+        while($row_signature = $result_signatures->fetch_assoc()) {
+            // Display the signature image
+            $signature_filename = $row_signature['filename'];
+            ?>
+            const sigRequestor = document.getElementById('sigRequestor');
+            const signatureImg = new Image();
+            signatureImg.src = "../uploads/signatures/<?= $signature_filename ?>";
+            sigRequestor.appendChild(signatureImg);
+            <?php
+        }
+    }
+    ?>
   </script>
 
 <?php

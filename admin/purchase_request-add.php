@@ -46,7 +46,7 @@ elseif($_SESSION['auth_role']==3)
 <div class="container mx-auto p-6 bg-yellow-100 shadow-black">
     <?php include('message.php'); ?>
     <h1 class="text-3xl font-bold mt-8 mb-4">XAVIER UNIVERSITY CENTRAL PURCHASING UNIT<a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a></h1>
-    <form action="../allcode.php" method="post">
+    <form action="code.php" method="post">
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Purchase Request</legend>
         <div class="mb-3">
