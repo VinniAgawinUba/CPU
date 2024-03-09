@@ -223,6 +223,8 @@ if(mysqli_num_rows($request_query_run) > 0)
                 <label for="signed_1">Signature:</label>
                 <img src="../uploads/signatures/'.$request_row['signed_1'].'" alt="signature" class="img-fluid">
                 </div>';
+                //DELETE BUTTON TO CLEAR SIGNATURE FROM DATABASE
+                echo '<button type="button" class="btn btn-danger delete-signature-btn" data-signature-field="signed_1">Delete Signature</button>';
             }
             else
             {
@@ -253,6 +255,8 @@ if(mysqli_num_rows($request_query_run) > 0)
                 <label for="signed_2">Signature:</label>
                 <img src="../uploads/signatures/'.$request_row['signed_2'].'" alt="signature" class="img-fluid">
                 </div>';
+                //DELETE BUTTON TO CLEAR SIGNATURE FROM DATABASE
+                echo '<button type="button" class="btn btn-danger delete-signature-btn" data-signature-field="signed_2">Delete Signature</button>';
             }
             else
             {
@@ -285,6 +289,8 @@ if(mysqli_num_rows($request_query_run) > 0)
                     <label for="signed_3">Signature:</label>
                     <img src="../uploads/signatures/'.$request_row['signed_3'].'" alt="signature" class="img-fluid">
                     </div>';
+                    //DELETE BUTTON TO CLEAR SIGNATURE FROM DATABASE
+                    echo '<button type="button" class="btn btn-danger delete-signature-btn" data-signature-field="signed_3">Delete Signature</button>';
                 }
                 else
                 {
@@ -315,6 +321,8 @@ if(mysqli_num_rows($request_query_run) > 0)
                     <label for="signed_4">Signature:</label>
                     <img src="../uploads/signatures/'.$request_row['signed_4'].'" alt="signature" class="img-fluid">
                     </div>';
+                    //DELETE BUTTON TO CLEAR SIGNATURE FROM DATABASE
+                    echo '<button type="button" class="btn btn-danger delete-signature-btn" data-signature-field="signed_4">Delete Signature</button>';
                 }
                 else
                 {
@@ -345,6 +353,8 @@ if(mysqli_num_rows($request_query_run) > 0)
                     <label for="signed_5">Signature:</label>
                     <img src="../uploads/signatures/'.$request_row['signed_5'].'" alt="signature" class="img-fluid">
                     </div>';
+                    //DELETE BUTTON TO CLEAR SIGNATURE FROM DATABASE
+                    echo '<button type="button" class="btn btn-danger delete-signature-btn" data-signature-field="signed_5">Delete Signature</button>';
                 }
                 else
                 {
@@ -475,38 +485,41 @@ if(mysqli_num_rows($request_query_run) > 0)
   </script>
   
   <!-- Delete Signature Script -->
-  <script>
+<script>
 $(document).ready(function(){
     $(".delete-signature-btn").click(function(){
         var signatureField = $(this).data("signature-field");
-        // AJAX call to delete the signature from the database
-        $.ajax({
-            url: "delete_signature.php",
-            type: "POST",
-            data: { signatureField: signatureField , request_id: <?=$request_id?>},
-            success: function(response) {
-    // Handle success
-    if (response === "success") {
-        // Remove signature from DOM
-        $("input[name='" + signatureField + "']").val("");
-        $("img[src='../uploads/signatures/" + signatureField + "']").remove();
-        $(".delete-signature-btn[data-signature-field='" + signatureField + "']").remove();
-        alert("Signature deleted successfully.");
-        // Reload the page
-        window.location.reload();
-    } else {
-        alert("Error deleting signature: " + response);
-    }
-},
-
-            error: function(xhr, status, error) {
-                // Handle error
-                console.error(xhr.responseText);
-            }
-        });
+        // Ask for confirmation before deleting
+        if (confirm("Are you sure you want to delete this signature?")) {
+            // AJAX call to delete the signature from the database
+            $.ajax({
+                url: "delete_signature.php",
+                type: "POST",
+                data: { signatureField: signatureField , request_id: <?=$request_id?>},
+                success: function(response) {
+                    // Handle success
+                    if (response === "success") {
+                        // Remove signature from DOM
+                        $("input[name='" + signatureField + "']").val("");
+                        $("img[src='../uploads/signatures/" + signatureField + "']").remove();
+                        $(".delete-signature-btn[data-signature-field='" + signatureField + "']").remove();
+                        alert("Signature deleted successfully.");
+                        // Reload the page
+                        window.location.reload();
+                    } else {
+                        alert("Error deleting signature: " + response);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    console.error(xhr.responseText);
+                }
+            });
+        }
     });
 });
 </script>
+
 
 <?php
 include('includes/footer.php');
