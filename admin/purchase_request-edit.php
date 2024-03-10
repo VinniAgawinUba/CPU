@@ -100,47 +100,66 @@ if(mysqli_num_rows($request_query_run) > 0)
         <!-- ITEMS -->
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
     <legend class="font-bold">Items</legend>
-    <p class="mb-2">Please include complete specifications/details or attach additional information on items. Use the back of this sheet if needed.</p>
-    <p class="mb-2">CPU will refuse to receive request without complete specifications or details.</p>
+    <p class="mb-2">Please include complete specifications/details or attach additional information on items.</p>
+    <p class="mb-2">CPU may refuse to receive request without complete specifications or details.</p>
     <div class="mb-3" id="itemRows">
-        <?php
-        // Retrieve items associated with the purchase request
-        $sql_items = "SELECT * FROM items WHERE purchase_request_id = $request_id";
-        $result_items = $con->query($sql_items);
+    <?php
+// Retrieve items associated with the purchase request
+$sql_items = "SELECT * FROM items WHERE purchase_request_id = $request_id";
+$result_items = $con->query($sql_items);
 
-        // Check if there are any items
-        if ($result_items->num_rows > 0) {
-            // Output data of each row
-            while($row_item = $result_items->fetch_assoc()) {
-                // Output HTML for each item
-                ?>
-                <div class="item-row mb-2">
-                    <label class="form-label">Item:</label>
-                    <div class="row bg-gray-100">
-                        <div class="col-md-3">
-                            <label for="item_qty">Qty/Unit:</label>
-                            <input type="text" name="item_qty[]" class="form-control" placeholder="Qty/Unit" value="<?= $row_item['item_qty'] ?>">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="item_type">Item:</label>
-                            <textarea name="item_type[]" class="form-control" placeholder="ITEMS -Please include complete specifications/details -CPU will refuse to receive request without complete specifications or details"><?= $row_item['item_type'] ?></textarea>
-                        </div>
-                        <div class="col-md-5">
-                            <label for="item_type">Justification:</label>
-                            <!-- Your checkbox and input fields for justification, reason, and date condition -->
-                        </div>
-                        <div class="col-auto">
-                            <button type="button" class="btn btn-danger btn-remove-item">Remove</button>
-                        </div>
+// Check if there are any items
+if ($result_items->num_rows > 0) {
+    // Output data of each row
+    while($row_item = $result_items->fetch_assoc()) {
+        // Output HTML for each item
+        ?>
+        <div class="item-row mb-2">
+            <label class="form-label">Item:</label>
+            <div class="row bg-gray-100">
+                <div class="col-md-3">
+                    <label for="item_qty">Qty/Unit:</label>
+                    <input type="text" name="item_qty[]" class="form-control" placeholder="Qty/Unit" value="<?= $row_item['item_qty'] ?>">
+                </div>
+                <div class="col-md-3">
+                    <label for="item_type">Item:</label>
+                    <textarea name="item_type[]" class="form-control" placeholder="ITEMS -Please include complete specifications/details -CPU will refuse to receive request without complete specifications or details"><?= $row_item['item_type'] ?></textarea>
+                </div>
+                <div class="col-md-5">
+                    <label for="item_type">Justification:</label>
+                    <?php 
+                    // Output checkboxes based on stored values
+                    $justifications = ['additional', 'replacement', 'new'];
+                    foreach($justifications as $justification) {
+                        $checked = (in_array($justification, explode(',', $row_item['item_justification']))) ? 'checked' : '';
+                        echo "<div class='form-check'>
+                                <input type='checkbox' id='$justification' name='item_justification[]' value='$justification' class='form-check-input' $checked>
+                                <label for='$justification' class='form-check-label'>$justification</label>
+                            </div>";
+                    }
+                    ?>
+                    <div>
+                        <label for="item_reason">Reason for request:</label>
+                        <input type="text" name="item_reason[]" class="form-control mt-1" placeholder="Pls specify needs & reasons" value="<?= $row_item['item_reason'] ?>" required>
+                    </div>
+                    <div>
+                        <label for="item_date_condition">Date Purchased & Condition (if replacement):</label>
+                        <input type="text" name="item_date_condition[]" class="form-control mt-1" placeholder="Indicate date purchased & condition if replacement" value="<?= $row_item['item_date_condition'] ?>">
                     </div>
                 </div>
-                <?php
-            }
-        } else {
-            // No items found message
-            echo "No items found.";
-        }
-        ?>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-danger btn-remove-item">Remove</button>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+} else {
+    // No items found message
+    echo "No items found.";
+}
+?>
+
     </div>
     <button type="button" class="btn btn-primary btn-add-item">Add Item</button>
 </fieldset>
