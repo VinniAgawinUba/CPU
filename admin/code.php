@@ -328,20 +328,28 @@ if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
     
     // Check if any of the signature fields are not '' and update sign_status accordingly
     $sign_status = '0';
+    //If signed 1 is not empty then it will be signed by the Vice President
     if ($row['signed_1'] && $row['signed_1'] != '') {
         $sign_status = 'Signed by Vice President ';
     }
-    if ($row['signed_2'] && $row['signed_2'] != '') {
+    //If signed 1 and signed 2 is not empty then it will be signed by the Vice President for Administration
+    elseif ($row['signed_1'] && $row['signed_1'] != '' && $row['signed_2'] && $row['signed_2'] != ''){
         $sign_status = 'Signed by Vice President Administration';
     }
-    if ($row['signed_3'] && $row['signed_3'] != '') {
+    //If signed 1, signed 2 and signed 3 is not empty then it will be signed by the Budget Controller
+    elseif ($row['signed_1'] && $row['signed_1'] != '' && $row['signed_2'] && $row['signed_2'] != '' && $row['signed_3'] && $row['signed_3'] != '') {
         $sign_status = 'Signed by budget controller';
     }
-    if ($row['signed_4'] && $row['signed_4'] != '') {
+    //If signed 1, signed 2, signed 3 and signed 4 is not empty then it will be signed by the University Treasurer
+   elseif ($row['signed_1'] && $row['signed_1'] != '' && $row['signed_2'] && $row['signed_2'] != '' && $row['signed_3'] && $row['signed_3'] != '' && $row['signed_4'] && $row['signed_4'] != '') {
         $sign_status = 'Signed by university treasurer';
     }
-    if ($row['signed_5'] && $row['signed_5'] != '') {
+    //If signed 1, signed 2, signed 3, signed 4 and signed 5 is not empty then it will be signed by the Office of the President
+    elseif ($row['signed_1'] && $row['signed_1'] != '' && $row['signed_2'] && $row['signed_2'] != '' && $row['signed_3'] && $row['signed_3'] != '' && $row['signed_4'] && $row['signed_4'] != '' && $row['signed_5'] && $row['signed_5'] != '') {
         $sign_status = 'Signed by president';
+    }
+    else {
+        $sign_status = 'WARNING: Sequence of signatures not followed!';
     }
 
     // Update the sign_status in the purchase_requests table
