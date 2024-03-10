@@ -83,6 +83,7 @@ elseif($_SESSION['auth_role']==3)
                                 <th>Endorsed by</th>
                                 <th>Requested Date</th>
                                 <th>Status</th>
+                                <th>History</th>
                                 <th>Edit</th>
                                 <?php if ($super_user) { ?><th>Delete</th><?php } ?>
                                 <?php if ($super_user) { ?><th>Assigned To</th><?php } ?>
@@ -129,7 +130,7 @@ elseif($_SESSION['auth_role']==3)
                                     ?>
                                     <tr class="<?= $row_class ?>">
                                         <td style="color:<?= $Changetext_color ?>">
-                                            <a href="purchase_request_history.php?request_id=<?= $row['id']; ?>">
+                                            <a href="purchase_request_details.php?request_id=<?= $row['id']; ?>">
                                                 <?= $row['id']; ?> 
                                             </a>
                                         
@@ -164,7 +165,10 @@ elseif($_SESSION['auth_role']==3)
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['requested_date']; ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['status']; ?></td>
                                         
-                                        
+                                        <td>
+                                            <a href="purchase_request_history.php?request_id=<?= $row['id']; ?>" class="btn btn-success">History</a>
+                                        </td>
+
                                         <td>
                                             <a href="purchase_request-edit.php?id=<?= $row['id']; ?>" class="btn btn-primary">Edit</a>
                                         </td>

@@ -314,7 +314,7 @@ foreach ($signatures as $signature_field) {
             }
         } else {
             // Error saving signature
-            $_SESSION['message'] = "Error saving signature.";
+            $_SESSION['message'] = "Error saving signature, Edit signatures from Edit Button, Not Request Details.";
             header('Location: purchase_request-view.php');
         }
     } else {
