@@ -6,6 +6,7 @@
     <title>Xavier University Central Procurement Unit</title>
 
     <link rel="stylesheet" href="assets/css/bootstrap5.min.css">
+    <link rel="stylesheet" href="tailwind.css">
     <link rel="stylesheet" href="assets/css/custom.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.1/viewer.min.css">
     

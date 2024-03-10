@@ -4,24 +4,54 @@
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script> <!-- Move this line up -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" /> <!-- Move this line up -->
 
+
 <script src="js/scripts.js"></script>
 <script src="js/datatables-simple-demo.js"></script>
 
         <script>
             $(document).ready( function () {
-            $('#myCategory').DataTable();
-            $('#myCollege').DataTable();
-            $('#myProject').DataTable();
-            $('#myDepartment').DataTable();
-            $('#myFaculty').DataTable();
-            $('#myPartner').DataTable();
-            $('#myPost').DataTable();
-            $('#myUsers').DataTable();
-            $('#myInventory').DataTable();
-            $('#myRequests').DataTable();
-            $('#myProject').DataTable();
-            $('#mySchoolyear').DataTable();
-            $('#myStudent').DataTable();
+            $('#myCategory').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myCollege').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myProject').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myDepartment').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myFaculty').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myPartner').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myPost').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myUsers').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myInventory').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myRequests').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myProject').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#mySchoolyear').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myStudent').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myPurchaseRequests').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
 
             } );
         </script>
@@ -52,7 +82,25 @@
     });
 </script>
 
-<!-- JavaScript for Delete Button Confirmation (Buttons Should have id of deleteButton) -->
+<!-- JavaScript for General Button Confirmation (Buttons Should have class of ConfirmButton) -->
+<script>
+    // Select all elements with the class 'ConfirmButton'
+    var ConfirmButton = document.querySelectorAll(".ConfirmButton");
+    
+    // Iterate over each delete button and attach event listener
+    ConfirmButton.forEach(function(button) {
+        button.addEventListener("click", function(event) {
+            if (confirm("Confirm to Continue")) {
+                // Find the closest form and submit it
+                this.closest(".deleteForm").submit();
+            } else {
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+
+<!-- JavaScript for Delete Button Confirmation (Buttons Should have class of deleteButton) -->
 <script>
     // Select all elements with the class 'deleteButton'
     var deleteButtons = document.querySelectorAll(".deleteButton");
@@ -74,7 +122,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const filterButtons = document.querySelectorAll('.filter-btn');
-        const tableRows = document.querySelectorAll('#myRequests tbody tr');
+        const tableRows = document.querySelectorAll('#myPurchaseRequests tbody tr');
 
         filterButtons.forEach(function (button) {
             button.addEventListener('click', function () {
@@ -82,7 +130,7 @@
 
                 tableRows.forEach(function (row) {
                     // If the status is 'all' or the row status matches the button status
-                    if (status === 'all' || row.cells[5].textContent.trim() === status || (status === 'not approved' && row.cells[5].textContent.trim() !== 'Approved') ){
+                    if (status === 'all' || row.cells[8].textContent.trim() === status  ){
                         row.style.display = '';
                     }
                     
@@ -94,8 +142,6 @@
         });
     });
 </script>
-
-
 
 
 </body>

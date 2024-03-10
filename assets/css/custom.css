@@ -59,6 +59,7 @@
     color:#3A53A5;
     border-color: aqua;
     font-weight: bold;
+    white-space: nowrap;
 }
 
 .customSidebar{

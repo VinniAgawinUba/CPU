@@ -60,6 +60,7 @@ elseif($_SESSION['auth_role']==3)
                     
                        <form action="code.php" method="POST" enctype="multipart/form-data">
                        <input type="hidden" name="request_id" value="<?= $request_row['id']?>">
+                       <input type="hidden" name="gcalendar_eventID" value="<?= $request_row['gcalendar_eventID']?>">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="">Name</label>

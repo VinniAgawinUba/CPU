@@ -1,7 +1,11 @@
 <?php
 session_start();
 include('admin/config/dbcon.php');
+include('admin/vendor/autoload.php');
 
+
+
+//Normal Login A.K.A non Google Login
 if(isset($_POST['login_btn']))
 {
     $email = mysqli_real_escape_string($con, $_POST['email']);
@@ -50,9 +54,10 @@ if(isset($_POST['login_btn']))
         exit(0);
     }
 }
+
 else
 {
-    $_SESSION['message'] = "You are not allwed to access this file";
+    $_SESSION['message'] = "You are not allowed to access this file";
     header('Location: login.php');
     exit(0);
 }

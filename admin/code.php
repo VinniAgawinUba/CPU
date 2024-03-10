@@ -1,14 +1,511 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include ('authentication.php');
-include('includes/scripts.php');
+include('authentication.php');
+
+//Initialize Variable
+$admin = null;
+$super_user = null;
+$department_editor = null;
+//Check level
+if($_SESSION['auth_role']==1)
+{
+    $admin = true;
+    $super_user = false;
+    $department_editor = false;
+}
+elseif($_SESSION['auth_role']==2)
+{
+    $admin = false;
+    $super_user = true;
+    $department_editor = false;
+}
+elseif($_SESSION['auth_role']==3)
+{
+    $admin = false;
+    $super_user = false;
+    $department_editor = true;
+}
 
 //PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require_once __DIR__ . '/vendor/autoload.php';
 
+//Google Calendar API
+use Google\Client;
+use Google\Service\Calendar as Google_Service_Calendar;
+use Google\Service\Calendar\Event as Google_Service_Calendar_Event;
+$credentials = __DIR__ . '/vendor/credentials.json';
+require_once __DIR__ . '/vendor/autoload.php';
+
+//Add Purchase Request
+if(isset($_POST['request_add_btn_front'])){
+    // Purchase Request Information
+    $purchase_request_number = $_POST['purchase_request_number'];
+    $printed_name = $_POST['printed_name'];
+    $unit_dept_college = $_POST['unit_dept_college'];
+    $iptel_email = $_POST['iptel_email'];
+    $requestor_signature = $_POST['signed_Requestor'];
+
+    //Requestor User Information
+    $requestor_user_id = $_SESSION['auth_user']['user_id'];
+    $requestor_user_email = $_SESSION['auth_user']['user_email'];
+    $requestor_user_name = $_SESSION['auth_user']['user_name'];
+  
+     // Signatures
+     $signatures = array(
+      // Add more signature fields as needed, e.g.,signed_1, signed_2, etc.
+      "signed_Requestor", // Requestor's signature
+      "signed_1", // Vice President's signature
+      "signed_2", // Vice President for Administration's signature
+      "signed_3", // Budget Controller's signature
+      "signed_4", // University Treasurer's signature
+      "signed_5" // Office of the President's signature
+  );
+  
+   // Signature Settings
+   $folderPath = "../uploads/signatures/";
+  
+   
+  
+    // Purchase Types
+    $purchase_types = isset($_POST['purchase_type']) ? implode(',', $_POST['purchase_type']) : '';
+  
+    // Items Information
+    $item_qty = $_POST['item_qty'];
+    $item_types = $_POST['item_type'];
+    $item_justifications = $_POST['item_justification'];
+    $item_reasons = $_POST['item_reason'];
+    $item_date_conditions = $_POST['item_date_condition'];
+  
+    // Remarks by College Dean/Principal
+    $remarks_dean = $_POST['remarks_dean'];
+  
+    // Endorsed by College Dean/Principal
+    $endorsed_by_dean = $_POST['endorsed_by_dean'];
+  
+    // Signatures for Approvals
+    $vice_president_remarks = $_POST['vice_president_remarks'];
+    $vice_president_approved = $_POST['vice_president_approved'];
+    $vice_president_signature = $_POST['signed_1'];
+  
+    $vice_president_administration_remarks = $_POST['vice_president_administration_remarks'];
+    $vice_president_administration_approved = $_POST['vice_president_administration_approved'];
+    $vice_president_administration_signature = $_POST['signed_2'];
+  
+    $budget_controller_remarks = $_POST['budget_controller_remarks'];
+    $budget_controller_approved = $_POST['budget_controller_approved'];
+    $budget_controller_code = $_POST['budget_controller_code'];
+    $budget_controller_signature = $_POST['signed_3'];
+  
+    $university_treasurer_remarks = $_POST['university_treasurer_remarks'];
+    $university_treasurer_approved = $_POST['university_treasurer_approved'];
+    $university_treasurer_signature = $_POST['signed_4'];
+  
+    $office_of_the_president_remarks = $_POST['office_of_the_president_remarks'];
+    $office_of_the_president_approved = $_POST['office_of_the_president_approved'];
+    $office_of_the_president_signature = $_POST['signed_5'];
+  
+    // Insert Purchase Request into the database
+    $sql_purchase_request = "INSERT INTO purchase_requests (requestor_user_id, requestor_user_name, requestor_user_email, purchase_request_number, printed_name, signed_Requestor, unit_dept_college, iptel_email, purchase_types, remarks_dean, endorsed_by_dean, vice_president_remarks, vice_president_approved, signed_1, vice_president_administration_remarks, vice_president_administration_approved, signed_2, budget_controller_remarks, budget_controller_approved, budget_controller_code, signed_3, university_treasurer_remarks, university_treasurer_approved, signed_4, office_of_the_president_remarks, office_of_the_president_approved, signed_5) 
+            VALUES ('$requestor_user_id', '$requestor_user_name', '$requestor_user_email', '$purchase_request_number', '$printed_name', '$requestor_signature, ','$unit_dept_college', '$iptel_email', '$purchase_types', '$remarks_dean', '$endorsed_by_dean', '$vice_president_remarks', '$vice_president_approved', '$vice_president_signature', '$vice_president_administration_remarks', '$vice_president_administration_approved', '$vice_president_administration_signature', '$budget_controller_remarks', '$budget_controller_approved', '$budget_controller_code', '$budget_controller_signature', '$university_treasurer_remarks', '$university_treasurer_approved', '$university_treasurer_signature', '$office_of_the_president_remarks', '$office_of_the_president_approved', '$office_of_the_president_signature')";
+  
+    // Execute Purchase Request query
+    if ($con->query($sql_purchase_request) === TRUE) {
+        // Get the ID of the last inserted purchase request
+        $purchase_request_id = $con->insert_id;
+        
+  // Save each signature to the server and database
+  foreach ($signatures as $signature_field) {
+    // Check if the signature field is set, Also Query IF it already exists then it will be updated
+    if (isset($_POST[$signature_field])) {
+        // Process each signature
+        $image_parts = explode(";base64,", $_POST[$signature_field]);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type = $image_type_aux[1];
+        $image_base64 = base64_decode($image_parts[1]);
+        $filename = uniqid() . ".$image_type";
+        $file = $folderPath . $filename;
+  
+        // Save the signature to the server
+        if (file_put_contents($file, $image_base64) !== false) {
+            // Signature saved successfully
+           
+  
+            // Update filename and request ID into the signatures table
+            $request_id = $purchase_request_id;
+            $sql = "INSERT INTO signatures (request_id, filename) VALUES ('$request_id', '$filename')";
+            if ($con->query($sql)) {
+                // Signature filename and request ID inserted into database
+  
+                //Update the purchase request with the signature filename
+                $sql_update = "UPDATE purchase_requests SET $signature_field = '$filename' WHERE id = $purchase_request_id";
+                if ($con->query($sql_update)) {
+                    // Signature filename updated successfully
+                } else {
+                    $_SESSION['message'] = "Error updating purchase request with signature filename: " . $con->error;
+                    header('Location: purchase_request-view.php');
+                }
+            } else {
+               $_SESSION['message'] = "Error inserting signature filename and request ID into database: " . $con->error;
+                header('Location: purchase_request-view.php');
+            }
+        } else {
+            // Error saving signature
+            $_SESSION['message'] = "Warning Some Signature fields are still empty";
+            header('Location: purchase_request-view.php');
+  
+        }
+          
+    }
+  }
+  
+        // Insert Items into the database
+        for ($i = 0; $i < count($item_qty); $i++) {
+            $sql_item = "INSERT INTO items (purchase_request_id, item_qty, item_type, item_justification, item_reason, item_date_condition) 
+                         VALUES ('$purchase_request_id', '{$item_qty[$i]}', '{$item_types[$i]}', '{$item_justifications[$i]}', '{$item_reasons[$i]}', '{$item_date_conditions[$i]}')";
+            
+            // Execute Item query
+            if ($con->query($sql_item) !== TRUE) {
+                echo "Error: " . $sql_item . "<br>" . $con->error;
+            }
+        }
+  
+        $_SESSION['message'] = "Successfully added a new request";
+        header('location: purchase_request-view.php');
+        exit(0);
+    } else {
+      $_SESSION['message'] = "Error: " . $sql_purchase_request . "<br>" . $con->error;
+        echo "Error: " . $sql_purchase_request . "<br>" . $con->error;
+    } 
+  }
+
+  //Update Purchase Request
+if(isset($_POST['request_update_btn_front'])){
+// Purchase Request Information
+$id = $_POST['request_id'];
+$purchase_request_number = $_POST['purchase_request_number'];
+$printed_name = $_POST['printed_name'];
+$unit_dept_college = $_POST['unit_dept_college'];
+$iptel_email = $_POST['iptel_email'];
+$requestor_signature = $_POST['signed_Requestor'];
+
+ // Signatures
+ $signatures = array(
+  // Add more signature fields as needed, e.g.,signed_1, signed_2, etc.
+  "signed_Requestor", // Requestor's signature
+  "signed_1", // Vice President's signature
+  "signed_2", // Vice President for Administration's signature
+  "signed_3", // Budget Controller's signature
+  "signed_4", // University Treasurer's signature
+  "signed_5" // Office of the President's signature
+);
+
+// Signature Settings
+$folderPath = "../uploads/signatures/";
+
+
+
+// Purchase Types
+$purchase_types = isset($_POST['purchase_type']) ? implode(',', $_POST['purchase_type']) : '';
+
+// Items Information
+$item_qty = $_POST['item_qty'];
+$item_types = $_POST['item_type'];
+$item_justifications = $_POST['item_justification'];
+$item_reasons = $_POST['item_reason'];
+$item_date_conditions = $_POST['item_date_condition'];
+
+// Remarks by College Dean/Principal
+$remarks_dean = $_POST['remarks_dean'];
+
+// Endorsed by College Dean/Principal
+$endorsed_by_dean = $_POST['endorsed_by_dean'];
+
+// Signatures for Approvals
+$vice_president_remarks = $_POST['vice_president_remarks'];
+$vice_president_approved = $_POST['vice_president_approved'];
+$vice_president_signature = $_POST['signed_1'];
+
+$vice_president_administration_remarks = $_POST['vice_president_administration_remarks'];
+$vice_president_administration_approved = $_POST['vice_president_administration_approved'];
+$vice_president_administration_signature = $_POST['signed_2'];
+
+$budget_controller_remarks = $_POST['budget_controller_remarks'];
+$budget_controller_approved = $_POST['budget_controller_approved'];
+$budget_controller_code = $_POST['budget_controller_code'];
+$budget_controller_signature = $_POST['signed_3'];
+
+$university_treasurer_remarks = $_POST['university_treasurer_remarks'];
+$university_treasurer_approved = $_POST['university_treasurer_approved'];
+$university_treasurer_signature = $_POST['signed_4'];
+
+$office_of_the_president_remarks = $_POST['office_of_the_president_remarks'];
+$office_of_the_president_approved = $_POST['office_of_the_president_approved'];
+$office_of_the_president_signature = $_POST['signed_5'];
+
+// Update Purchase Request into the database
+$sql_purchase_request = "UPDATE purchase_requests SET purchase_request_number = '$purchase_request_number', printed_name = '$printed_name', 
+signed_Requestor = '$requestor_signature', unit_dept_college = '$unit_dept_college', 
+iptel_email = '$iptel_email', purchase_types = '$purchase_types', remarks_dean = '$remarks_dean', 
+endorsed_by_dean = '$endorsed_by_dean', vice_president_remarks = '$vice_president_remarks', 
+vice_president_approved = '$vice_president_approved', signed_1 = '$vice_president_signature', 
+vice_president_administration_remarks = '$vice_president_administration_remarks', 
+vice_president_administration_approved = '$vice_president_administration_approved', 
+signed_2 = '$vice_president_administration_signature', budget_controller_remarks = '$budget_controller_remarks', 
+budget_controller_approved = '$budget_controller_approved', budget_controller_code = '$budget_controller_code', 
+signed_3 = '$budget_controller_signature', university_treasurer_remarks = '$university_treasurer_remarks', 
+university_treasurer_approved = '$university_treasurer_approved', signed_4 = '$university_treasurer_signature', 
+office_of_the_president_remarks = '$office_of_the_president_remarks', office_of_the_president_approved = '$office_of_the_president_approved', 
+signed_5 = '$office_of_the_president_signature' WHERE id = '$id'";
+// Execute Purchase Request query
+if ($con->query($sql_purchase_request) === TRUE) {
+
+  // Get the Request ID
+$purchase_request_id = $id;
+
+// Save each signature to the server and database
+foreach ($signatures as $signature_field) {
+    if (isset($_POST[$signature_field]) && !empty($_POST[$signature_field])) {
+        // Process each signature
+        $image_parts = explode(";base64,", $_POST[$signature_field]);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type = $image_type_aux[1];
+        $image_base64 = base64_decode($image_parts[1]);
+        $filename = uniqid() . ".$image_type";
+        $file = $folderPath . $filename;
+
+        // Save the signature to the server
+        if (file_put_contents($file, $image_base64) !== false) {
+            // Signature saved successfully
+
+            // Update filename and request ID into the signatures table
+            $request_id = $purchase_request_id;
+            $sql_insert_signature = "INSERT INTO signatures (request_id, filename) VALUES ('$request_id', '$filename')";
+            if ($con->query($sql_insert_signature)) {
+                // Signature filename and request ID inserted into database
+
+                // Check if the signature field in purchase_requests table is empty
+                $sql_check_empty = "SELECT $signature_field FROM purchase_requests WHERE id = $purchase_request_id";
+                $result_check_empty = $con->query($sql_check_empty);
+                if ($result_check_empty && $result_check_empty->num_rows > 0) {
+                    $row = $result_check_empty->fetch_assoc();
+                    if ($row[$signature_field] && $row[$signature_field] != '') {
+                        // Update the purchase request with the signature filename
+                        $sql_update_purchase_request = "UPDATE purchase_requests SET $signature_field = '$filename' WHERE id = $purchase_request_id";
+                        if ($con->query($sql_update_purchase_request)) {
+                            // Signature filename updated successfully
+                        } else {
+                            $_SESSION['message'] = "Error updating purchase request with signature filename: " . $con->error;
+                            header('Location: purchase_request-view.php');
+                        }
+                    } else {
+                        // Signature field is not empty, do nothing
+                    }
+                } else {
+                    $_SESSION['message'] = "Error checking if signature field is empty: " . $con->error;
+                    header('Location: purchase_request-view.php');
+                }
+            } else {
+                $_SESSION['message'] = "Error inserting signature filename and request ID into database: " . $con->error;
+                header('Location: purchase_request-view.php');
+            }
+        } else {
+            // Error saving signature
+            $_SESSION['message'] = "Error saving signature, Edit signatures from Edit Button, Not Request Details.";
+            header('Location: purchase_request-view.php');
+        }
+    } else {
+        // Signature field is empty
+    }
+}
+
+
+
+// Select signature fields from the purchase_requests table (TO UPDATE sign_status)
+$sql_select_sigs = "SELECT * FROM purchase_requests WHERE id = $purchase_request_id";
+$result_select_sigs = $con->query($sql_select_sigs);
+
+if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
+    $row = $result_select_sigs->fetch_assoc();
+    
+    // Check if any of the signature fields are not '' and update sign_status accordingly
+    $sign_status = '0';
+    //If signed 1 is not empty then it will be signed by the Vice President
+    if ($row['signed_1'] && $row['signed_1'] != '') {
+        $sign_status = 'Signed by Vice President ';
+    }
+    //If signed 1 and signed 2 is not empty then it will be signed by the Vice President for Administration
+    elseif ($row['signed_1'] && $row['signed_1'] != '' && $row['signed_2'] && $row['signed_2'] != ''){
+        $sign_status = 'Signed by Vice President Administration';
+    }
+    //If signed 1, signed 2 and signed 3 is not empty then it will be signed by the Budget Controller
+    elseif ($row['signed_1'] && $row['signed_1'] != '' && $row['signed_2'] && $row['signed_2'] != '' && $row['signed_3'] && $row['signed_3'] != '') {
+        $sign_status = 'Signed by budget controller';
+    }
+    //If signed 1, signed 2, signed 3 and signed 4 is not empty then it will be signed by the University Treasurer
+   elseif ($row['signed_1'] && $row['signed_1'] != '' && $row['signed_2'] && $row['signed_2'] != '' && $row['signed_3'] && $row['signed_3'] != '' && $row['signed_4'] && $row['signed_4'] != '') {
+        $sign_status = 'Signed by university treasurer';
+    }
+    //If signed 1, signed 2, signed 3, signed 4 and signed 5 is not empty then it will be signed by the Office of the President
+    elseif ($row['signed_1'] && $row['signed_1'] != '' && $row['signed_2'] && $row['signed_2'] != '' && $row['signed_3'] && $row['signed_3'] != '' && $row['signed_4'] && $row['signed_4'] != '' && $row['signed_5'] && $row['signed_5'] != '') {
+        $sign_status = 'Signed by president';
+    }
+    else {
+        $sign_status = 'WARNING: Sequence of signatures not followed!';
+    }
+
+    // Update the sign_status in the purchase_requests table
+    $sql_update_sign_status = "UPDATE purchase_requests SET sign_status = '$sign_status' WHERE id = $purchase_request_id";
+    if ($con->query($sql_update_sign_status)) {
+        // sign_status updated successfully
+    } else {
+        $_SESSION['message'] = "Error updating sign_status in purchase_requests: " . $con->error;
+        header('Location: purchase_request-view.php');
+        exit; // Terminate script execution
+    }
+} else {
+    $_SESSION['message'] = "Error selecting signature fields from purchase_requests: " . $con->error;
+    header('Location: purchase_request-view.php');
+    exit; // Terminate script execution
+}
+
+
+
+
+
+
+    //Query current Items and check if there are any new items
+    $sql_current_items = "SELECT * FROM items WHERE purchase_request_id = '$purchase_request_id'";
+    $result = $con->query($sql_current_items);
+    $current_items = array();
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $current_items[] = $row;
+        }
+    }
+    //Check if there are any new items
+    if (count($current_items) < count($item_qty)) {
+        // Insert Items into the database
+        for ($i = count($current_items); $i < count($item_qty); $i++) {
+            $sql_item = "INSERT INTO items (purchase_request_id, item_qty, item_type, item_justification, item_reason, item_date_condition) 
+                         VALUES ('$purchase_request_id', '{$item_qty[$i]}', '{$item_types[$i]}', '{$item_justifications[$i]}', '{$item_reasons[$i]}', '{$item_date_conditions[$i]}')";
+            
+            // Execute Item query
+            if ($con->query($sql_item) !== TRUE) {
+                echo "Error: " . $sql_item . "<br>" . $con->error;
+            }
+        }
+    } else {
+        // Update Items in the database
+        for ($i = 0; $i < count($item_qty); $i++) {
+            $sql_item = "UPDATE items SET item_qty = '{$item_qty[$i]}', item_type = '{$item_types[$i]}', item_justification = '{$item_justifications[$i]}', item_reason = '{$item_reasons[$i]}', item_date_condition = '{$item_date_conditions[$i]}' WHERE id = '{$current_items[$i]['id']}'";
+            
+            // Execute Item query
+            if ($con->query($sql_item) !== TRUE) {
+                echo "Error: " . $sql_item . "<br>" . $con->error;
+            }
+        }
+    }
+
+   
+
+    $_SESSION['message'] = "Successfully Updated request";
+    //Insert into purchase_requests_history
+    $change_made = "Request Details Updated";
+    $last_modified_by = $_POST['user_name'];
+    $insert_query = "INSERT INTO purchase_requests_history (purchase_request_id, change_made, last_modified_by, datetime_occured) VALUES ('$purchase_request_id','$change_made', '$last_modified_by', NOW())";
+    $insert_query_run = mysqli_query($con, $insert_query);
+    header('location: purchase_request-view.php');
+    exit(0);
+} else {
+  $_SESSION['message'] = "Error: " . $sql_purchase_request . "<br>" . $con->error;
+    echo "Error: " . $sql_purchase_request . "<br>" . $con->error;
+}     
+}
+
+//Approve Purchase Request
+if(isset($_POST['request_approve_btn'])) {
+    $request_id = $_POST['request_id'];
+    $approval_remarks = $_POST['approval_remarks'];
+    //Hidden User name
+    $last_modified_by = $_POST['user_name'];
+    //Specify change made Unique to each action
+    $change_made = "Request Approved";
+
+    // Your SQL query to update data in the database
+    $update_query = "UPDATE purchase_requests SET status = 'approved', approval_remarks = '$approval_remarks' WHERE id = '$request_id'";
+    // Executing the query
+    $query_run = mysqli_query($con, $update_query);
+
+    if($query_run) {
+        // If query executed successfully, Insert into purchase_requests_history
+        $insert_query = "INSERT INTO purchase_requests_history (purchase_request_id, change_made, last_modified_by, datetime_occured) VALUES ('$request_id','$change_made', '$last_modified_by', NOW())";
+        $insert_query_run = mysqli_query($con, $insert_query);
+        $_SESSION['message'] = "Request was approved!";
+        header('Location: purchase_request-view.php');
+    } else {
+        // If there was an error in executing the query
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: purchase_request-view.php');
+    }
+}
+
+//Complete Purchase Request
+if(isset($_POST['request_complete_btn'])) {
+    $request_id = $_POST['request_id'];
+    $completion_remarks = $_POST['completion_remarks'];
+    //Hidden User name
+    $last_modified_by = $_POST['user_name'];
+    //Specify change made Unique to each action
+    $change_made = "Request Completed";
+
+
+    // Your SQL query to update data in the database
+    $update_query = "UPDATE purchase_requests SET status = 'completed', completed_remarks = '$completion_remarks' WHERE id = '$request_id'";
+    // Executing the query
+    $query_run = mysqli_query($con, $update_query);
+
+    if($query_run) {
+        // If query executed successfully, Insert into purchase_requests_history
+        $insert_query = "INSERT INTO purchase_requests_history (purchase_request_id, change_made, last_modified_by, datetime_occured) VALUES ('$request_id','$change_made', '$last_modified_by', NOW())";
+        $insert_query_run = mysqli_query($con, $insert_query);
+        $_SESSION['message'] = "Request was completed!";
+        header('Location: purchase_request-view.php');
+    } else {
+        // If there was an error in executing the query
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: purchase_request-view.php');
+    }
+}
+
+//Reject Purchase Request
+if(isset($_POST['request_reject_btn'])) {
+    $request_id = $_POST['request_id'];
+    $rejection_reason = $_POST['rejection_reason'];
+    //Hidden User name
+    $last_modified_by = $_POST['user_name'];
+    //Specify change made Unique to each action
+    $change_made = "Request Rejected";
+
+    // Your SQL query to update data in the database
+    $update_query = "UPDATE purchase_requests SET status = 'rejected', rejection_reason = '$rejection_reason' WHERE id = '$request_id'";
+    // Executing the query
+    $query_run = mysqli_query($con, $update_query);
+
+    if($query_run) {
+        // If query executed successfully, Insert into purchase_requests_history
+        $insert_query = "INSERT INTO purchase_requests_history (purchase_request_id, change_made, last_modified_by, datetime_occured) VALUES ('$request_id', '$change_made', '$last_modified_by', NOW())";
+        $insert_query_run = mysqli_query($con, $insert_query);
+        $_SESSION['message'] = "Request was rejected!";
+        header('Location: purchase_request-view.php');
+    } else {
+        // If there was an error in executing the query
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: purchase_request-view.php');
+    }
+}
 
 
 // Add Request
@@ -32,16 +529,65 @@ if(isset($_POST['request_add_btn'])) {
     // Executing the query
     $query_run = mysqli_query($con, $insert_query);
 
-    if($query_run) {
-        // If query executed successfully
-        $_SESSION['message'] = "Request added successfully!";
-        header('Location: request-view.php');
-    } else {
-        // If there was an error in executing the query
-        $_SESSION['message'] = "Something went wrong";
-        header('Location: request-add.php');
-    }
+
+    // After executing the database insertion successfully, if the user is an admin or super user, add the event to Google Calendar
+if ($query_run && ($admin || $super_user)) {
+    // Get the ID of the newly added request
+    $request_id = $con->insert_id;
+
+    // Insert event into Google Calendar
+    $client = new Google_Client();
+    $client->setAuthConfig($credentials);
+    $client->addScope(Google_Service_Calendar::CALENDAR_EVENTS);
+    $client->setAccessType('offline');
+    $client->getAccessToken();
+    $client->getRefreshToken(); 
+
+    $service = new Google_Service_Calendar($client);
+
+    // Create event
+    $event = new Google_Service_Calendar_Event(array(
+        'summary' => $name,
+        'description' => 'Your event description here',
+        'start' => array(
+            'date' => $request_received_date, // Assuming date format is 'Y-m-d'
+            'timeZone' => 'Asia/Manila', // Example: 'America/New_York'
+        ),
+        'end' => array(
+            'date' => $expected_delivery_date,
+            'timeZone' => 'Asia/Manila', // Example: 'America/New_York'
+        ),
+        'reminders' => array(
+            'useDefault' => false,
+            'overrides' => array(
+                array('method' => 'email', 'minutes' => 24 * 60),
+                array('method' => 'popup', 'minutes' => 30),
+            ),
+        ),
+    ));    
+
+    $calendarId = '946eec7b8e94a06ab78f828e340cdcc7e013e06e1474c361cdaef7912c08875c@group.calendar.google.com'; // INPUT Calendar ID of the user's primary calendar
+    $event = $service->events->insert($calendarId, $event);
+
+    // Store the event ID in your database along with other request details
+    $event_id = $event->getId(); // Assuming this retrieves the ID of the newly added event
+    // Store $event_id in your database
+    $event_id_query = "UPDATE requests SET gcalendar_eventID = '$event_id' WHERE id = '$request_id'";
+    $event_id_query_run = mysqli_query($con, $event_id_query);
+    
+
+    // Redirect or do whatever you want after adding event
+     // If query executed successfully
+    $_SESSION['message'] = "Request Added successfully!";
+    header('Location: request-add.php');
+} else {
+    // Handle error
+    $_SESSION['message'] = "Something went wrong";
+    header('Location: request-add.php');
 }
+}
+
+
 
 // Update Request
 if(isset($_POST['request_edit_btn'])) {
@@ -58,10 +604,54 @@ if(isset($_POST['request_edit_btn'])) {
     $semester = $_POST['semester'];
     $school_year_id = $_POST['school_year_id'];
     $assigned_to = $_POST['user_id'];
+    $event_id = $_POST['gcalendar_eventID']; // Retrieve the event ID from the form
 
       //  SQL query to fetch the old status from request_status_history table
       $history_query = "SELECT new_status FROM request_status_history WHERE request_id = '$request_id' ORDER BY change_date DESC LIMIT 1";
       $history_result = mysqli_query($con, $history_query);
+
+
+        // If the event ID is found, update the event in Google Calendar
+    if (!empty($event_id)) {
+        $client = new Google_Client();
+        $client->setAuthConfig($credentials);
+        $client->addScope(Google_Service_Calendar::CALENDAR_EVENTS);
+        $client->setAccessType('offline');
+        $client->getAccessToken();
+        $client->getRefreshToken(); 
+
+        $service = new Google_Service_Calendar($client);
+
+       
+        
+        // Retrieve the event from Google Calendar
+        $calendar_id = '946eec7b8e94a06ab78f828e340cdcc7e013e06e1474c361cdaef7912c08875c@group.calendar.google.com';
+        $event = $service->events->get($calendar_id, $event_id);
+
+        // Update the event details
+        $event->setSummary($name);
+        $event->setDescription('Your event description here');
+        // Update the start and end dates
+        $eventStart = new Google\Service\Calendar\EventDateTime();
+        $eventStart->setDate($request_received_date);
+        $eventStart->setTimeZone('Asia/Manila');
+        $event->setStart($eventStart);
+
+        $eventEnd = new Google\Service\Calendar\EventDateTime();
+        $eventEnd->setDate($expected_delivery_date);
+        $eventEnd->setTimeZone('Asia/Manila');
+        $event->setEnd($eventEnd);
+
+        
+        
+        // Call the update method to update the event in Google Calendar
+        $updated_event = $service->events->update($calendar_id, $event_id, $event);
+    }
+    else {
+        // Handle error
+        $_SESSION['message'] = "Event ID not found, Could Not Update Google Calendar";
+        header('Location: request-edit.php?id='.$request_id);
+    }
   
       if ($history_result && mysqli_num_rows($history_result) > 0) {
           $row = mysqli_fetch_assoc($history_result);
@@ -168,20 +758,7 @@ $mail->send();
      } catch (Exception $e) {
          echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
      }
-          }
-        }
-    
-
-    
-
-     
-
-    // Your SQL query to update data in the database
-    $update_query = "UPDATE requests SET name = '$name', inventory_id = '$inventory_id', college_id = '$college_id', department_id = '$department_id', status = '$status', request_received_date = '$request_received_date', expected_delivery_date = '$expected_delivery_date', actual_delivery_date = '$actual_delivery_date', semester = '$semester', school_year_id = '$school_year_id',assigned_user = '$assigned_to 'WHERE id = '$request_id'";
-    // Executing the query
-    $query_run = mysqli_query($con, $update_query);
-
-    // Update the request_status_history table edited_by column
+      // Update the request_status_history table edited_by column
     $edited_by = $_SESSION['auth_user']['user_id'];
     $history_query = "INSERT INTO request_status_history (request_id, old_status, new_status, change_date, edited_by) VALUES ('$request_id', '$old_status', '$status', NOW(), '$edited_by')";
     //Executing the history query
@@ -195,9 +772,15 @@ $mail->send();
         $_SESSION['message'] = "Something went wrong";
         header('Location: request-edit.php?id='.$request_id);
     }
-
-
+          }
+        }
     
+    // Your SQL query to update data in the database
+    $update_query = "UPDATE requests SET name = '$name', inventory_id = '$inventory_id', college_id = '$college_id', department_id = '$department_id', status = '$status', request_received_date = '$request_received_date', expected_delivery_date = '$expected_delivery_date', actual_delivery_date = '$actual_delivery_date', semester = '$semester', school_year_id = '$school_year_id',assigned_user = '$assigned_to 'WHERE id = '$request_id'";
+    // Executing the query
+    $query_run = mysqli_query($con, $update_query);
+
+   
 
     if($query_run) {
         // If query executed successfully
@@ -1100,8 +1683,11 @@ if(isset($_POST['logout_btn'])){
     unset($_SESSION['auth_user']);
     unset($_SESSION['auth_role']);
 
+    session_destroy();
+
     $_SESSION['message'] = "Logged Out Successfully";
     header('location: ../login.php');
     exit(0);
 }
+
 ?>
