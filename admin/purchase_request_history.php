@@ -214,121 +214,29 @@ elseif($_SESSION['auth_role']==3)
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Request ID</th>
-                                <th>Old Status</th>
-                                <th>New Status</th>
-                                <th>Change Date</th>
-                                <th>Edited by</th>
+                                <th>Purchase Request ID</th>
+                                <th>Change Made</th>
+                                <th>Last Modified by</th>
+                                <th>DateTime Occured</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            $request_history = "SELECT * FROM request_status_history WHERE request_id = $_GET[request_id] ORDER BY change_date DESC";
+                            $request_history = "SELECT * FROM purchase_requests_history WHERE purchase_request_id = $_GET[request_id] ORDER BY datetime_occured DESC";
                             $request_history_run = mysqli_query($con, $request_history);
                             if (mysqli_num_rows($request_history_run) > 0) {
                                 foreach ($request_history_run as $row) {
                                     ?>
                                     <tr>
                                         <td><?= $row['id']; ?></td>
-                                        <td><?= $row['request_id']; ?></td>
-                                        <td>
-                                            <?php 
-                                            if ($row['old_status']==0) {
-                                                echo "Received by CPU";
-                                            } elseif ($row['old_status'] == 1) {
-                                                echo "Left CPU office";
-                                            } elseif ($row['old_status'] == 2) {
-                                                echo "Received by Registrar";
-                                            } elseif ($row['old_status'] == 3) {
-                                                echo "Left Registrar office";
-                                                
-                                            }elseif ($row['old_status'] == 4) {
-                                                echo "Received by VPadmin";
-                                                
-                                                
-                                            }elseif ($row['old_status'] == 5) {
-                                                echo "Left VPadmin office";
-                                                
-                                                
-                                            }elseif ($row['old_status'] == 6) {
-                                                echo "Received by President";
-                                                
-                                                
-                                            }elseif ($row['old_status'] == 7) {
-                                                echo "Left President office";
-                                                
-                                                
-                                            }elseif ($row['old_status'] == 8) {
-                                                echo "Approved";
-                                                
-                                            } else {
-                                                echo "Unknown Status";
-                                            }
-                                            ?>
-                                        </td>
+                                        <td><?= $row['purchase_request_id']; ?></td>
+                                        <td><?= $row['change_made']; ?></td>
+                                        <td><?= $row['last_modified_by']; ?></td>
 
-                                        <td>
-                                            <?php 
-                                            if ($row['new_status']==0) {
-                                                echo "Received by CPU";
-                                            } elseif ($row['new_status'] == 1) {
-                                                echo "Left CPU office";
-                                            } elseif ($row['new_status'] == 2) {
-                                                echo "Received by Registrar";
-                                            } elseif ($row['new_status'] == 3) {
-                                                echo "Left Registrar office";
-                                                
-                                            }elseif ($row['new_status'] == 4) {
-                                                echo "Received by VPadmin";
-                                                
-                                                
-                                            }elseif ($row['new_status'] == 5) {
-                                                echo "Left VPadmin office";
-                                                
-                                                
-                                            }elseif ($row['new_status'] == 6) {
-                                                echo "Received by President";
-                                                
-                                                
-                                            }elseif ($row['new_status'] == 7) {
-                                                echo "Left President office";
-                                                
-                                                
-                                            }elseif ($row['new_status'] == 8) {
-                                                echo "Approved";
-                                                
-                                            } else {
-                                                echo "Unknown Status";
-                                            }
-                                            ?>
+                                        
+                                        <td><?= date('F j Y h:i:s A', strtotime($row['datetime_occured'])); ?></td>
 
-                                        </td>
-                                        <td><?= date('F j Y h:i:s A', strtotime($row['change_date'])); ?></td>
-
-                                        <td>
-                                            <?php 
-                                            if($row['edited_by'] > 0)
-                                            {
-                                                $user_query = "SELECT * FROM users WHERE id = ".$row['edited_by'];
-                                                $user_query_run = mysqli_query($con, $user_query);
-                                                if(mysqli_num_rows($user_query_run) > 0)
-                                                {
-                                                    foreach($user_query_run as $user_list)
-                                                    {
-                                                        echo $user_list['fname'].' '. $user_list['lname'];
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    echo "No User Found";
-                                                }
-                                            }
-                                            else
-                                            {
-                                                echo "No User Found";
-                                            }
-                                            
-                                            ?>
+                                        
                                         
                                             
                                         

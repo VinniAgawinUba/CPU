@@ -393,22 +393,76 @@ if ($result_items->num_rows > 0) {
         
       </fieldset>
 
-      <!-- Reject Request Button (sets status to rejected)-->
-<div class="mb-4 flex items-center">
-  <form action="code.php" method="post" class="flex items-center">
-     <input type="hidden" name="request_id" value="<?=$request_id?>">
-     <textarea type="text" name="rejection_reason" class="form-control mr-2" placeholder="Reason For Rejection" rows="3"></textarea>
-     <button id="ConfirmButton" type="submit" name="request_reject_btn" class="btn btn-danger">Reject Request</button>
-  </form>
-</div>
-      
-      
+  
       
 
-      <button type="submit" name="request_update_btn_front" class="btn btn-primary">Save Request</button>
+
+      
+      <!-- Save Request Button (saves the request without changing status)-->
+
+      <button type="submit" name="request_update_btn_front" class="btn btn-primary">Update Request Details</button>
     </form>
+    <!-- End of Form -->
 
   </div>
+
+  <hr>
+  <div>
+    <!-- FIELDSET REJECTION, APPROVAL, COMPLETION SECTION-->
+    <fieldset class="mb-4 bg-white shadow-md rounded p-4">
+        <legend class="font-bold">REJECTION, APPROVAL, COMPLETION SECTION</legend>
+        <div class="mb-3">
+          <!-- Reject Request Form (sets status to rejected) -->
+<div class="mb-4 row">
+  <div class="col-md-8">
+    <form action="code.php" method="post">
+      <!-- Hidden input to store the request ID and username -->
+      <input type="hidden" name="user_name" value="<?=$_SESSION['auth_user']['user_name']?>">
+      <input type="hidden" name="request_id" value="<?=$request_id?>">
+      <textarea type="text" name="rejection_reason" class="form-control mb-2" placeholder="Reason For Rejection" rows="3"></textarea>
+    </div>
+    <div class="col-md-4">
+      <button type="submit" name="request_reject_btn" class="btn ConfirmButton btn-danger">Reject Request</button>
+    </form>
+  </div>
+</div>
+
+
+<!-- Approve Request Forms (sets status to approved) -->
+<div class="mb-4 row">
+  <div class="col-md-8">
+    <form action="code.php" method="post">
+      <!-- Hidden input to store the request ID and username -->
+      <input type="hidden" name="user_name" value="<?=$_SESSION['auth_user']['user_name']?>">
+      <input type="hidden" name="request_id" value="<?=$request_id?>">
+      <textarea type="text" name="approval_reason" class="form-control mb-2" placeholder="Approval Remarks: (ONCE ALL NECESSARY SIGNATURES ARE SIGNED)" rows="3"></textarea>
+    </div>
+    <div class="col-md-4">
+      <button type="submit" name="request_approve_btn" class="btn ConfirmButton text-white bg-green-400 hover:bg-green-300">Approve Request</button>
+    </form>
+  </div>
+</div>
+
+<!-- Complete Request Button (sets status to completed) -->
+<div class="mb-4 row">
+  <div class="col-md-8">
+    <form action="code.php" method="post">
+      <!-- Hidden input to store the request ID and username -->
+      <input type="hidden" name="user_name" value="<?=$_SESSION['auth_user']['user_name']?>">
+      <input type="hidden" name="request_id" value="<?=$request_id?>">
+      <textarea type="text" name="completion_remarks" class="form-control mb-2" placeholder="Completion Remarks: (FOR CPU)" rows="3"></textarea>
+    </div>
+    <div class="col-md-4">
+      <button type="submit" name="request_complete_btn" class="btn ConfirmButton text-white bg-green-500 hover:bg-green-500">Complete Request</button>
+    </form>
+  </div>
+</div>
+
+
+        </div>
+      </fieldset>
+  </div>
+  
   
 
   <!-- Bootstrap JavaScript -->

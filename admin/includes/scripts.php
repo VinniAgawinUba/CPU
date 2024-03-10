@@ -4,6 +4,7 @@
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script> <!-- Move this line up -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" /> <!-- Move this line up -->
 
+
 <script src="js/scripts.js"></script>
 <script src="js/datatables-simple-demo.js"></script>
 
@@ -81,7 +82,7 @@
     });
 </script>
 
-<!-- JavaScript for General Button Confirmation (Buttons Should have id of ConfirmButton) -->
+<!-- JavaScript for General Button Confirmation (Buttons Should have class of ConfirmButton) -->
 <script>
     // Select all elements with the class 'ConfirmButton'
     var ConfirmButton = document.querySelectorAll(".ConfirmButton");
@@ -99,7 +100,7 @@
     });
 </script>
 
-<!-- JavaScript for Delete Button Confirmation (Buttons Should have id of deleteButton) -->
+<!-- JavaScript for Delete Button Confirmation (Buttons Should have class of deleteButton) -->
 <script>
     // Select all elements with the class 'deleteButton'
     var deleteButtons = document.querySelectorAll(".deleteButton");

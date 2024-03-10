@@ -3,7 +3,6 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include('authentication.php');
 
-session_start();
 //Initialize Variable
 $admin = null;
 $super_user = null;
@@ -422,10 +421,69 @@ if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
 }     
 }
 
+//Approve Purchase Request
+if(isset($_POST['request_approve_btn'])) {
+    $request_id = $_POST['request_id'];
+    $approval_remarks = $_POST['approval_remarks'];
+    //Hidden User name
+    $last_modified_by = $_POST['user_name'];
+    //Specify change made Unique to each action
+    $change_made = "Request Approved";
+
+    // Your SQL query to update data in the database
+    $update_query = "UPDATE purchase_requests SET status = 'approved', approval_remarks = '$approval_remarks' WHERE id = '$request_id'";
+    // Executing the query
+    $query_run = mysqli_query($con, $update_query);
+
+    if($query_run) {
+        // If query executed successfully, Insert into purchase_requests_history
+        $insert_query = "INSERT INTO purchase_requests_history (purchase_request_id, change_made, last_modified_by, datetime_occured) VALUES ('$request_id','$change_made', '$last_modified_by', NOW())";
+        $insert_query_run = mysqli_query($con, $insert_query);
+        $_SESSION['message'] = "Request was approved!";
+        header('Location: purchase_request-view.php');
+    } else {
+        // If there was an error in executing the query
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: purchase_request-view.php');
+    }
+}
+
+//Complete Purchase Request
+if(isset($_POST['request_complete_btn'])) {
+    $request_id = $_POST['request_id'];
+    $completion_remarks = $_POST['completion_remarks'];
+    //Hidden User name
+    $last_modified_by = $_POST['user_name'];
+    //Specify change made Unique to each action
+    $change_made = "Request Completed";
+
+
+    // Your SQL query to update data in the database
+    $update_query = "UPDATE purchase_requests SET status = 'completed', completion_remarks = '$completion_remarks' WHERE id = '$request_id'";
+    // Executing the query
+    $query_run = mysqli_query($con, $update_query);
+
+    if($query_run) {
+        // If query executed successfully, Insert into purchase_requests_history
+        $insert_query = "INSERT INTO purchase_requests_history (purchase_request_id, change_made, last_modified_by, datetime_occured) VALUES ('$request_id','$change_made', '$last_modified_by', NOW())";
+        $insert_query_run = mysqli_query($con, $insert_query);
+        $_SESSION['message'] = "Request was completed!";
+        header('Location: purchase_request-view.php');
+    } else {
+        // If there was an error in executing the query
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: purchase_request-view.php');
+    }
+}
+
 //Reject Purchase Request
 if(isset($_POST['request_reject_btn'])) {
     $request_id = $_POST['request_id'];
     $rejection_reason = $_POST['rejection_reason'];
+    //Hidden User name
+    $last_modified_by = $_POST['user_name'];
+    //Specify change made Unique to each action
+    $change_made = "Request Rejected";
 
     // Your SQL query to update data in the database
     $update_query = "UPDATE purchase_requests SET status = 'rejected', rejection_reason = '$rejection_reason' WHERE id = '$request_id'";
@@ -433,7 +491,9 @@ if(isset($_POST['request_reject_btn'])) {
     $query_run = mysqli_query($con, $update_query);
 
     if($query_run) {
-        // If query executed successfully
+        // If query executed successfully, Insert into purchase_requests_history
+        $insert_query = "INSERT INTO purchase_requests_history (purchase_request_id, change_made, last_modified_by, datetime_occured) VALUES ('$request_id', '$change_made', '$last_modified_by', NOW())";
+        $insert_query_run = mysqli_query($con, $insert_query);
         $_SESSION['message'] = "Request was rejected!";
         header('Location: purchase_request-view.php');
     } else {
