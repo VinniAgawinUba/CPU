@@ -60,7 +60,7 @@ elseif($_SESSION['auth_role']==3)
                                     <li><a class="dropdown-item filter-btn" href="#" data-status="pending">Pending</a></li>
                                     <li><a class="dropdown-item filter-btn" href="#" data-status="approved">Approved</a></li>
                                     <li><a class="dropdown-item filter-btn" href="#" data-status="rejected">Rejected</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="complete">Completed</a></li>
+                                    <li><a class="dropdown-item filter-btn" href="#" data-status="completed">Completed</a></li>
                                     
                                     <!-- Add more items for other statuses as needed -->
                                 </ul>
