@@ -234,7 +234,7 @@ elseif($_SESSION['auth_role']==3)
                                         <td><?= $row['last_modified_by']; ?></td>
 
                                         
-                                        <td><?= date('F j Y h:i:s A', strtotime($row['datetime_occured'])); ?></td>
+                                        <td><?= date('F j Y h:i A', strtotime($row['datetime_occured'])); ?></td>
 
                                         
                                         

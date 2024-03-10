@@ -408,11 +408,15 @@ if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
             }
         }
     }
-    //SQL query to Check if each signature field 1 to 5 is empty
 
    
 
     $_SESSION['message'] = "Successfully Updated request";
+    //Insert into purchase_requests_history
+    $change_made = "Request Details Updated";
+    $last_modified_by = $_POST['user_name'];
+    $insert_query = "INSERT INTO purchase_requests_history (purchase_request_id, change_made, last_modified_by, datetime_occured) VALUES ('$purchase_request_id','$change_made', '$last_modified_by', NOW())";
+    $insert_query_run = mysqli_query($con, $insert_query);
     header('location: purchase_request-view.php');
     exit(0);
 } else {
