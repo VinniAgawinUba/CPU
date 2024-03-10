@@ -19,7 +19,7 @@ include('includes/scripts.php');
             <div class="card">
                 <!-- Request Details Card -->
                 <div class="card-header">
-                    <h4>Full Information</h4>
+                    <h4>Full Information</h4> <a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a>
                 </div>
                 <div class="card-body">
                     <form action="code.php" method="POST">
@@ -35,10 +35,9 @@ include('includes/scripts.php');
                                     foreach ($row as $key => $value) {
                                         echo "<tr>";
                                         echo "<td>" . ucwords(str_replace("_", " ", $key)) . "</td>";
-                                        echo "<td><input type='text' name='$key' value='$value'></td>";
+                                        echo "<td>$value</td>";
                                         echo "</tr>";
                                     }
-                                    echo "<tr><td colspan='2'><button type='submit' name='request_update_btn_front' class='btn btn-primary'>Update</button></td></tr>";
                                 } else {
                                     echo "<tr><td colspan='2'>No data found</td></tr>";
                                 }
