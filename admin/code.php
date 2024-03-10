@@ -422,6 +422,26 @@ if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
 }     
 }
 
+//Reject Purchase Request
+if(isset($_POST['request_reject_btn'])) {
+    $request_id = $_POST['request_id'];
+    $rejection_reason = $_POST['rejection_reason'];
+
+    // Your SQL query to update data in the database
+    $update_query = "UPDATE purchase_requests SET status = 'rejected', rejection_reason = '$rejection_reason' WHERE id = '$request_id'";
+    // Executing the query
+    $query_run = mysqli_query($con, $update_query);
+
+    if($query_run) {
+        // If query executed successfully
+        $_SESSION['message'] = "Request was rejected!";
+        header('Location: purchase_request-view.php');
+    } else {
+        // If there was an error in executing the query
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: purchase_request-view.php');
+    }
+}
 
 
 // Add Request
@@ -502,6 +522,8 @@ if ($query_run && ($admin || $super_user)) {
     header('Location: request-add.php');
 }
 }
+
+
 
 // Update Request
 if(isset($_POST['request_edit_btn'])) {

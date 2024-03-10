@@ -393,9 +393,23 @@ if ($result_items->num_rows > 0) {
         
       </fieldset>
 
+      <!-- Reject Request Button (sets status to rejected)-->
+<div class="mb-4 flex items-center">
+  <form action="code.php" method="post" class="flex items-center">
+     <input type="hidden" name="request_id" value="<?=$request_id?>">
+     <textarea type="text" name="rejection_reason" class="form-control mr-2" placeholder="Reason For Rejection" rows="3"></textarea>
+     <button id="ConfirmButton" type="submit" name="request_reject_btn" class="btn btn-danger">Reject Request</button>
+  </form>
+</div>
+      
+      
+      
+
       <button type="submit" name="request_update_btn_front" class="btn btn-primary">Save Request</button>
     </form>
+
   </div>
+  
 
   <!-- Bootstrap JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

@@ -81,6 +81,24 @@
     });
 </script>
 
+<!-- JavaScript for General Button Confirmation (Buttons Should have id of ConfirmButton) -->
+<script>
+    // Select all elements with the class 'ConfirmButton'
+    var ConfirmButton = document.querySelectorAll(".ConfirmButton");
+    
+    // Iterate over each delete button and attach event listener
+    ConfirmButton.forEach(function(button) {
+        button.addEventListener("click", function(event) {
+            if (confirm("Confirm to Continue")) {
+                // Find the closest form and submit it
+                this.closest(".deleteForm").submit();
+            } else {
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+
 <!-- JavaScript for Delete Button Confirmation (Buttons Should have id of deleteButton) -->
 <script>
     // Select all elements with the class 'deleteButton'
