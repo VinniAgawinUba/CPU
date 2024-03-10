@@ -110,11 +110,11 @@ elseif($_SESSION['auth_role']==3)
                                     // Add a CSS class based on the condition
                                     $row_class = '';
                                     $Changetext_color = 'black';
-                                    if ($difference >= 30 && $row['status'] != 'approved') {
+                                    if ($difference >= 30 && ($row['status'] != 'approved' && ($row['status'] != 'completed'))) {
                                         $row_class = 'bg-danger'; // Older than or equal to 30 days, set background to red
                                         $Changetext_color = 'white'; // Set text color to white
                                     } 
-                                    elseif ($difference >= 15 && $row['status'] != 'approved') {
+                                    elseif ($difference >= 15 && ($row['status'] != 'approved' && ($row['status'] != 'completed'))) {
                                         $row_class = 'bg-warning'; // Older than or equal to 15 days but less than 30, set background to yellow
                                         $Changetext_color = 'black'; // Set text color to dark
                                     } 
@@ -122,7 +122,7 @@ elseif($_SESSION['auth_role']==3)
                                         $row_class = 'bg-danger'; // Status is Not Approved, set background to blue
                                         $Changetext_color = 'white'; // Set text color to white
                                     }
-                                    elseif ($row['status'] == 'approved') {
+                                    elseif ($row['status'] == 'approved' || $row['status'] == 'completed') {
                                         $row_class = 'bg-success'; // Status is Approved, set background to green
                                         $Changetext_color = 'white'; // Set text color to white
                                     }
