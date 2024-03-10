@@ -34,7 +34,7 @@
     <input type="hidden" name="user_name" value="<?php echo $_SESSION['auth_user']['user_name']; ?>">
     <input type="hidden" name="user_id" value="<?php echo $_SESSION['auth_user']['user_id']; ?>">
     <input type="hidden" name="user_email" value="<?php echo $_SESSION['auth_user']['user_email']; ?>">
-    
+
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Purchase Request</legend>
         <div class="mb-3">
@@ -116,91 +116,7 @@
         </div>
       </fieldset>
 
-      <!-- Signatures for Approvals -->
-      <fieldset class="mb-4 bg-white shadow-md rounded p-4">
-        <legend class="font-bold">Approvals</legend>
-
-        <!-- Vice President -->
-        <div class="mb-3">
-          <label for="vice_president" class="form-label">1-VICE PRESIDENT (CLUSTER):</label>
-          <input type="text" id="vice_president_remarks" name="vice_president_remarks" class="form-control" placeholder="Remarks">
-          <label for="vice_president" class="form-label">Approved By:</label>
-          <input type="text" id="vice_president_approved" name="vice_president_approved" class="form-control">
-          
-          <!-- Signature -->
-          <div class="mb-3">
-            <label for="signature1">Signature:</label>
-            <div id="sig1"></div>
-            <button id="clear1" class="btn btn-primary">Clear Signature</button>
-            <textarea id="signature64_1" name="signed_1" style="display:none"></textarea>
-          </div>
-        </div>
-        
-        <!-- Vice President for Administration -->
-        <div class="mb-3">
-          <label for="vice_president_administration" class="form-label">2-VICE PRESIDENT FOR ADMINISTRATION:</label>
-          <input type="text" id="vice_president_administration_remarks" name="vice_president_administration_remarks" class="form-control" placeholder="Remarks">
-          <label for="vice_president_administration" class="form-label">Approved By:</label>
-          <input type="text" id="vice_president_administration_approved" name="vice_president_administration_approved" class="form-control">
-          
-          <!-- Signature -->
-          <div class="mb-3">
-            <label for="signature2">Signature:</label>
-            <div id="sig2"></div>
-            <button id="clear2" class="btn btn-primary">Clear Signature</button>
-            <textarea id="signature64_2" name="signed_2" style="display:none"></textarea>
-          </div>
-        </div>
-
-        <!--Budget Controller-->
-        <div class="mb-3">
-          <label for="budget_controller" class="form-label">3-BUDGET CONTROLLER:</label>
-          <input type="text" id="budget_controller_remarks" name="budget_controller_remarks" class="form-control" placeholder="Remarks">
-          <label for="budget_controller" class="form-label">Approved By:</label>
-          <input type="text" id="budget_controller_approved" name="budget_controller_approved" class="form-control">
-          <label for="budget_controller" class="form-label">Acct. Code:</label>
-          <input type="text" id="budget_controller_code" name="budget_controller_code" class="form-control" placeholder="Input Acct. Code">
-          
-          <!-- Signature -->
-          <div class="mb-3">
-            <label for="signature3">Signature:</label>
-            <div id="sig3"></div>
-            <button id="clear3" class="btn btn-primary">Clear Signature</button>
-            <textarea id="signature64_3" name="signed_3" style="display:none"></textarea>
-          </div>
-
-        <!--University Treasurer-->
-        <div class="mb-3">
-            <label for="university_treasurer" class="form-label">4-UNIVERSITY TREASURER:</label>
-            <input type="text" id="university_treasurer_remarks" name="university_treasurer_remarks" class="form-control" placeholder="Remarks">
-            <label for="university_treasurer" class="form-label">Approved By:</label>
-            <input type="text" id="university_treasurer_approved" name="university_treasurer_approved" class="form-control">
-            
-            <!-- Signature -->
-            <div class="mb-3">
-            <label for="signature4">Signature:</label>
-            <div id="sig4"></div>
-            <button id="clear4" class="btn btn-primary">Clear Signature</button>
-            <textarea id="signature64_4" name="signed_4" style="display:none"></textarea>
-            </div>
-
-        <!--OFFICE OF THE PRESIDENT (for budget re-alignment only) :-->
-        <div class="mb-3">
-            <label for="office_of_the_president" class="form-label">5-OFFICE OF THE PRESIDENT (for budget re-alignment only) :</label>
-            <input type="text" id="office_of_the_president_remarks" name="office_of_the_president_remarks" class="form-control" placeholder="Remarks">
-            <label for="office_of_the_president" class="form-label">Approved By:</label>
-            <input type="text" id="office_of_the_president_approved" name="office_of_the_president_approved" class="form-control">
-            
-            <!-- Signature -->
-            <div class="mb-3">
-            <label for="signature5">Signature:</label>
-            <div id="sig5"></div>
-            <button id="clear5" class="btn btn-primary">Clear Signature</button>
-            <textarea id="signature64_5" name="signed_5" style="display:none"></textarea>
-            </div>
-        <!-- Add more approval sections as needed -->
-        
-      </fieldset>
+      
 
       <button type="submit" name="request_add_btn_front" class="btn btn-primary">Submit Request</button>
     </form>
