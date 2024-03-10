@@ -459,7 +459,7 @@ if(isset($_POST['request_complete_btn'])) {
 
 
     // Your SQL query to update data in the database
-    $update_query = "UPDATE purchase_requests SET status = 'completed', completion_remarks = '$completion_remarks' WHERE id = '$request_id'";
+    $update_query = "UPDATE purchase_requests SET status = 'completed', completed_remarks = '$completion_remarks' WHERE id = '$request_id'";
     // Executing the query
     $query_run = mysqli_query($con, $update_query);
 
