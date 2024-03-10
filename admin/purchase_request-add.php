@@ -47,6 +47,11 @@ elseif($_SESSION['auth_role']==3)
     <?php include('message.php'); ?>
     <h1 class="text-3xl font-bold mt-8 mb-4">XAVIER UNIVERSITY CENTRAL PURCHASING UNIT<a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a></h1>
     <form action="code.php" method="post">
+    <!-- Hidden user_name, user_id, user_email -->
+    <input type="hidden" name="user_name" value="<?php echo $_SESSION['auth_user']['user_name']; ?>">
+    <input type="hidden" name="user_id" value="<?php echo $_SESSION['auth_user']['user_id']; ?>">
+    <input type="hidden" name="user_email" value="<?php echo $_SESSION['auth_user']['user_email']; ?>">
+
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Purchase Request</legend>
         <div class="mb-3">

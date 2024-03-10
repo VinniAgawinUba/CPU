@@ -34,6 +34,11 @@ if(isset($_POST['request_add_btn_front'])){
   $iptel_email = $_POST['iptel_email'];
   $requestor_signature = $_POST['signed_Requestor'];
 
+  //Requestor User Information
+  $requestor_user_id = $_SESSION['auth_user']['user_id'];
+  $requestor_user_email = $_SESSION['auth_user']['user_email'];
+  $requestor_user_name = $_SESSION['auth_user']['user_name'];
+
    // Signatures
    $signatures = array(
     // Add more signature fields as needed, e.g.,signed_1, signed_2, etc.
@@ -89,8 +94,8 @@ if(isset($_POST['request_add_btn_front'])){
   $office_of_the_president_signature = $_POST['signed_5'];
 
   // Insert Purchase Request into the database
-  $sql_purchase_request = "INSERT INTO purchase_requests (purchase_request_number, printed_name, signed_Requestor, unit_dept_college, iptel_email, purchase_types, remarks_dean, endorsed_by_dean, vice_president_remarks, vice_president_approved, signed_1, vice_president_administration_remarks, vice_president_administration_approved, signed_2, budget_controller_remarks, budget_controller_approved, budget_controller_code, signed_3, university_treasurer_remarks, university_treasurer_approved, signed_4, office_of_the_president_remarks, office_of_the_president_approved, signed_5) 
-          VALUES ('$purchase_request_number', '$printed_name', '$requestor_signature, ','$unit_dept_college', '$iptel_email', '$purchase_types', '$remarks_dean', '$endorsed_by_dean', '$vice_president_remarks', '$vice_president_approved', '$vice_president_signature', '$vice_president_administration_remarks', '$vice_president_administration_approved', '$vice_president_administration_signature', '$budget_controller_remarks', '$budget_controller_approved', '$budget_controller_code', '$budget_controller_signature', '$university_treasurer_remarks', '$university_treasurer_approved', '$university_treasurer_signature', '$office_of_the_president_remarks', '$office_of_the_president_approved', '$office_of_the_president_signature')";
+  $sql_purchase_request = "INSERT INTO purchase_requests (requestor_user_id, requestor_user_name, requestor_user_email, purchase_request_number, printed_name, signed_Requestor, unit_dept_college, iptel_email, purchase_types, remarks_dean, endorsed_by_dean, vice_president_remarks, vice_president_approved, signed_1, vice_president_administration_remarks, vice_president_administration_approved, signed_2, budget_controller_remarks, budget_controller_approved, budget_controller_code, signed_3, university_treasurer_remarks, university_treasurer_approved, signed_4, office_of_the_president_remarks, office_of_the_president_approved, signed_5) 
+          VALUES ('$requestor_user_id', '$requestor_user_name', '$requestor_user_email','$purchase_request_number', '$printed_name', '$requestor_signature, ','$unit_dept_college', '$iptel_email', '$purchase_types', '$remarks_dean', '$endorsed_by_dean', '$vice_president_remarks', '$vice_president_approved', '$vice_president_signature', '$vice_president_administration_remarks', '$vice_president_administration_approved', '$vice_president_administration_signature', '$budget_controller_remarks', '$budget_controller_approved', '$budget_controller_code', '$budget_controller_signature', '$university_treasurer_remarks', '$university_treasurer_approved', '$university_treasurer_signature', '$office_of_the_president_remarks', '$office_of_the_president_approved', '$office_of_the_president_signature')";
 
   // Execute Purchase Request query
   if ($con->query($sql_purchase_request) === TRUE) {
