@@ -216,6 +216,7 @@ $item_types = $_POST['item_type'];
 $item_justifications = $_POST['item_justification'];
 $item_reasons = $_POST['item_reason'];
 $item_date_conditions = $_POST['item_date_condition'];
+$item_status = $_POST['item_status'];
 
 // Remarks by College Dean/Principal
 $remarks_dean = $_POST['remarks_dean'];
@@ -400,7 +401,7 @@ if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
     } else {
         // Update Items in the database
         for ($i = 0; $i < count($item_qty); $i++) {
-            $sql_item = "UPDATE items SET item_qty = '{$item_qty[$i]}', item_type = '{$item_types[$i]}', item_justification = '{$item_justifications[$i]}', item_reason = '{$item_reasons[$i]}', item_date_condition = '{$item_date_conditions[$i]}' WHERE id = '{$current_items[$i]['id']}'";
+            $sql_item = "UPDATE items SET item_qty = '{$item_qty[$i]}', item_type = '{$item_types[$i]}', item_justification = '{$item_justifications[$i]}', item_reason = '{$item_reasons[$i]}', item_date_condition = '{$item_date_conditions[$i]}', item_status = '{$item_status[$i]}' WHERE id = '{$current_items[$i]['id']}'";
             
             // Execute Item query
             if ($con->query($sql_item) !== TRUE) {

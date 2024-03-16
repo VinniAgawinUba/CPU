@@ -147,6 +147,24 @@ if ($result_items->num_rows > 0) {
                         <input type="text" name="item_date_condition[]" class="form-control mt-1" placeholder="Indicate date purchased & condition if replacement" value="<?= $row_item['item_date_condition'] ?>">
                     </div>
                 </div>
+                <!-- Item Status -->
+                <div class="col-md-1">
+                  <label for="item_status">Item Status:</label>
+                  <select name="item_status[]" class="form-select">
+                    <?php
+                    // Static list of status choices
+                    $status_choices = array('pending', 'approved', 'rejected', 'completed');
+
+                    // Output options for each status choice
+                    foreach ($status_choices as $status_choice) {
+                      $selected = ($row_item['item_status'] == $status_choice) ? 'selected' : '';
+                      echo "<option value='$status_choice' $selected>$status_choice</option>";
+                    }
+                    ?>
+                  </select>
+                </div>
+
+                    
                 <div class="col-auto">
                     <button type="button" class="btn btn-danger btn-remove-item">Remove</button>
                 </div>

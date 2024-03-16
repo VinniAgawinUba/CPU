@@ -166,7 +166,7 @@ elseif($_SESSION['auth_role']==3)
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['status']; ?></td>
                                         
                                         <td>
-                                            <a href="purchase_request_history.php?request_id=<?= $row['id']; ?>" class="btn btn-success">History</a>
+                                            <a href="purchase_request_history.php?request_id=<?= $row['id']; ?>" class="btn btn-secondary">History</a>
                                         </td>
 
                                         <td>
