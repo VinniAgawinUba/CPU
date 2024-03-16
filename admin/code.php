@@ -78,6 +78,7 @@ if(isset($_POST['request_add_btn_front'])){
     $item_justifications = $_POST['item_justification'];
     $item_reasons = $_POST['item_reason'];
     $item_date_conditions = $_POST['item_date_condition'];
+    $item_number = $_POST['item_number'];
   
     // Remarks by College Dean/Principal
     $remarks_dean = $_POST['remarks_dean'];
@@ -163,8 +164,8 @@ if(isset($_POST['request_add_btn_front'])){
   
         // Insert Items into the database
         for ($i = 0; $i < count($item_qty); $i++) {
-            $sql_item = "INSERT INTO items (purchase_request_id, item_qty, item_type, item_justification, item_reason, item_date_condition) 
-                         VALUES ('$purchase_request_id', '{$item_qty[$i]}', '{$item_types[$i]}', '{$item_justifications[$i]}', '{$item_reasons[$i]}', '{$item_date_conditions[$i]}')";
+            $sql_item = "INSERT INTO items (item_number, purchase_request_id, item_qty, item_justification) 
+                         VALUES ('$item_number','$purchase_request_id', '{$item_qty[$i]}', '{$item_justifications[$i]}')";
             
             // Execute Item query
             if ($con->query($sql_item) !== TRUE) {
@@ -338,7 +339,7 @@ if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
         $sign_status = 'Signed by Vice President ';
     }
     //If signed 1 and signed 2 is not empty then it will be signed by the Vice President for Administration
-    elseif ($row['signed_1'] && $row['signed_1'] != '' && $row['signed_2'] && $row['signed_2'] != ''){
+    elseif ($row['signed_2'] && $row['signed_2'] != ''){
         $sign_status = 'Signed by Vice President Administration';
     }
     //If signed 1, signed 2 and signed 3 is not empty then it will be signed by the Budget Controller
