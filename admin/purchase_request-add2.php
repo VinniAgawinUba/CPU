@@ -43,9 +43,9 @@ elseif($_SESSION['auth_role']==3)
     #sig canvas { width: 100% !important; height: auto; }
   </style>
 
-<div class="container mx-auto p-6 bg-blue-400 shadow-black">
+<div class="container mx-auto p-6 bg-blue-100 shadow-black">
     <?php include('message.php'); ?>
-    <h1 class="text-3xl font-bold mt-8 mb-4 justify-center items-center">XAVIER UNIVERSITY CENTRAL PURCHASING UNIT<a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a></h1>
+    <h1 class="text-3xl font-bold mt-8 mb-4 justify-centeritems-center">XAVIER UNIVERSITY CENTRAL PURCHASING UNIT<a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a></h1>
     <form action="code.php" method="post">
     <!-- Hidden user_name, user_id, user_email -->
     <input type="hidden" name="user_name" value="<?php echo $_SESSION['auth_user']['user_name']; ?>">
@@ -139,7 +139,7 @@ elseif($_SESSION['auth_role']==3)
         <tbody>
             <!-- Vice President -->
             <tr>
-                <td>1-Cluster Vice President (if above P100,000):</td>
+                <td>1-Cluster Vice President (if above P50,000):</td>
                 <td>
                     <input type="text" id="vice_president_remarks" name="vice_president_remarks" class="form-control" placeholder="Remarks">
                     <br>
