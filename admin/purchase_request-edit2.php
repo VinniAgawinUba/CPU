@@ -214,7 +214,7 @@ if(mysqli_num_rows($request_query_run) > 0)
             <tr>
                 <td>Approved by: (Unit Head)</td>
                 <td>
-                    <input type="text" id="approved_by_unit_head" name="approved_by_unit_head" class="form-control" required placeholder="Unit Head Name" value="<?=$request_row['endorsed_by_dean']?>">
+                    <input type="text" id="endorsed_by_dean" name="endorsed_by_dean" class="form-control" required placeholder="Unit Head Name" value="<?=$request_row['endorsed_by_dean']?>">
                 </td>
             </tr>
             <tr>

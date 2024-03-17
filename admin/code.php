@@ -213,9 +213,11 @@ $folderPath = "../uploads/signatures/";
 $purchase_types = isset($_POST['purchase_type']) ? implode(',', $_POST['purchase_type']) : '';
 
 // Items Information
+$item_number = $_POST['item_number'];
 $item_qty = $_POST['item_qty'];
 $item_types = $_POST['item_type'];
 $item_justifications = $_POST['item_justification'];
+$item_description = $_POST['item_description'];
 $item_reasons = $_POST['item_reason'];
 $item_date_conditions = $_POST['item_date_condition'];
 $item_status = $_POST['item_status'];
@@ -392,8 +394,8 @@ if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
     if (count($current_items) < count($item_qty)) {
         // Insert Items into the database
         for ($i = count($current_items); $i < count($item_qty); $i++) {
-            $sql_item = "INSERT INTO items (purchase_request_id, item_qty, item_type, item_justification, item_reason, item_date_condition) 
-                         VALUES ('$purchase_request_id', '{$item_qty[$i]}', '{$item_types[$i]}', '{$item_justifications[$i]}', '{$item_reasons[$i]}', '{$item_date_conditions[$i]}')";
+            $sql_item = "INSERT INTO items (item_number,purchase_request_id, item_qty, item_type, item_description,item_justification, item_reason, item_date_condition) 
+                         VALUES ('{$item_number[$i]}','$purchase_request_id', '{$item_qty[$i]}', '{$item_types[$i]}', '{$item_description[$i]}','{$item_justifications[$i]}', '{$item_reasons[$i]}', '{$item_date_conditions[$i]}')";
             
             // Execute Item query
             if ($con->query($sql_item) !== TRUE) {
@@ -421,7 +423,6 @@ if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
     $insert_query = "INSERT INTO purchase_requests_history (purchase_request_id, change_made, last_modified_by, datetime_occured) VALUES ('$purchase_request_id','$change_made', '$last_modified_by', NOW())";
     $insert_query_run = mysqli_query($con, $insert_query);
     header('location: purchase_request-view.php');
-    exit(0);
 } else {
   $_SESSION['message'] = "Error: " . $sql_purchase_request . "<br>" . $con->error;
     echo "Error: " . $sql_purchase_request . "<br>" . $con->error;
