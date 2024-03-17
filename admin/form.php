@@ -44,7 +44,7 @@ elseif($_SESSION['auth_role']==3)
     #sig canvas { width: 100% !important; height: auto; }
   </style>
 
-<div class="container mx-auto p-6 bg-blue-50 shadow-black">
+<div class="container p-6 bg-blue-50 shadow-black">
     <?php include('message.php'); ?>
     <h1 class="text-3xl font-bold mt-8 mb-4 justify-center items-center">XAVIER UNIVERSITY CENTRAL PURCHASING UNIT<a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a></h1>
     <form action="code.php" method="post">

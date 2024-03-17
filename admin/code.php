@@ -427,6 +427,24 @@ if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
 }     
 }
 
+//Delete Purchase Request
+if(isset($_POST['purchase_request_delete_btn'])) {
+    $request_id = $_POST['id'];
+    // Your SQL query to delete data from the database
+    $delete_query = "DELETE FROM purchase_requests WHERE id = '$request_id'";
+    // Executing the query
+    $query_run = mysqli_query($con, $delete_query);
+
+    if($query_run) {
+        $_SESSION['message'] = "Request was deleted!";
+        header('Location: purchase_request-view.php');
+    } else {
+        // If there was an error in executing the query
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: purchase_request-view.php');
+    }
+}
+
 //Approve Purchase Request
 if(isset($_POST['request_approve_btn'])) {
     $request_id = $_POST['request_id'];

@@ -178,7 +178,7 @@ elseif($_SESSION['auth_role']==3)
                                         <td>
                                         <form id="deleteForm" action="code.php" method="POST">
                                             <input type="hidden" name="id" value="<?= $row['id']; ?>">
-                                            <button type="submit" name="request_delete_btn" value="<?=$row['id']?>" class="btn btn-danger deleteButton" id="deleteButton">Delete</button>
+                                            <button type="submit" name="purchase_request_delete_btn" value="<?=$row['id']?>" class="btn btn-danger deleteButton" id="purchase_request_delete_btn">Delete</button>
                                         </form>
 
                                         </td>
