@@ -76,6 +76,7 @@ if(isset($_POST['request_add_btn_front'])){
     $item_qty = $_POST['item_qty'];
     $item_types = $_POST['item_type'];
     $item_justifications = $_POST['item_justification'];
+    $item_description = $_POST['item_description'];
     $item_reasons = $_POST['item_reason'];
     $item_date_conditions = $_POST['item_date_condition'];
     $item_number = $_POST['item_number'];
@@ -164,8 +165,8 @@ if(isset($_POST['request_add_btn_front'])){
   
         // Insert Items into the database
         for ($i = 0; $i < count($item_qty); $i++) {
-            $sql_item = "INSERT INTO items (item_number, purchase_request_id, item_qty, item_justification) 
-                         VALUES ('$item_number','$purchase_request_id', '{$item_qty[$i]}', '{$item_justifications[$i]}')";
+            $sql_item = "INSERT INTO items (item_number, purchase_request_id, item_qty, item_justification, item_description) 
+                         VALUES ('$item_number','$purchase_request_id', '{$item_qty[$i]}', '{$item_justifications[$i]}, '{$item_description[$i]})";
             
             // Execute Item query
             if ($con->query($sql_item) !== TRUE) {

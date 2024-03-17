@@ -40,7 +40,7 @@ $spreadsheet = IOFactory::load($templateFile);
 $sheet = $spreadsheet->getActiveSheet();
 
 // Set cell values
-$sheet->setCellValue('B6', 'New Value 1');
+$sheet->setCellValue('B6', 'WASSUP CUH');
 $sheet->setCellValue('C6', 'NIBBA');
 // Add more cell values as needed...
 
@@ -53,7 +53,7 @@ echo "Excel file generated successfully!";
 ?>
 
 <!-- Display/DownloadPrompt the Excel file -->
-<iframe src="output.xlsx" width="100%" height="600px"></iframe>
+echo '<a href="output.xlsx" download>Download Excel File</a>';
 
   <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">

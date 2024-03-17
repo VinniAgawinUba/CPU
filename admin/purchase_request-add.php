@@ -123,7 +123,7 @@ elseif($_SESSION['auth_role']==3)
             <tr>
                 <td>IPTel#/E-mail Address:</td>
                 <td>
-                    <input type="text" id="iptel_email" name="iptel_email" class="form-control">
+                    <input type="text" id="iptel_email" name="iptel_email" class="form-control" required>
                 </td>
             </tr>
             

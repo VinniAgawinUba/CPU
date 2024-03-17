@@ -87,6 +87,7 @@ elseif($_SESSION['auth_role']==3)
                                 <th>Edit</th>
                                 <?php if ($super_user) { ?><th>Delete</th><?php } ?>
                                 <?php if ($super_user) { ?><th>Assigned To</th><?php } ?>
+                                <th>Print</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -211,6 +212,14 @@ elseif($_SESSION['auth_role']==3)
                                                 ?>
                                         </td>
                                             <?php } ?>
+                                            
+                                        <td>
+                                            <!-- Print Button -->
+                                            <form action="printout.php" method="post">
+                                            <input type="hidden" name="id" value="<?= $row['id']; ?>">
+                                                <button type="submit" name="printout_btn" class="btn btn-success">Print</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                     <?php
                                 }
