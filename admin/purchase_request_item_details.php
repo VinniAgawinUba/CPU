@@ -201,39 +201,77 @@ elseif($_SESSION['auth_role']==3)
                         <div class="btn-group float-end" role="group" aria-label="Basic example">
                         </div>
                     <div class="card-body">
-                    <!-- Items Table -->
-                      <!-- Items Table-->
-                      <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Item Number</th>
-                                <th>Item Description</th>
-                                <th>Item Justification</th>
-                                <th>Item Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $items = "SELECT * FROM items WHERE purchase_request_id = $_GET[request_id]";
-                            $items_run = mysqli_query($con, $items);
-                            if (mysqli_num_rows($items_run) > 0) {
-                                foreach ($items_run as $row) {
-                                    ?>
-                                    <tr>
-                                        <td><?= $row['item_number']; ?></td>
-                                        <td><?= $row['item_description']; ?></td>
-                                        <td><?= $row['item_justification']; ?></td>
-                                        <td><?= $row['item_status']; ?></td>
-                                    </tr>
-                                    <?php
-                                }
+                                <!-- Items Table-->
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Item Number</th>
+                            <th>Item Description</th>
+                            <th>Item Justification</th>
+                            <th>Item Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $items = "SELECT * FROM items WHERE purchase_request_id = $_GET[request_id]";
+                        $items_run = mysqli_query($con, $items);
+                        if (mysqli_num_rows($items_run) > 0) {
+                            foreach ($items_run as $item_row) {
+                                ?>
+                                <tr>
+                                    <td><?= $item_row['item_number']; ?></td>
+                                    <td><?= $item_row['item_description']; ?></td>
+                                    <td><?= $item_row['item_justification']; ?></td>
+                                    <td>
+                                        <select class="item-status" data-item-id="<?= $item_row['id'];?>">
+                                            <option value="pending" <?= ($item_row['item_status'] == 'pending') ? 'selected' : ''; ?>>Pending</option>
+                                            <option value="approved" <?= ($item_row['item_status'] == 'approved') ? 'selected' : ''; ?>>Approved</option>
+                                            <option value="rejected" <?= ($item_row['item_status'] == 'rejected') ? 'selected' : ''; ?>>Rejected</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <?php
                             }
-                            else{echo "No Items Found";} 
-                            ?>
-                        </tbody>
-                    </table>
+                        } else {
+                            echo "No Items Found";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+
                     </div>
-                 </div>
+                    <script>
+                    // Add event listener to all item status dropdowns
+                    document.querySelectorAll('.item-status').forEach(function(select) {
+                        select.addEventListener('change', function() {
+                            // Get the selected value and item id
+                            var newStatus = this.value;
+                            var itemId = this.getAttribute('data-item-id');
+
+                            // Send AJAX request to update item status
+                            var xhr = new XMLHttpRequest();
+                            xhr.open('POST', 'javascript-update_item_status.php', true);
+                            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                            xhr.onload = function() {
+                                // Update table cell with new status
+                                if (xhr.status === 200) {
+                                    // Assuming the response contains the updated status
+                                    var response = JSON.parse(xhr.responseText);
+                                    if (response.success) {
+                                        // Update the table cell text
+                                        var statusCell = document.querySelector('.item-status[data-item-id="'+ itemId +'"]');
+                                        statusCell.textContent = newStatus;
+                                        location.reload();
+                                    } else {
+                                        console.error('Error updating item status');
+                                    }
+                                }
+                            };
+                            xhr.send('id=' + itemId + '&new_status=' + newStatus);
+                        });
+                    });
+                </script>
+
 
                     
 
