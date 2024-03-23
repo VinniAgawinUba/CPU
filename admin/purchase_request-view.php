@@ -58,6 +58,7 @@ elseif($_SESSION['auth_role']==3)
                                 <ul class="dropdown-menu" aria-labelledby="filterDropdown">
                                     <li><a class="dropdown-item filter-btn" href="#" data-status="all">All</a></li>
                                     <li><a class="dropdown-item filter-btn" href="#" data-status="pending">Pending</a></li>
+                                    <li><a class="dropdown-item filter-btn" href="#" data-status="acknowledged_by_cpu">Acknowledged by CPU</a></li>
                                     <li><a class="dropdown-item filter-btn" href="#" data-status="approved">Approved</a></li>
                                     <li><a class="dropdown-item filter-btn" href="#" data-status="rejected">Rejected</a></li>
                                     <li><a class="dropdown-item filter-btn" href="#" data-status="completed">Completed</a></li>
@@ -79,7 +80,7 @@ elseif($_SESSION['auth_role']==3)
                                 <th>Requestor Name</th>
                                 <th>Unit/Dept/College</th>
                                 <th>Iptel#/Email</th>
-                                <th>Purchase Type</th>
+                                <th>Acknowledged by CPU</th>
                                 <th>Endorsed by</th>
                                 <th>Requested Date</th>
                                 <th>Status</th>
@@ -158,7 +159,9 @@ elseif($_SESSION['auth_role']==3)
                                             </td>
                                             <td style="color:<?= $Changetext_color ?>">
                                             <?php 
-                                            echo $row['purchase_types']
+                                            echo 
+                                            //If acknowledged_by_cpu = 1, echo "CPU Acknowledged", else echo "Not Acknowledged"
+                                            $row['acknowledged_by_cpu'] == 1 ? "CPU Acknowledged" : "Not Acknowledged";
                                             ?>
                                             </td>
                                         </td>

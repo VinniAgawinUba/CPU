@@ -40,8 +40,8 @@ $spreadsheet = IOFactory::load($templateFile);
 $sheet = $spreadsheet->getActiveSheet();
 
 // Set cell values
-$sheet->setCellValue('B6', 'WASSUP CUH');
-$sheet->setCellValue('C6', 'NIBBA');
+$sheet->setCellValue('B6', 'WASSUP');
+$sheet->setCellValue('C6', 'HELLO WORLD');
 // Add more cell values as needed...
 
 // Save the modified Excel file

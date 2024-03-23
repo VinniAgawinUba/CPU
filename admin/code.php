@@ -192,6 +192,7 @@ $printed_name = $_POST['printed_name'];
 $unit_dept_college = $_POST['unit_dept_college'];
 $iptel_email = $_POST['iptel_email'];
 $requestor_signature = $_POST['signed_Requestor'];
+$acknowledged_by_cpu = $_POST['acknowledged_by_cpu'] == true ? '1' : '0'; // Set acknowledged-by-cpu to 1/true if checkbox is checked, otherwise set to 0/false
 
  // Signatures
  $signatures = array(
@@ -215,15 +216,15 @@ $purchase_types = isset($_POST['purchase_type']) ? implode(',', $_POST['purchase
 // Items Information
 $item_number = $_POST['item_number'];
 $item_qty = $_POST['item_qty'];
-$item_types = $_POST['item_type'];
+//$item_types = $_POST['item_types'];
 $item_justifications = $_POST['item_justification'];
 $item_description = $_POST['item_description'];
-$item_reasons = $_POST['item_reason'];
-$item_date_conditions = $_POST['item_date_condition'];
+//$item_reasons = $_POST['item_reason'];
+//$item_date_conditions = $_POST['item_date_condition'];
 $item_status = $_POST['item_status'];
 
 // Remarks by College Dean/Principal
-$remarks_dean = $_POST['remarks_dean'];
+//$remarks_dean = $_POST['remarks_dean'];
 
 // Endorsed by College Dean/Principal
 $endorsed_by_dean = $_POST['endorsed_by_dean'];
@@ -253,7 +254,7 @@ $office_of_the_president_signature = $_POST['signed_5'];
 // Update Purchase Request into the database
 $sql_purchase_request = "UPDATE purchase_requests SET purchase_request_number = '$purchase_request_number', printed_name = '$printed_name', 
 signed_Requestor = '$requestor_signature', unit_dept_college = '$unit_dept_college', 
-iptel_email = '$iptel_email', purchase_types = '$purchase_types', remarks_dean = '$remarks_dean', 
+iptel_email = '$iptel_email', purchase_types = '$purchase_types', 
 endorsed_by_dean = '$endorsed_by_dean', vice_president_remarks = '$vice_president_remarks', 
 vice_president_approved = '$vice_president_approved', signed_1 = '$vice_president_signature', 
 vice_president_administration_remarks = '$vice_president_administration_remarks', 
@@ -263,7 +264,7 @@ budget_controller_approved = '$budget_controller_approved', budget_controller_co
 signed_3 = '$budget_controller_signature', university_treasurer_remarks = '$university_treasurer_remarks', 
 university_treasurer_approved = '$university_treasurer_approved', signed_4 = '$university_treasurer_signature', 
 office_of_the_president_remarks = '$office_of_the_president_remarks', office_of_the_president_approved = '$office_of_the_president_approved', 
-signed_5 = '$office_of_the_president_signature' WHERE id = '$id'";
+signed_5 = '$office_of_the_president_signature', acknowledged_by_cpu = '$acknowledged_by_cpu' WHERE id = '$id'";
 // Execute Purchase Request query
 if ($con->query($sql_purchase_request) === TRUE) {
 
@@ -394,8 +395,8 @@ if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
     if (count($current_items) < count($item_qty)) {
         // Insert Items into the database
         for ($i = count($current_items); $i < count($item_qty); $i++) {
-            $sql_item = "INSERT INTO items (item_number,purchase_request_id, item_qty, item_type, item_description,item_justification, item_reason, item_date_condition) 
-                         VALUES ('{$item_number[$i]}','$purchase_request_id', '{$item_qty[$i]}', '{$item_types[$i]}', '{$item_description[$i]}','{$item_justifications[$i]}', '{$item_reasons[$i]}', '{$item_date_conditions[$i]}')";
+            $sql_item = "INSERT INTO items (item_number,purchase_request_id, item_qty,  item_description,item_justification) 
+                         VALUES ('{$item_number[$i]}','$purchase_request_id', '{$item_qty[$i]}',  '{$item_description[$i]}','{$item_justifications[$i]}' )";
             
             // Execute Item query
             if ($con->query($sql_item) !== TRUE) {
