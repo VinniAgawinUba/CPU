@@ -179,6 +179,12 @@ elseif($_SESSION['auth_role']==3)
                             elseif ($row['status'] == 'pending') {
                                 echo "<tr><td colspan='100%' class='text-center'>This request is still pending</td></tr>";
                             }
+                            elseif ($row['status'] == 'partially-completed') {
+                                echo "<tr><td colspan='100%' class='text-center'>This request is still partially-completed</td></tr>";
+                            }
+                            elseif ($row['status'] == 'completed') {
+                                echo "<tr><td colspan='100%' class='text-center text-white bg-success'>This request is completed</td></tr>";
+                            }
                             elseif ($row['status'] == 'rejected') {
                                 echo "<tr><td colspan='100%' class='text-center text-white bg-danger'>This request has been rejected</td></tr>";
                             }
@@ -205,7 +211,9 @@ elseif($_SESSION['auth_role']==3)
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <th>Item ID</th>
                             <th>Item Number</th>
+                            <th>Item Qty</th>
                             <th>Item Description</th>
                             <th>Item Justification</th>
                             <th>Item Status</th>
@@ -219,13 +227,16 @@ elseif($_SESSION['auth_role']==3)
                             foreach ($items_run as $item_row) {
                                 ?>
                                 <tr>
+                                    <td><?= $item_row['id']; ?></td>
                                     <td><?= $item_row['item_number']; ?></td>
+                                    <td><?= $item_row['item_qty']; ?></td>
                                     <td><?= $item_row['item_description']; ?></td>
                                     <td><?= $item_row['item_justification']; ?></td>
                                     <td>
                                         <select class="item-status" data-item-id="<?= $item_row['id'];?>">
                                             <option value="pending" <?= ($item_row['item_status'] == 'pending') ? 'selected' : ''; ?>>Pending</option>
                                             <option value="approved" <?= ($item_row['item_status'] == 'approved') ? 'selected' : ''; ?>>Approved</option>
+                                            <option value="completed" <?= ($item_row['item_status'] == 'completed') ? 'selected' : ''; ?>>Completed</option>
                                             <option value="rejected" <?= ($item_row['item_status'] == 'rejected') ? 'selected' : ''; ?>>Rejected</option>
                                         </select>
                                     </td>
@@ -240,6 +251,7 @@ elseif($_SESSION['auth_role']==3)
                 </table>
 
                     </div>
+                    <!-- JavaScript to update item status (Redirects to javascript-update_item_status.php)-->
                     <script>
                     // Add event listener to all item status dropdowns
                     document.querySelectorAll('.item-status').forEach(function(select) {
@@ -280,6 +292,31 @@ elseif($_SESSION['auth_role']==3)
                         });
                     });
                 </script>
+                <!-- JavaScript to check and update purchase request status -->
+                <script>
+                    function checkAndUpdatePurchaseStatus() {
+                        var purchase_request_id = <?= $_GET['request_id']; ?>;
+                        // Send AJAX request to check and update purchase request status
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', 'javascript-check_purchase_status.php', true);
+                        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                        xhr.onload = function() {
+                            if (xhr.status === 200) {
+                                // Optional: You can handle the response here if needed
+                            } else {
+                                console.error('Error checking and updating purchase request status');
+                            }
+                        };
+                        xhr.send('purchase_request_id=' + purchase_request_id);
+                    }
+
+                    // Call checkAndUpdatePurchaseStatus when the page is fully loaded
+                    window.onload = function() {
+                        checkAndUpdatePurchaseStatus();
+                    };
+                </script>
+
+
 
 
                     
@@ -302,7 +339,6 @@ elseif($_SESSION['auth_role']==3)
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>History ID</th>
                                 <th>Item ID</th>
                                 <th>Change Made</th>
                                 <th>Last Modified by</th>
@@ -317,7 +353,6 @@ elseif($_SESSION['auth_role']==3)
                                 foreach ($request_history_run as $row) {
                                     ?>
                                     <tr>
-                                        <td><?= $row['id']; ?></td>
                                         <td><?= $row['item_id']; ?></td>
                                         <td><?= $row['change_made']; ?></td>
                                         <td><?= $row['last_modified_by']; ?></td>
