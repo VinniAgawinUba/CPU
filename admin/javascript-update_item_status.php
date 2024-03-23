@@ -18,10 +18,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id']) && isset($_POST[
     // Sanitize and validate inputs
     $item_id = mysqli_real_escape_string($con, $_POST['id']);
     $new_status = mysqli_real_escape_string($con, $_POST['new_status']);
+    $purchase_request_id = mysqli_real_escape_string($con, $_POST['purchase_request_id']);
+    $last_modified_by = mysqli_real_escape_string($con, $_POST['last_modified_by']);
+    $change_made = mysqli_real_escape_string($con, $_POST['change_made']);
 
     // Update item status in the database
     $update_query = "UPDATE items SET item_status = '$new_status' WHERE id = '$item_id'";
     $result = mysqli_query($con, $update_query);
+
+    //Insert into items_history in the database
+    $insert_query = "INSERT INTO items_history (item_id,purchase_request_id, change_made, last_modified_by) VALUES ('$item_id', '$purchase_request_id', '$change_made', '$last_modified_by')";
+    $result = mysqli_query($con, $insert_query);
 
     if ($result) {
         // If the update was successful, send a JSON response

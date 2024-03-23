@@ -244,9 +244,18 @@ elseif($_SESSION['auth_role']==3)
                     // Add event listener to all item status dropdowns
                     document.querySelectorAll('.item-status').forEach(function(select) {
                         select.addEventListener('change', function() {
-                            // Get the selected value and item id
+                            <?php
+                            // Get the current user from PHP session
+                            $CURRENT_USER = $_SESSION['auth_user']['user_name'];
+                            // Echo the PHP variable into JavaScript
+                            echo "var user = '$CURRENT_USER';";
+                            ?>
+                            // Get the selected value and item id, and other values for history logs
                             var newStatus = this.value;
                             var itemId = this.getAttribute('data-item-id');
+                            var purchase_request_id = <?= $_GET['request_id']; ?>;
+                            var change_made = 'Item status changed to ' + newStatus;
+                            var last_modified_by = user;
 
                             // Send AJAX request to update item status
                             var xhr = new XMLHttpRequest();
@@ -267,7 +276,7 @@ elseif($_SESSION['auth_role']==3)
                                     }
                                 }
                             };
-                            xhr.send('id=' + itemId + '&new_status=' + newStatus);
+                            xhr.send('id=' + itemId + '&new_status=' + newStatus + '&purchase_request_id=' + purchase_request_id + '&change_made=' + change_made + '&last_modified_by=' + last_modified_by);
                         });
                     });
                 </script>
