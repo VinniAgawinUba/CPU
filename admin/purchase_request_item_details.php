@@ -3,6 +3,7 @@ include('authentication.php');
 include('includes/header.php');
 include('includes/scripts.php');
 
+
 //Initialize Variable
 $admin = null;
 $super_user = null;
@@ -30,78 +31,51 @@ elseif($_SESSION['auth_role']==3)
 ?>
 
 
-
 <div class="container-fluid px-4">
-        <h4 class="mt-4">Purchase Requests</h4>
+        <h4 class="mt-4">Purchase Item Details</h4>
             <ol class="breadcrumb mb-4">
                 <li class="breadcrumb-item active">Dashboard</li>
-                <li class="breadcrumb-item">Purchase Requests</li>
+                <li class="breadcrumb-item">Purchase Request Details</li>
             </ol>
             <div class="row">
 
             <div class="col-md-12">
                 <?php include('message.php'); ?>
                 <div class="card">
+                    <!-- Request Details Card -->
                     <div class="card-header">
-                        <h4>View Purchase Requests
-                        <a href="purchase_request-add.php" class="btn btn-primary float-end">Add Purchase Request</a>
+                        <h4>Request Details
+                        <a href="purchase_request-view.php" class="btn btn-danger float-end">Back</a>
                         </h4>
                         <div class="btn-group float-end" role="group" aria-label="Basic example">
     
 
                     </div>
                     <div class="card-body">
-                        <div class="dropdown">
-                                <button class="btn btn-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Filter by Status
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="filterDropdown">
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="all">All</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="pending">Pending</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="approved">Approved</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="rejected">Rejected</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="completed">Completed</a></li>
-                                    
-                                    <!-- Add more items for other statuses as needed -->
-                                </ul>
-                                
-                        </div>
+                        
                     </div>
 
 
 
-
-                    <table id="myPurchaseRequests" class="table table-bordered table-striped">
+                    <!-- Request Details Table -->
+                    <table  class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                            <th>ID</th>
                                 <th>Purchase Request Number</th>
                                 <th>Requestor Name</th>
                                 <th>Unit/Dept/College</th>
                                 <th>Iptel#/Email</th>
-                                <th>Acknowledged by CPU</th>
+                                <th>Purchase Type</th>
                                 <th>Endorsed by</th>
                                 <th>Requested Date</th>
                                 <th>Status</th>
-                                <th>History</th>
-                                <th>Edit</th>
-                                <?php if ($super_user) { ?><th>Delete</th><?php } ?>
                                 <?php if ($super_user) { ?><th>Assigned To</th><?php } ?>
-                                <th>Print</th>
-
-                                <?php if ($super_user) { ?><th>Item Details</th><?php } ?>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            if($super_user || $department_editor)
-                            {
-                                $request = "SELECT * FROM purchase_requests ORDER BY id DESC";
-                            }
-                            else
-                            {
-                                $request = "SELECT * FROM purchase_requests WHERE assigned_user = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
-                            }
+                            $request = "SELECT * FROM purchase_requests WHERE id = $_GET[request_id]";
                             $request_run = mysqli_query($con, $request);
                             if (mysqli_num_rows($request_run) > 0) {
                                 foreach ($request_run as $row) {
@@ -113,27 +87,21 @@ elseif($_SESSION['auth_role']==3)
                                     // Add a CSS class based on the condition
                                     $row_class = '';
                                     $Changetext_color = 'black';
-                                    if ($difference >= 30 && ($row['status'] != 'approved' && ($row['status'] != 'completed'))) {
+                                    if ($difference >= 30 && $row['status'] != 'approved') {
                                         $row_class = 'bg-danger'; // Older than or equal to 30 days, set background to red
                                         $Changetext_color = 'white'; // Set text color to white
-                                    } 
-                                    elseif ($difference >= 15 && ($row['status'] != 'approved' && ($row['status'] != 'completed'))) {
+                                    } elseif ($difference >= 15 && $row['status'] != 'approved') {
                                         $row_class = 'bg-warning'; // Older than or equal to 15 days but less than 30, set background to yellow
                                         $Changetext_color = 'black'; // Set text color to dark
-                                    } 
-                                    elseif ($row['status'] == 'rejected'){
-                                        $row_class = 'bg-danger'; // Status is Not Approved, set background to blue
-                                        $Changetext_color = 'white'; // Set text color to white
-                                    }
-                                    elseif ($row['status'] == 'approved' || $row['status'] == 'completed') {
-                                        $row_class = 'bg-success'; // Status is Approved, set background to green
+                                    } elseif ($row['status'] == 'approved') {
+                                        $row_class = 'bg-success'; // Status is 'Approved', set background to green
                                         $Changetext_color = 'white'; // Set text color to white
                                     }
                                      
                                     ?>
                                     <tr class="<?= $row_class ?>">
                                         <td style="color:<?= $Changetext_color ?>">
-                                            <a href="purchase_request_details.php?request_id=<?= $row['id']; ?>">
+                                            <a href="purchase_request_history.php?request_id=<?= $row['id']; ?>">
                                                 <?= $row['id']; ?> 
                                             </a>
                                         
@@ -160,9 +128,7 @@ elseif($_SESSION['auth_role']==3)
                                             </td>
                                             <td style="color:<?= $Changetext_color ?>">
                                             <?php 
-                                            echo 
-                                            //If acknowledged_by_cpu = 1, echo "CPU Acknowledged", else echo "Not Acknowledged"
-                                            $row['acknowledged_by_cpu'] == 1 ? "CPU Acknowledged" : "Not Acknowledged";
+                                            echo $row['purchase_types']
                                             ?>
                                             </td>
                                         </td>
@@ -170,24 +136,8 @@ elseif($_SESSION['auth_role']==3)
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['requested_date']; ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['status']; ?></td>
                                         
-                                        <td>
-                                            <a href="purchase_request_history.php?request_id=<?= $row['id']; ?>" class="btn btn-secondary">History</a>
-                                        </td>
-
-                                        <td>
-                                            <a href="purchase_request-edit.php?id=<?= $row['id']; ?>" class="btn btn-primary">Edit</a>
-                                        </td>
-
-                                        <!-- If Super User, see Delete Button -->
-                                        <?php if ($super_user) { ?>
-                                        <td>
-                                        <form id="deleteForm" action="code.php" method="POST">
-                                            <input type="hidden" name="id" value="<?= $row['id']; ?>">
-                                            <button type="submit" name="purchase_request_delete_btn" value="<?=$row['id']?>" class="btn btn-danger deleteButton" id="purchase_request_delete_btn">Delete</button>
-                                        </form>
-
-                                        </td>
-                                        <?php } ?>
+                                        
+                                       
                                         <!-- If Super User, see Assigned User -->
                                         <?php if ($super_user) { ?>
                                         <td style="color:<?= $Changetext_color ?>">
@@ -216,31 +166,136 @@ elseif($_SESSION['auth_role']==3)
                                                 ?>
                                         </td>
                                             <?php } ?>
-                                            
-                                        <td>
-                                            <!-- Print Button -->
-                                            <form action="printout.php" method="post">
-                                            <input type="hidden" name="id" value="<?= $row['id']; ?>">
-                                                <button type="submit" name="printout_btn" class="btn btn-success">Print</button>
-                                            </form>
-                                        </td>
-
-                                        <!-- If Super User, see Item Details -->
-                                        <?php if ($super_user) { ?>
-                                        <td >
-                                            <a href="purchase_request_item_details.php?request_id=<?= $row['id']; ?>" class="btn btn-info">Item Details</a>
-                                        </td>
-                                        <?php } ?>
-
                                     </tr>
                                     <?php
                                 }
                             } 
+                            if ($difference >= 30 && $row['status'] != 'approved') {
+                                echo "<tr><td colspan='100%' class='text-center text-white bg-danger'>This request is older than 30 days and has not been approved</td></tr>";
+                            } 
+                            elseif ($difference >= 15 && $row['status'] != 'approved') {
+                                echo "<tr><td colspan='100%' class='text-center text-white bg-warning'>This request is older than 15 days and has not been approved</td></tr>";
+                            } 
+                            elseif ($row['status'] == 'pending') {
+                                echo "<tr><td colspan='100%' class='text-center'>This request is still pending</td></tr>";
+                            }
+                            elseif ($row['status'] == 'rejected') {
+                                echo "<tr><td colspan='100%' class='text-center text-white bg-danger'>This request has been rejected</td></tr>";
+                            }
+                            elseif ($row['status'] == 'approved') {
+                                echo "<tr><td colspan='100%' class='text-center text-white bg-success'>This request has been approved</td></tr>";
+                            }
                             ?>
                             
                         </tbody>
                     </table>
+
+
+                    
+                    
+                    </div>
+                    <!-- Items Card -->
+                    <div class="card-header">
+                        <h4>Items
+                        </h4>
+                        <div class="btn-group float-end" role="group" aria-label="Basic example">
+                        </div>
+                    <div class="card-body">
+                    <!-- Items Table -->
+                      <!-- Items Table-->
+                      <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Item Number</th>
+                                <th>Item Description</th>
+                                <th>Item Justification</th>
+                                <th>Item Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $items = "SELECT * FROM items WHERE purchase_request_id = $_GET[request_id]";
+                            $items_run = mysqli_query($con, $items);
+                            if (mysqli_num_rows($items_run) > 0) {
+                                foreach ($items_run as $row) {
+                                    ?>
+                                    <tr>
+                                        <td><?= $row['item_number']; ?></td>
+                                        <td><?= $row['item_description']; ?></td>
+                                        <td><?= $row['item_justification']; ?></td>
+                                        <td><?= $row['item_status']; ?></td>
+                                    </tr>
+                                    <?php
+                                }
+                            }
+                            else{echo "No Items Found";} 
+                            ?>
+                        </tbody>
+                    </table>
+                    </div>
+                 </div>
+
+                    
+
+                    <!-- Item History Card -->
+                    <div class="card-header">
+                        <h4>Item History Logs
+                        </h4>
+                        <div class="btn-group float-end" role="group" aria-label="Basic example">
+    
+
+                    </div>
+                    <div class="card-body">
                         
+                    </div>
+
+
+
+                    <!-- Item History Table -->
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>History ID</th>
+                                <th>Item ID</th>
+                                <th>Change Made</th>
+                                <th>Last Modified by</th>
+                                <th>DateTime Occured</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $request_history = "SELECT * FROM items_history WHERE purchase_request_id = $_GET[request_id] ORDER BY datetime_occured DESC";
+                            $request_history_run = mysqli_query($con, $request_history);
+                            if (mysqli_num_rows($request_history_run) > 0) {
+                                foreach ($request_history_run as $row) {
+                                    ?>
+                                    <tr>
+                                        <td><?= $row['id']; ?></td>
+                                        <td><?= $row['item_id']; ?></td>
+                                        <td><?= $row['change_made']; ?></td>
+                                        <td><?= $row['last_modified_by']; ?></td>
+
+                                        
+                                        <td><?= date('F j Y h:i A', strtotime($row['datetime_occured'])); ?></td>
+
+                                        
+                                        
+                                            
+                                        
+                                     
+                                    </tr>
+                                    <?php
+                                }
+                            }
+                            else{echo "No Item History Found";} 
+                            ?>
+                            
+                        </tbody>
+                    </table>
+
+
+                    
+                    
                     </div>
             </div>
         </div>
