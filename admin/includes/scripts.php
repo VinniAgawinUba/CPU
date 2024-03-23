@@ -52,6 +52,12 @@
             $('#myPurchaseRequests').DataTable({
                 "order": [[ 0, "desc" ]]
             });
+            $('#myItemHistory').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myRequestDetailsHistory').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
 
             } );
         </script>

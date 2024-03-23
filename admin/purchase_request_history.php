@@ -210,7 +210,7 @@ elseif($_SESSION['auth_role']==3)
 
 
                     <!-- Request History Table -->
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped" id="myRequestDetailsHistory">
                         <thead>
                             <tr>
                                 <th>ID</th>

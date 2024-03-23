@@ -233,9 +233,19 @@ elseif($_SESSION['auth_role']==3)
                                     <td><?= $item_row['item_description']; ?></td>
                                     <td><?= $item_row['item_justification']; ?></td>
                                     <td>
-                                        <select class="item-status" data-item-id="<?= $item_row['id'];?>">
+                                        <select class="item-status" data-item-id="<?= $item_row['id'];?>" style="width:300px;">
                                             <option value="pending" <?= ($item_row['item_status'] == 'pending') ? 'selected' : ''; ?>>Pending</option>
                                             <option value="approved" <?= ($item_row['item_status'] == 'approved') ? 'selected' : ''; ?>>Approved</option>
+
+                                            <option value="for_pricing" <?= ($item_row['item_status'] == 'for_pricing') ? 'selected' : ''; ?>>For Pricing</option>
+                                            <option value="for_po" <?= ($item_row['item_status'] == 'for_po') ? 'selected' : ''; ?>>For Pricing Officer</option>
+                                            <option value="issued_po" <?= ($item_row['item_status'] == 'issued_po') ? 'selected' : ''; ?>>Issued Pricing Officer</option>
+
+                                            <option value="for_delivery_by_supplier" <?= ($item_row['item_status'] == 'for_delivery_by_supplier') ? 'selected' : ''; ?>>For Delivery by Supplier</option>
+                                            <option value="for_pickup_at_supplier" <?= ($item_row['item_status'] == 'for_pickup_at_supplier') ? 'selected' : ''; ?>>For Pickup at Supplier</option>
+                                            <option value="for_tagging" <?= ($item_row['item_status'] == 'for_tagging') ? 'selected' : ''; ?>>For Tagging</option>
+                                            <option value="for_delivery_to_requesting_unit" <?= ($item_row['item_status'] == 'for_delivery_to_requesting_unit') ? 'selected' : ''; ?>>For Delivery to Requesting Unit</option>
+
                                             <option value="completed" <?= ($item_row['item_status'] == 'completed') ? 'selected' : ''; ?>>Completed</option>
                                             <option value="rejected" <?= ($item_row['item_status'] == 'rejected') ? 'selected' : ''; ?>>Rejected</option>
                                         </select>
@@ -336,7 +346,7 @@ elseif($_SESSION['auth_role']==3)
 
 
                     <!-- Item History Table -->
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped" id="myItemHistory">
                         <thead>
                             <tr>
                                 <th>Item ID</th>
