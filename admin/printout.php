@@ -39,10 +39,153 @@ $spreadsheet = IOFactory::load($templateFile);
 // Get the active sheet
 $sheet = $spreadsheet->getActiveSheet();
 
-// Set cell values
-$sheet->setCellValue('B6', 'WASSUP');
-$sheet->setCellValue('C6', 'HELLO WORLD');
-// Add more cell values as needed...
+
+// Get purchase request ID from the URL
+$purchase_request_id = $_GET['id'];
+
+//Query purchase request data from the database
+$purchase_request_query = "SELECT * FROM purchase_requests WHERE id = '$purchase_request_id'";
+$purchase_request_result = mysqli_query($con, $purchase_request_query);
+$request_row = mysqli_fetch_array($purchase_request_result);
+
+// Query item data from the database
+$item_query = "SELECT * FROM items WHERE purchase_request_id = '$purchase_request_id'";
+$item_result = mysqli_query($con, $item_query);
+
+// Initialize arrays to store item data
+$itemNumbers = array();
+$itemQtys = array();
+$itemDescriptions = array();
+$itemJustifications = array();
+
+// Fetch item data and populate arrays
+while ($row = mysqli_fetch_assoc($item_result)) {
+    $itemNumbers[] = $row['item_number'];
+    $itemQtys[] = $row['item_qty'];
+    $itemDescriptions[] = $row['item_description'];
+    $itemJustifications[] = $row['item_justification'];
+}
+
+// Start row for inserting items in Excel
+$startRow = 6;
+
+// Loop through items and insert them into the Excel template
+for ($i = 0; $i < count($itemNumbers); $i++) {
+    $row = $startRow + $i;
+    $sheet->setCellValue('A' . $row, $itemNumbers[$i]);
+    $sheet->setCellValue('B' . $row, $itemQtys[$i]);
+
+    // Set item descriptions spanning from columns C to H
+    $sheet->mergeCells('C' . $row . ':H' . $row);
+    $sheet->setCellValue('C' . $row, $itemDescriptions[$i]);
+    // Apply border and alignment for description cells
+    $sheet->getStyle('C' . $row . ':H' . $row)->applyFromArray([
+        'borders' => [
+            'outline' => [
+                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+            ],
+        ],
+        'alignment' => [
+            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+        ],
+    ]);
+
+    // Set item justifications spanning from columns I to L
+    $sheet->mergeCells('I' . $row . ':L' . $row);
+    $sheet->setCellValue('I' . $row, $itemJustifications[$i]);
+    // Apply border and alignment for justification cells
+    $sheet->getStyle('I' . $row . ':L' . $row)->applyFromArray([
+        'borders' => [
+            'outline' => [
+                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+            ],
+        ],
+        'alignment' => [
+            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+        ],
+    ]);
+
+    // Apply alignment for columns A and B
+    $sheet->getStyle('A' . $row . ':B' . $row)->applyFromArray([
+        'alignment' => [
+            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+        ],
+    ]);
+
+    // Apply border for the right side of column A and left side of column B
+    $sheet->getStyle('A' . $row)->applyFromArray([
+        'borders' => [
+            'right' => [
+                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+            ],
+            'outline' => [
+                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+            ],
+        ],
+    ]);
+    $sheet->getStyle('B' . $row)->applyFromArray([
+        'borders' => [
+            'left' => [
+                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+            ],
+            'outline' => [
+                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+            ],
+        ],
+    ]);
+}
+
+
+
+
+
+// Shift down other fields beneath the items
+$endRow = $startRow + count($itemNumbers) - 1;
+$shiftDownRows = 1; // Number of rows to shift down
+$sheet->insertNewRowBefore($endRow + 1, $shiftDownRows);
+
+// Value to search for
+$searchValue_UnitDept = 'Unit/Dept:________________________________';
+
+// Loop through all cells to find the cell with the specific value
+foreach ($sheet->getRowIterator() as $row) {
+    foreach ($row->getCellIterator() as $cell) {
+        $cellValue = $cell->getValue();
+        if ($cellValue == $searchValue_UnitDept) {
+            // Found the cell with the specific value
+            // Perform operations here, like inserting something near it
+            // For example, insert a value in the cell to the right of it
+
+            // Get the column and row of the Unit/Dept cell convert to int add 2 then convert back to string
+            $nextColumn = chr(ord($cell->getColumn()) + 2);
+            $nextRow = $cell->getRow();
+            $sheet->setCellValue($nextColumn.$nextRow, ''.$request_row['unit_dept_college']);
+        }
+    }
+}
+
+
+
+// Set border style to none for each cell in the range after the last item
+$startShiftedRow = $endRow + 1;
+$endShiftedRow = $startShiftedRow + $shiftDownRows - 1;
+for ($r = $startShiftedRow; $r <= $endShiftedRow; $r++) {
+    for ($c = 'A'; $c <= 'L'; $c++) {
+        $sheet->getStyle($c . $r)->applyFromArray([
+            'borders' => [
+                'outline' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE,
+                ],
+            ],
+        ]);
+        
+    }
+}
+
+
 
 // Save the modified Excel file
 $outputFile = 'output.xlsx';

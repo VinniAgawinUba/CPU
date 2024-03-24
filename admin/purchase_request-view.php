@@ -47,10 +47,11 @@ elseif($_SESSION['auth_role']==3)
                         <a href="purchase_request-add.php" class="btn btn-primary float-end">Add Purchase Request</a>
                         </h4>
                         <div class="btn-group float-end" role="group" aria-label="Basic example">
+                    </div>
     
 
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="overflow-x: auto;">
                         <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     Filter by Status
@@ -68,6 +69,8 @@ elseif($_SESSION['auth_role']==3)
                                 
                         </div>
                     </div>
+
+                    <div class="card-body" style="overflow-x: auto;">
 
 
 
@@ -90,18 +93,26 @@ elseif($_SESSION['auth_role']==3)
                                 <?php if ($super_user) { ?><th>Assigned To</th><?php } ?>
                                 <th>Print</th>
 
-                                <?php if ($super_user) { ?><th>Item Details</th><?php } ?>
+                                <!-- If Super User or admin, see Item Details Column -->
+                                <?php if ($super_user || $admin) { ?><th>Item Details</th><?php } ?>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            if($super_user || $department_editor)
+                            //If Super User, show all purchase requests
+                            if($super_user)
                             {
                                 $request = "SELECT * FROM purchase_requests ORDER BY id DESC";
                             }
-                            else
+                            //If Admin, show only purchase requests assigned to the logged in user
+                            if ($admin)
                             {
-                                $request = "SELECT * FROM purchase_requests WHERE assigned_user = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
+                                $request = "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
+                            }
+                            //If Department Editor, show only purchase requests  that are not completed, partially-completed, or rejected or approved
+                            if ($department_editor)
+                            {
+                                $request = "SELECT * FROM purchase_requests WHERE status NOT IN ('completed', 'partially-completed', 'rejected', 'approved') ORDER BY id DESC";
                             }
                             $request_run = mysqli_query($con, $request);
                             if (mysqli_num_rows($request_run) > 0) {
@@ -189,45 +200,67 @@ elseif($_SESSION['auth_role']==3)
 
                                         </td>
                                         <?php } ?>
-                                        <!-- If Super User, see Assigned User -->
+
+                                        <!-- If Super User, see Assigned User Column -->
                                         <?php if ($super_user) { ?>
-                                        <td style="color:<?= $Changetext_color ?>">
-                                        <?php 
-                                                if($row['assigned_user_id'] > 0)
-                                                {
-                                                    $user_query = "SELECT * FROM users WHERE id = ".$row['assigned_user'];
-                                                    $user_query_run = mysqli_query($con, $user_query);
-                                                    if(mysqli_num_rows($user_query_run) > 0)
-                                                    {
-                                                        foreach($user_query_run as $user_list)
-                                                        {
-                                                            echo $user_list['fname'].' '.$user_list['lname'];
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        echo "No Assigned User Found";
-                                                    }
+                                        <td>
+                                        <select class="assigned-user" data-request-id="<?= $row['id']; ?>">
+                                            <option>--Select User--</option>
+                                            <?php
+                                            // Fetch all admin users from the database
+                                            $user_query = "SELECT * FROM users WHERE role_as = 1 ORDER BY id DESC";
+                                            $user_query_run = mysqli_query($con, $user_query);
+                                            if (mysqli_num_rows($user_query_run) > 0) {
+                                                foreach ($user_query_run as $user_list) {
+                                                    $selected = ($user_list['id'] == $row['assigned_user_id']) ? 'selected' : ''; // Check if user is assigned
+                                                    echo '<option value="' . $user_list['id'] . '" ' . $selected . '>' . $user_list['email'] . '</option>';
                                                 }
-                                                else
-                                                {
-                                                    echo "No Assigned User Found";
-                                                }
-                                                
-                                                ?>
+                                            } else {
+                                                echo '<option>No Users Found</option>';
+                                            }
+                                            ?>
+                                        </select>
                                         </td>
                                             <?php } ?>
+                                             <!-- Java Script to update assigned user (Redirects to javascript-update_assigned_user.php) -->
+                                             <script>
+                                            // Add event listener to all assigned user dropdowns
+                                            document.querySelectorAll('.assigned-user').forEach(function(select) {
+                                                select.addEventListener('change', function() {
+                                                    // Get the selected value and request id
+                                                    var newUserId = this.value;
+                                                    var requestId = this.getAttribute('data-request-id');
+
+                                                    // Send AJAX request to update assigned user
+                                                    var xhr = new XMLHttpRequest();
+                                                    xhr.open('POST', 'javascript-update_assigned_user.php', true);
+                                                    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                                                    xhr.onload = function() {
+                                                        if (xhr.status === 200) {
+                                                            var response = JSON.parse(xhr.responseText);
+                                                            if (response.success) {
+                                                                // Update successful, you can update UI if needed
+                                                                console.log('Assigned user updated successfully');
+                                                                //reload page
+                                                                location.reload();
+                                                            } else {
+                                                                console.error('Error updating assigned user');
+                                                            }
+                                                        }
+                                                    };
+                                                    xhr.send('id=' + requestId + '&assigned_user_id=' + newUserId);
+                                                });
+                                            });
+                                        </script>
+
                                             
                                         <td>
                                             <!-- Print Button -->
-                                            <form action="printout.php" method="post">
-                                            <input type="hidden" name="id" value="<?= $row['id']; ?>">
-                                                <button type="submit" name="printout_btn" class="btn btn-success">Print</button>
-                                            </form>
+                                            <a href="printout.php?id=<?= $row['id']; ?>" class="btn btn-success">Print</a>
                                         </td>
 
-                                        <!-- If Super User, see Item Details -->
-                                        <?php if ($super_user) { ?>
+                                        <!-- If Super User or admin, see Item Details -->
+                                        <?php if ($super_user || $admin) { ?>
                                         <td >
                                             <a href="purchase_request_item_details.php?request_id=<?= $row['id']; ?>" class="btn btn-info">Item Details</a>
                                         </td>
@@ -236,11 +269,16 @@ elseif($_SESSION['auth_role']==3)
                                     </tr>
                                     <?php
                                 }
+                            }
+                            else
+                            {
+                                echo "No Record Found";
                             } 
                             ?>
                             
                         </tbody>
                     </table>
+                    </div>
                         
                     </div>
             </div>

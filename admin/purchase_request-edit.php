@@ -29,7 +29,7 @@ elseif($_SESSION['auth_role']==3)
 //Query to get request details
 $request_id = $_GET['id'];
 //Item Status Choices
-$status_choices = array('pending', 'approved', 'rejected', 'completed');
+$status_choices = array('pending', 'approved', 'for_pricing', 'for_po','issued_po','for_delivery_by_supplier','for_pickup_at_supplier','for_tagging','for_delivery_to_requesting_unit','rejected','completed');
 
 //Query to get request details
 $request_query = "SELECT * FROM purchase_requests WHERE id = '$request_id' LIMIT 1";
@@ -134,7 +134,7 @@ if(mysqli_num_rows($request_query_run) > 0)
                     </td>
                     <td>
                         <!-- JUSTIFICATION -->
-                        <textarea type="text" name="item_justification[]" class="form-control" style="width:500px" required><?php echo $item_justification; ?> </textarea>
+                        <textarea type="text" name="item_justification[]" class="form-control" style="width:500px" required><?php echo $item_justification; ?></textarea>
                     </td>
                     <td>
                         <!-- ITEM STATUS -->
@@ -462,6 +462,8 @@ if(mysqli_num_rows($request_query_run) > 0)
   </div>
 </div>
 
+<!-- Approve & Request Should only be visible if user is super_user or admin -->
+<?php if($super_user || $admin) { ?>
 
 <!-- Approve Request Forms (sets status to approved) -->
 <div class="mb-4 row">
@@ -498,6 +500,7 @@ if(mysqli_num_rows($request_query_run) > 0)
       </fieldset>
   </div>
   
+    <?php } ?>
 
   <!-- Bootstrap JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
