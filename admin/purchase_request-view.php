@@ -192,13 +192,13 @@ elseif($_SESSION['auth_role']==3)
 
                                         <!-- If Super User, see Delete Button -->
                                         <?php if ($super_user) { ?>
-                                        <td>
-                                        <form id="deleteForm" action="code.php" method="POST">
-                                            <input type="hidden" name="id" value="<?= $row['id']; ?>">
-                                            <button type="submit" name="purchase_request_delete_btn" value="<?=$row['id']?>" class="btn btn-danger deleteButton" id="purchase_request_delete_btn">Delete</button>
-                                        </form>
+                                            <td>
+                                                <form id="deleteForm<?= $row['id']; ?>" action="code.php" method="POST">
+                                                    <input type="hidden" name="id" value="<?= $row['id']; ?>">
+                                                    <button type="submit" name="purchase_request_delete_btn" id="purchase_request_delete_btn"class="btn btn-danger deleteButton">Delete</button>
+                                                </form>
+                                            </td>
 
-                                        </td>
                                         <?php } ?>
 
                                         <!-- If Super User, see Assigned User Column -->
@@ -284,6 +284,28 @@ elseif($_SESSION['auth_role']==3)
             </div>
         </div>
 </div>
+
+<!-- Delete Confirmation Script -->
+<!-- JavaScript for Delete Button Confirmation (Buttons Should have class of deleteButton) -->
+<script>
+    // Select all elements with the class 'deleteButton'
+    var deleteButtons = document.querySelectorAll(".deleteButton");
+    
+    // Iterate over each delete button and attach event listener
+    deleteButtons.forEach(function(button) {
+        button.addEventListener("click", function(event) {
+            if (confirm("Are you sure you want to delete this document?")) {
+                // Find the closest form and submit it
+                this.closest(".deleteForm").submit();
+            } else {
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+
+
+
         
 <?php
 include('includes/footer.php');

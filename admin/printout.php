@@ -144,13 +144,21 @@ for ($i = 0; $i < count($itemNumbers); $i++) {
 
 // Shift down other fields beneath the items
 $endRow = $startRow + count($itemNumbers) - 1;
-$shiftDownRows = 1; // Number of rows to shift down
+$minShiftDownRows = 1; // Minimum number of rows to shift down
+
+// Calculate the actual number of rows to shift down based on the number of items
+$shiftDownRows = max($minShiftDownRows, count($itemNumbers));
+
+// Shift down rows beneath the items
 $sheet->insertNewRowBefore($endRow + 1, $shiftDownRows);
+
+// Update the end row after shifting
+$endRow += $shiftDownRows;
 
 // Value to search for
 $searchValue_UnitDept = 'Unit/Dept:________________________________';
 
-// Loop through all cells to find the cell with the specific value
+// Loop through all cells to find the cell with the specific value UnitDept
 foreach ($sheet->getRowIterator() as $row) {
     foreach ($row->getCellIterator() as $cell) {
         $cellValue = $cell->getValue();
@@ -167,12 +175,8 @@ foreach ($sheet->getRowIterator() as $row) {
     }
 }
 
-
-
-// Set border style to none for each cell in the range after the last item
-$startShiftedRow = $endRow + 1;
-$endShiftedRow = $startShiftedRow + $shiftDownRows - 1;
-for ($r = $startShiftedRow; $r <= $endShiftedRow; $r++) {
+// Remove borders for the empty cells between the last item row and the shifted cells
+for ($r = $endRow - $shiftDownRows + 1; $r <= $endRow; $r++) {
     for ($c = 'A'; $c <= 'L'; $c++) {
         $sheet->getStyle($c . $r)->applyFromArray([
             'borders' => [
@@ -181,9 +185,11 @@ for ($r = $startShiftedRow; $r <= $endShiftedRow; $r++) {
                 ],
             ],
         ]);
-        
     }
 }
+
+
+
 
 
 

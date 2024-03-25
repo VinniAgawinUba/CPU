@@ -74,11 +74,11 @@ if(isset($_POST['request_add_btn_front'])){
   
     // Items Information
     $item_qty = $_POST['item_qty'];
-    $item_types = $_POST['item_type'];
+    //$item_types = $_POST['item_type'];
     $item_justifications = $_POST['item_justification'];
     $item_description = $_POST['item_description'];
-    $item_reasons = $_POST['item_reason'];
-    $item_date_conditions = $_POST['item_date_condition'];
+    //$item_reasons = $_POST['item_reason'];
+    //$item_date_conditions = $_POST['item_date_condition'];
     $item_number = $_POST['item_number'];
   
     // Remarks by College Dean/Principal
@@ -110,8 +110,8 @@ if(isset($_POST['request_add_btn_front'])){
     $office_of_the_president_signature = $_POST['signed_5'];
   
     // Insert Purchase Request into the database
-    $sql_purchase_request = "INSERT INTO purchase_requests (requestor_user_id, requestor_user_name, requestor_user_email, purchase_request_number, printed_name, signed_Requestor, unit_dept_college, iptel_email, purchase_types, remarks_dean, endorsed_by_dean, vice_president_remarks, vice_president_approved, signed_1, vice_president_administration_remarks, vice_president_administration_approved, signed_2, budget_controller_remarks, budget_controller_approved, budget_controller_code, signed_3, university_treasurer_remarks, university_treasurer_approved, signed_4, office_of_the_president_remarks, office_of_the_president_approved, signed_5) 
-            VALUES ('$requestor_user_id', '$requestor_user_name', '$requestor_user_email', '$purchase_request_number', '$printed_name', '$requestor_signature, ','$unit_dept_college', '$iptel_email', '$purchase_types', '$remarks_dean', '$endorsed_by_dean', '$vice_president_remarks', '$vice_president_approved', '$vice_president_signature', '$vice_president_administration_remarks', '$vice_president_administration_approved', '$vice_president_administration_signature', '$budget_controller_remarks', '$budget_controller_approved', '$budget_controller_code', '$budget_controller_signature', '$university_treasurer_remarks', '$university_treasurer_approved', '$university_treasurer_signature', '$office_of_the_president_remarks', '$office_of_the_president_approved', '$office_of_the_president_signature')";
+    $sql_purchase_request = "INSERT INTO purchase_requests (requestor_user_id, requestor_user_name, requestor_user_email, purchase_request_number, printed_name, signed_Requestor, unit_dept_college, iptel_email,  remarks_dean, endorsed_by_dean, vice_president_remarks, vice_president_approved, signed_1, vice_president_administration_remarks, vice_president_administration_approved, signed_2, budget_controller_remarks, budget_controller_approved, budget_controller_code, signed_3, university_treasurer_remarks, university_treasurer_approved, signed_4, office_of_the_president_remarks, office_of_the_president_approved, signed_5) 
+            VALUES ('$requestor_user_id', '$requestor_user_name', '$requestor_user_email', '$purchase_request_number', '$printed_name', '$requestor_signature, ','$unit_dept_college', '$iptel_email',  '$remarks_dean', '$endorsed_by_dean', '$vice_president_remarks', '$vice_president_approved', '$vice_president_signature', '$vice_president_administration_remarks', '$vice_president_administration_approved', '$vice_president_administration_signature', '$budget_controller_remarks', '$budget_controller_approved', '$budget_controller_code', '$budget_controller_signature', '$university_treasurer_remarks', '$university_treasurer_approved', '$university_treasurer_signature', '$office_of_the_president_remarks', '$office_of_the_president_approved', '$office_of_the_president_signature')";
   
     // Execute Purchase Request query
     if ($con->query($sql_purchase_request) === TRUE) {
@@ -164,15 +164,20 @@ if(isset($_POST['request_add_btn_front'])){
   }
   
         // Insert Items into the database
-        for ($i = 0; $i < count($item_qty); $i++) {
-            $sql_item = "INSERT INTO items (item_number, purchase_request_id, item_qty, item_justification, item_description) 
-                         VALUES ('$item_number','$purchase_request_id', '{$item_qty[$i]}', '{$item_justifications[$i]}, '{$item_description[$i]})";
-            
-            // Execute Item query
-            if ($con->query($sql_item) !== TRUE) {
-                echo "Error: " . $sql_item . "<br>" . $con->error;
-            }
+    for ($i = 0; $i < count($item_qty); $i++) {
+        $sql_item = "INSERT INTO items (item_number, purchase_request_id, item_qty, item_justification, item_description) 
+                    VALUES ('{$item_number[$i]}','$purchase_request_id', '{$item_qty[$i]}', '{$item_justifications[$i]}', '{$item_description[$i]}')";
+                    
+        // Execute Item query using prepared statement
+        $stmt = $con->prepare($sql_item);
+        if ($stmt) {
+            $stmt->execute();
+            $stmt->close();
+        } else {
+            echo "Error: " . $sql_item . "<br>" . $con->error;
         }
+    }
+
   
         $_SESSION['message'] = "Successfully added a new request";
         header('location: purchase_request-view.php');

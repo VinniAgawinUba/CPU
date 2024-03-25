@@ -258,7 +258,7 @@ elseif($_SESSION['auth_role']==3)
             </div>
         </div>
 </div>
-        
+
 <?php
 include('includes/footer.php');
 
