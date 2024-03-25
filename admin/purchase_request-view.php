@@ -256,7 +256,7 @@ elseif($_SESSION['auth_role']==3)
                                             
                                         <td>
                                             <!-- Print Button -->
-                                            <a href="printout.php?id=<?= $row['id']; ?>" class="btn btn-success">Print</a>
+                                            <a href="print-template.php?id=<?= $row['id']; ?>" class="btn btn-success">Print</a>
                                         </td>
 
                                         <!-- If Super User or admin, see Item Details -->

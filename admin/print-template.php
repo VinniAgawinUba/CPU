@@ -1,3 +1,21 @@
+<?php
+include ('config/dbcon.php');
+//Get purchase_request_id from URL
+$purchase_request_id = $_GET['id'];
+echo $purchase_request_id;
+echo '<a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a>';
+
+// Fetch item data from database
+$item_query = "SELECT * FROM items WHERE purchase_request_id = $purchase_request_id";
+$item_query_run = mysqli_query($con, $item_query);
+$items = mysqli_fetch_all($item_query_run, MYSQLI_ASSOC);
+
+// Fetch purchase request data from database
+$pr_query = "SELECT * FROM purchase_requests WHERE id = $purchase_request_id";
+$pr_query_run = mysqli_query($con, $pr_query);
+$pr_row = mysqli_fetch_assoc($pr_query_run);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +31,7 @@
 <div class="prDiv">
     <!-- Purchase Request# (Dynamically fetch from purchase_requests table in database) -->
     <label for="pr_input">Purchase Request#</label>
-    <input id="pr_input" type="text" class="pr_input"></input>
+    <input id="pr_input" type="text" class="pr_input" value="<?=$pr_row['purchase_request_number']?>"></input>
 </div>
 <div class="headerTitle">
     <h1>PURCHASE REQUEST FORM</h1>
@@ -32,18 +50,14 @@
     </thead>
     <tbody>
         <!-- Dynamically fetch items from items table in database with matching purchase_request_id -->
+        <?php foreach($items as $item): ?>
         <tr>
-            <td>1</td>
-            <td>1</td>
-            <td>Soap</td>
-            <td>NEW NANGIANGIANGIANGIANGI Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempora tempore aliquid voluptate autem repudiandae eveniet quos sapiente, consequuntur unde soluta consequatur perspiciatis molestias aliquam alias nulla excepturi adipisci quod sunt?</td>
+            <td><?php echo $item['item_number']; ?></td>
+            <td><?php echo $item['item_qty']; ?></td>
+            <td><?php echo $item['item_description']; ?></td>
+            <td><?php echo $item['item_justification']; ?></td>
         </tr>
-        <tr>
-            <td>2</td>
-            <td>1</td>
-            <td>Balls</td>
-            <td>New</td>
-        </tr>
+        <?php endforeach; ?>
     </tbody>
 </table>
 </div>
@@ -55,7 +69,7 @@
         <div class="row">
             <div class="col">
                 <label for="unit_dept">Unit/Dept:</label>
-                <input id="unit_dept" type="text" class="unit_dept input_border_bottom"></input>
+                <input id="unit_dept" type="text" class="unit_dept input_border_bottom" value="<?=$pr_row['unit_dept_college']?>"></input>
             </div>
           
         </div>
@@ -79,13 +93,13 @@
         <!--Row 3-->
         <div class="row">
             <div class="col">
-                <input id="requestor" type="text" class="requestor input_border_bottom"></input>
+                <input id="requestor" type="text" class="requestor input_border_bottom" value="<?=$pr_row['printed_name']?>"></input>
             </div>
             <div class="col">
-                <input id="approved_by" type="text" class="approved_by input_border_bottom"></input>
+                <input id="approved_by" type="text" class="approved_by input_border_bottom" value="<?=$pr_row['endorsed_by_dean']?>"></input>
             </div>
             <div class="col">
-                <input id="cluster_vice_president" type="text" class="cluster_vice_president input_border_bottom"></input>
+                <input id="cluster_vice_president" type="text" class="cluster_vice_president input_border_bottom" value="<?=$pr_row['vice_president_approved']?>"></input>
             </div>
         </div>
 
@@ -98,7 +112,8 @@
                 <label for="unit_head">Unit Head</label>
             </div>
             <div class="col">
-                <label for="cluster_vice_president">Cluster Vice President</label>
+                <label for="cluster_vice_president">Cluster Vice President</label><br>
+                <label for="cluster_vice_president">(If above P50,000)</label>
             </div>
         </div>
     </div>
@@ -115,16 +130,16 @@
             
             <div class="col">
                 <label for="account_code">Acct. Code</label>
-                <input id="account_code" type="text" class="account_code input_border_bottom"></input>
+                <input id="account_code" type="text" class="account_code input_border_bottom" value="<?=$pr_row['budget_controller_code']?>"></input>
             </div>
         </div>
         <!--Row 3-->
         <div class="row">
             <div class="col">
-                <input id="budget_controller" type="text" class="budget_controller input_border_bottom"></input>
+                <input id="budget_controller" type="text" class="budget_controller input_border_bottom" value="Marilyn M. Castanares"></input>
             </div>
             <div class="col">
-                <input id="university_treasurer" type="text" class="university_treasurer input_border_bottom"></input>
+                <input id="university_treasurer" type="text" class="university_treasurer input_border_bottom" value="Lennie K. Ong"></input>
             </div>
         </div>
 
@@ -135,6 +150,8 @@
             </div>
             <div class="col">
                 <label for="university_treasurer">University Treasurer</label>
+                <br>
+                <br>
             </div>
         </div>
     </div>

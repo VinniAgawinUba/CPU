@@ -5,6 +5,7 @@
     align-items: end;
     border: 0;
     border-bottom: 1px solid black;
+    color: red;
 
 }
 
@@ -12,6 +13,8 @@
 .input_border_bottom{
     border: 0;
     border-bottom: 1px solid black;
+
+    font-weight: bold;
 
 }
 
@@ -48,7 +51,7 @@ table, th, td{
     align-items: center;
     border: 1px solid black;
     border-collapse: collapse;
-    margin: 15px;
+    margin: 10px;
     flex-grow: 1;
 }
 
@@ -62,7 +65,7 @@ tr:nth-child(even){
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 16px;
+    font-size: 20px;
     border-top: 5px solid #e5e5e5;
     border: 2px dashed #e5e5e5;
 }
@@ -72,7 +75,7 @@ tr:nth-child(even){
     justify-content: space-between;
     align-items: center;
     flex: 1; /* Take full available width */
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .col {
@@ -81,11 +84,20 @@ tr:nth-child(even){
 }
 
 .box1{
-    border: 5px solid;
-    margin-right: 10px; /* Add some spacing between boxes */
+    border: 1px dashed;
+    margin-right: 5px; /* Add some spacing between boxes */
 }
 .box2{
-    border: 3px solid;
+    border: 1px dashed;
 }
+
+/* Print Styles */
+@media print {
+    /* Ensure background colors are printed */
+    tr:nth-child(even) {
+        background-color: #f2f2f2 !important; /* Use !important to override any print-specific styles */
+    }
+}
+
 
 
