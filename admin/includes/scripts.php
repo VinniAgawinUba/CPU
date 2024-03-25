@@ -58,6 +58,9 @@
             $('#myRequestDetailsHistory').DataTable({
                 "order": [[ 0, "desc" ]]
             });
+            $('#myPurchaseRequestsFront').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
 
             } );
         </script>

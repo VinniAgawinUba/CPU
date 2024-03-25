@@ -70,7 +70,7 @@
     <a class="nav-link active customfont" href="index.php">HOME</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link customfont" href="requests.php">REQUESTS</a>
+    <a class="nav-link customfont" href="myrequests.php"> MY REQUESTS</a>
   </li>
   
 </ul>
