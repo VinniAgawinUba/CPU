@@ -19,7 +19,7 @@ $query_run = mysqli_query($con, $query);
 ?>
 
 
-<div class="container">
+<div class="container p-5">
     
     <div class="grid grid-cols-3 gap-10">
         <?php

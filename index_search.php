@@ -14,10 +14,18 @@ $offset = ($page - 1) * $results_per_page;
 // Retrieve search query
 $search_query = isset($_GET['search_query']) ? $_GET['search_query'] : '';
 
+
+// Columns to search
+$search_columns = array('id', 'unit_dept_college', 'iptel_email', 'status', 'requested_date');
+
 // Modify SQL query to include search condition
 $query_condition = "";
 if (!empty($search_query)) {
-    $query_condition = "WHERE id LIKE '%$search_query%'";
+    $search_conditions = array();
+    foreach ($search_columns as $column) {
+        $search_conditions[] = "$column LIKE '%$search_query%'";
+    }
+    $query_condition = "WHERE " . implode(" OR ", $search_conditions);
 }
 
 // Query to fetch requests with pagination and search

@@ -50,7 +50,7 @@ $query_run = mysqli_query($con, $query);
     </script>
 
 <!-- Container for Table -->
-<div class="container mx-auto px-4 sm:px-8">
+<div class="container mx-auto px-4 sm:px-8 shadow">
     <div class="py-8">
         <div>
             <h2 class="text-2xl font-semibold leading-tight">My Requests</h2>
@@ -68,6 +68,7 @@ $query_run = mysqli_query($con, $query);
                                 <th>Endorsed by</th>
                                 <th>Requested Date</th>
                                 <th>Status</th>
+                                <th>Details</th>
                                 
                             </tr>
                         </thead>
@@ -152,6 +153,9 @@ $query_run = mysqli_query($con, $query);
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['endorsed_by_dean']; ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['requested_date']; ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['status']; ?></td>
+                                        <td>
+                                        <a href="my_purchase_request_details.php?request_id=<?= $row['id']; ?>" class="btn btn-info">Details</a>
+                                        </td>
                                         
                                         
 
