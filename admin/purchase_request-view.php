@@ -68,7 +68,7 @@ elseif($_SESSION['auth_role']==3)
                                 </ul>
                                 
                         </div>
-                    </div>
+                    
 
                     <div class="card-body" style="overflow-x: auto;">
 
@@ -282,6 +282,7 @@ elseif($_SESSION['auth_role']==3)
                         
                     </div>
             </div>
+        </div>
         </div>
 </div>
 

@@ -2,8 +2,7 @@
 include ('config/dbcon.php');
 //Get purchase_request_id from URL
 $purchase_request_id = $_GET['id'];
-echo $purchase_request_id;
-echo '<a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a>';
+echo '<button><a href="purchase_request-view.php" class="btn btn-danger float-end no-print">BACK</a></button>';
 
 // Fetch item data from database
 $item_query = "SELECT * FROM items WHERE purchase_request_id = $purchase_request_id";
@@ -69,7 +68,7 @@ $pr_row = mysqli_fetch_assoc($pr_query_run);
         <div class="row">
             <div class="col">
                 <label for="unit_dept">Unit/Dept:</label>
-                <input id="unit_dept" type="text" class="unit_dept input_border_bottom" value="<?=$pr_row['unit_dept_college']?>"></input>
+                <input id="unit_dept" type="text" class="unit_dept input_border_bottom" value="<?=$pr_row['unit_dept_college']?>" style="width:400px"></input>
             </div>
           
         </div>
@@ -147,6 +146,8 @@ $pr_row = mysqli_fetch_assoc($pr_query_run);
         <div class="row">
             <div class="col">
                 <label for="budget_controller">Budget Controller</label>
+                <br>
+                <br>
             </div>
             <div class="col">
                 <label for="university_treasurer">University Treasurer</label>

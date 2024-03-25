@@ -95,8 +95,9 @@ tr:nth-child(even){
 @media print {
     /* Ensure background colors are printed */
     tr:nth-child(even) {
-        background-color: #f2f2f2 !important; /* Use !important to override any print-specific styles */
+        background-color: #f2f2f2; /* Use !important to override any print-specific styles */
     }
+    .no-print { display: none; }
 }
 
 
