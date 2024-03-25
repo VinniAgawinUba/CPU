@@ -1,13 +1,21 @@
 <?php
-include ('config/dbcon.php');
-//Get purchase_request_id from URL
+include('config/dbcon.php');
+
+// Get purchase_request_id from URL
 $purchase_request_id = $_GET['id'];
-echo '<button><a href="purchase_request-view.php" class="btn btn-danger float-end no-print">BACK</a></button>';
+echo $purchase_request_id;
+echo '<a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a>';
 
 // Fetch item data from database
 $item_query = "SELECT * FROM items WHERE purchase_request_id = $purchase_request_id";
 $item_query_run = mysqli_query($con, $item_query);
 $items = mysqli_fetch_all($item_query_run, MYSQLI_ASSOC);
+
+// Define the maximum number of items per page
+$max_items_per_page = 10;
+
+// Split items into multiple pages
+$pages = array_chunk($items, $max_items_per_page);
 
 // Fetch purchase request data from database
 $pr_query = "SELECT * FROM purchase_requests WHERE id = $purchase_request_id";
@@ -17,58 +25,63 @@ $pr_row = mysqli_fetch_assoc($pr_query_run);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CPU Print Template</title>
     <link rel="stylesheet" href="print-template.css">
 </head>
+
 <body>
 
+    <?php
+    // Loop through each page
+    foreach ($pages as $page_items) {
+    ?>
+        <!-- Header -->
+        <div class="prDiv">
+            <!-- Purchase Request# (Dynamically fetch from purchase_requests table in database) -->
+            <label for="pr_input">Purchase Request#</label>
+            <input id="pr_input" type="text" class="pr_input" value="<?= $pr_row['purchase_request_number'] ?>"></input>
+        </div>
+        <div class="headerTitle">
+            <h1>PURCHASE REQUEST FORM</h1>
+        </div>
 
-<!-- Header -->
-<div class="prDiv">
-    <!-- Purchase Request# (Dynamically fetch from purchase_requests table in database) -->
-    <label for="pr_input">Purchase Request#</label>
-    <input id="pr_input" type="text" class="pr_input" value="<?=$pr_row['purchase_request_number']?>"></input>
-</div>
-<div class="headerTitle">
-    <h1>PURCHASE REQUEST FORM</h1>
-</div>
+        <!-- Item Table -->
+        <div class="tableDiv">
+            <table class="tableMain">
+                <thead>
+                    <tr>
+                        <th>ITEM#</th>
+                        <th>QTY/UNIT</th>
+                        <th>DESCRIPTION</th>
+                        <th>JUSTIFICATION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamically fetch items from items table in database with matching purchase_request_id -->
+                    <?php foreach ($page_items as $item) : ?>
+                        <tr>
+                            <td><?php echo $item['item_number']; ?></td>
+                            <td><?php echo $item['item_qty']; ?></td>
+                            <td><?php echo $item['item_description']; ?></td>
+                            <td><?php echo $item['item_justification']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
 
-<!-- Item Table -->
-<div class="tableDiv">
-<table class="tableMain">
-    <thead>
-        <tr>
-            <th>ITEM#</th>
-            <th>QTY/UNIT</th>
-            <th>DESCRIPTION</th>
-            <th>JUSTIFICATION</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Dynamically fetch items from items table in database with matching purchase_request_id -->
-        <?php foreach($items as $item): ?>
-        <tr>
-            <td><?php echo $item['item_number']; ?></td>
-            <td><?php echo $item['item_qty']; ?></td>
-            <td><?php echo $item['item_description']; ?></td>
-            <td><?php echo $item['item_justification']; ?></td>
-        </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
-</div>
-
-<!-- Footer (Requestor Information and Signatures)-->
+        <!-- Footer (Requestor Information and Signatures)-->
 <div class="footer">
     <div class="box1">
         <!--Row 1-->
         <div class="row">
             <div class="col">
                 <label for="unit_dept">Unit/Dept:</label>
-                <input id="unit_dept" type="text" class="unit_dept input_border_bottom" value="<?=$pr_row['unit_dept_college']?>" style="width:400px"></input>
+                <input id="unit_dept" type="text" class="unit_dept input_border_bottom" value="<?=$pr_row['unit_dept_college']?>"></input>
             </div>
           
         </div>
@@ -158,8 +171,10 @@ $pr_row = mysqli_fetch_assoc($pr_query_run);
     </div>
 </div>
 
+    <?php
+    }
+    ?>
 
-
-    
 </body>
+
 </html>
