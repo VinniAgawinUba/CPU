@@ -17,11 +17,15 @@ include('includes/header.php');
         #chartContainer {
             height: 370px;
             width: 100%;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
 <body>
-    <input type="text" id="dateRangePicker" name="dateRangePicker" />
+    <!-- Date range picker input field -->
+    <input type="text" id="dateRangePicker" name="dateRangePicker"/>
+    <br><br>
+    <!-- Chart will be rendered here -->
     <div id="chartContainer"></div>
     
 
@@ -34,7 +38,7 @@ include('includes/header.php');
         $(document).ready(function () {
             // Initialize date range picker
             $('#dateRangePicker').daterangepicker({
-                opens: 'left' // Set the calendar to open on the left
+                opens: 'right' // Set the calendar to open on the left
             }, function(start, end, label) {
                 // Fetch data for the selected date range
                 fetchData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
@@ -112,6 +116,9 @@ include('includes/header.php');
                 // Example: Render additional information in a div with id "additionalInfo"
                 var additionalInfoDiv = document.getElementById("additionalInfo");
                 additionalInfoDiv.innerHTML = ""; // Clear previous content
+
+                var hr = document.createElement("hr");
+                additionalInfoDiv.appendChild(hr);
 
                 // Create a new Header element
                 var Header = document.createElement("h3");
