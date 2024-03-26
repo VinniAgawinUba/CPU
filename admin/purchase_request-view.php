@@ -66,9 +66,21 @@ elseif($_SESSION['auth_role']==3)
                                     
                                     <!-- Add more items for other statuses as needed -->
                                 </ul>
+
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="filterView" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Show (For Signers Only)
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="filterView">
+                                    <li><a class="dropdown-item filter-view" href="#" data-status="all">All</a></li>
+                                    <li><a class="dropdown-item filter-view" href="#" data-status="pending">Not Signed</a></li>
+                                    <li><a class="dropdown-item filter-view" href="#" data-status="hidden">Signed by me</a></li>
+                                    
+                                    <!-- Add more items for other statuses as needed -->
+                                </ul>
                                 
                         </div>
-                    
+
+                       
 
                     <div class="card-body" style="overflow-x: auto;">
 
@@ -95,6 +107,7 @@ elseif($_SESSION['auth_role']==3)
 
                                 <!-- If Super User or admin, see Item Details Column -->
                                 <?php if ($super_user || $admin) { ?><th>Item Details</th><?php } ?>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -262,9 +275,10 @@ elseif($_SESSION['auth_role']==3)
                                         <!-- If Super User or admin, see Item Details -->
                                         <?php if ($super_user || $admin) { ?>
                                         <td >
-                                            <a href="purchase_request_item_details.php?request_id=<?= $row['id']; ?>" class="btn btn-info">Item Details</a>
+                                            <a href="purchase_request_item_details.php?request_id=<?= $row['id']; ?>" class="btn btn-info" style="color:white;">Item Details</a>
                                         </td>
                                         <?php } ?>
+
 
                                     </tr>
                                     <?php
@@ -295,9 +309,27 @@ elseif($_SESSION['auth_role']==3)
     // Iterate over each delete button and attach event listener
     deleteButtons.forEach(function(button) {
         button.addEventListener("click", function(event) {
-            if (confirm("Are you sure you want to delete this document?")) {
+            if (confirm("Are you sure you want to delete this Request?")) {
                 // Find the closest form and submit it
                 this.closest(".deleteForm").submit();
+            } else {
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+
+<!-- JavaScript for Hide Button Confirmation (Buttons Should have class of hideButton) -->
+<script>
+    // Select all elements with the class 'deleteButton'
+    var hideButtons = document.querySelectorAll(".hideButton");
+    
+    // Iterate over each delete button and attach event listener
+    hideButtons.forEach(function(button) {
+        button.addEventListener("click", function(event) {
+            if (confirm("Are you sure you want to Hide this Request?")) {
+                // Find the closest form and submit it
+                this.closest(".hideForm").submit();
             } else {
                 event.preventDefault(); // Prevent form submission
             }

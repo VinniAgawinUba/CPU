@@ -199,6 +199,11 @@ $iptel_email = $_POST['iptel_email'];
 $requestor_signature = $_POST['signed_Requestor'];
 $acknowledged_by_cpu = $_POST['acknowledged_by_cpu'] == true ? '1' : '0'; // Set acknowledged-by-cpu to 1/true if checkbox is checked, otherwise set to 0/false
 
+//User Information
+$updater_user_id = $_POST['user_id'];
+$updater_user_email = $_POST['user_email'];
+$updater_user_name = $_POST['user_name'];
+
  // Signatures
  $signatures = array(
   // Add more signature fields as needed, e.g.,signed_1, signed_2, etc.
@@ -278,6 +283,7 @@ $purchase_request_id = $id;
 
 // Save each signature to the server and database
 foreach ($signatures as $signature_field) {
+    // Check if the signature field is set
     if (isset($_POST[$signature_field]) && !empty($_POST[$signature_field])) {
         // Process each signature
         $image_parts = explode(";base64,", $_POST[$signature_field]);
@@ -307,6 +313,16 @@ foreach ($signatures as $signature_field) {
                         $sql_update_purchase_request = "UPDATE purchase_requests SET $signature_field = '$filename' WHERE id = $purchase_request_id";
                         if ($con->query($sql_update_purchase_request)) {
                             // Signature filename updated successfully
+
+                            // Insert into _by column In the purchase_requests table
+                            $sql_insert_signed_by = "UPDATE purchase_requests SET {$signature_field}_by = '$updater_user_email' WHERE id = $purchase_request_id";
+                            if ($con->query($sql_insert_signed_by)) {
+                                // Signed by updated successfully
+                            } else {
+                                $_SESSION['message'] = "Error updating signed by in purchase_requests: " . $con->error;
+                                header('Location: purchase_request-view.php');
+                            }
+                            
                         } else {
                             $_SESSION['message'] = "Error updating purchase request with signature filename: " . $con->error;
                             header('Location: purchase_request-view.php');
@@ -445,6 +461,25 @@ if(isset($_POST['purchase_request_delete_btn'])) {
 
     if($query_run) {
         $_SESSION['message'] = "Request was deleted!";
+        header('Location: purchase_request-view.php');
+    } else {
+        // If there was an error in executing the query
+        $_SESSION['message'] = "Something went wrong";
+        header('Location: purchase_request-view.php');
+    }
+}
+
+//Hide Purchase request
+if(isset($_POST['purchase_request_mark_complete'])) {
+    $request_id = $_POST['request_id'];
+    $user_id = $_POST['user_id'];
+    // Your SQL query to insert into user_purchase_request_completion table in the database
+    $hide_query = "INSERT INTO purchase_requests (user_id, purchase_request_id, completed) VALUES ('$request_id','$user_id','1')";
+    // Executing the query
+    $query_run = mysqli_query($con, $hide_query);
+
+    if($query_run) {
+        $_SESSION['message'] = "Request was Hidden!";
         header('Location: purchase_request-view.php');
     } else {
         // If there was an error in executing the query
