@@ -33,29 +33,30 @@
             });
 
             // Function to fetch data for the selected date range
-            function fetchData(startDate, endDate) {
-                $.ajax({
-                    url: 'javascript-fetch_data.php', // PHP script to fetch data from database
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        startDate: startDate,
-                        endDate: endDate
-                    },
-                    success: function(response) {
-                        var chartData = response.dataPoints; // Chart data
-                        var additionalInfo = response.additionalInfo; // Additional information
+                function fetchData(startDate, endDate) {
+                    $.ajax({
+                        url: 'javascript-fetch_data.php', // PHP script to fetch data from database
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            startDate: startDate,
+                            endDate: endDate
+                        },
+                        success: function(response) {
+                            var chartData = response.dataPoints; // Chart data
+                            var additionalInfo = response.additionalInfo; // Additional information
 
-                        // Update chart with fetched data
-                        updateChart(chartData);
+                            // Update chart with fetched data
+                            updateChart(chartData);
 
-                        // Render additional information
-                        renderAdditionalInfo(additionalInfo);
-                    }
+                            // Render additional information
+                            renderAdditionalInfo(additionalInfo);
+                        }
 
 
-                });
-            }
+                    });
+                }
+
 
             // Function to update chart with fetched data
             function updateChart(data) {
