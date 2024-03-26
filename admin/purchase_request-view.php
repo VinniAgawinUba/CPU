@@ -73,11 +73,13 @@ $current_user_email = $_SESSION['auth_user']['user_email'];
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="filterView">
                                     <li><a class="dropdown-item filter-view" data-status="all">All</a></li>
-                                    <li><a class="dropdown-item filter-view" data-status="not_signed">Not Signed</a></li>
+                                    <li><a class="dropdown-item filter-view" data-status="not_signed">Not Signed by me</a></li>
                                     <li><a class="dropdown-item filter-view" data-status="signed_by_me">Signed by me</a></li>
                                     
                                     <!-- Add more items for other statuses as needed -->
                                 </ul>
+
+                                    <a class="btn btn-danger" href="purchase_request-view.php" style="color:white;">Clear Filters</a>
                                 
                         </div>
 
@@ -116,12 +118,15 @@ $current_user_email = $_SESSION['auth_user']['user_email'];
                             //If Super User, show all purchase requests
                             if($super_user)
                             {
-                                $request = "SELECT * FROM purchase_requests ORDER BY id DESC";
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests ORDER BY id DESC";
+                                //$request = "SELECT * FROM purchase_requests ORDER BY id DESC";
                             }
                             //If Admin, show only purchase requests assigned to the logged in user
                             if ($admin)
                             {
-                                $request = "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
+                                // Retrieve the updated query from the URL, if not available use default query
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
+                                //$request = "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
                             }
                             //If Department Editor, show only purchase requests  that are not completed, partially-completed, or rejected or approved
                             if ($department_editor)
