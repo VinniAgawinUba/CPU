@@ -1,8 +1,8 @@
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script> <!-- Move this line up -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" /> <!-- Move this line up -->
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="js/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="js/jquery.dataTables.js"></script> <!-- Move this line up -->
+<link rel="stylesheet" href="css/jquery.dataTables.css" /> <!-- Move this line up -->
 
 
 <script src="js/scripts.js"></script>

@@ -1,3 +1,8 @@
+<?php 
+include('config/dbcon.php');
+include('authentication.php');
+include('includes/header.php');
+?>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -6,6 +11,7 @@
     <link href="css/daterangepicker.css" rel="stylesheet" type="text/css" />
     <script src="js/daterangepicker.min.js"></script>
     <script src="js/canvasjs.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
 
     <style>
         #chartContainer {
@@ -129,3 +135,7 @@
     </script>
 </body>
 </html>
+
+<?php
+include('includes/footer.php');
+?>
