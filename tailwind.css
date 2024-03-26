@@ -638,6 +638,11 @@ video {
   margin: 1rem;
 }
 
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
 .mx-3 {
   margin-left: 0.75rem;
   margin-right: 0.75rem;
@@ -859,15 +864,6 @@ video {
   border-width: 1px;
 }
 
-.border-dashed {
-  border-style: dashed;
-}
-
-.border-xu-darkblue {
-  --tw-border-opacity: 1;
-  border-color: rgb(40 57 113 / var(--tw-border-opacity));
-}
-
 .bg-blue-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(219 234 254 / var(--tw-bg-opacity));
@@ -923,37 +919,23 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-yellow-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(234 179 8 / var(--tw-bg-opacity));
-}
-
-.bg-slate-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(148 163 184 / var(--tw-bg-opacity));
-}
-
 .bg-xu-blue {
   --tw-bg-opacity: 1;
   background-color: rgb(58 83 165 / var(--tw-bg-opacity));
 }
 
+.bg-yellow-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(234 179 8 / var(--tw-bg-opacity));
+}
+
+.bg-xu-gold {
+  --tw-bg-opacity: 1;
+  background-color: rgb(161 145 88 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
-}
-
-.bg-gradient-to-r {
-  background-image: linear-gradient(to right, var(--tw-gradient-stops));
-}
-
-.from-blue-100 {
-  --tw-gradient-from: #dbeafe var(--tw-gradient-from-position);
-  --tw-gradient-to: rgb(219 234 254 / 0) var(--tw-gradient-to-position);
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-}
-
-.to-xu-blue {
-  --tw-gradient-to: #3A53A5 var(--tw-gradient-to-position);
 }
 
 .p-1 {
@@ -972,12 +954,9 @@ video {
   padding: 1.5rem;
 }
 
-.p-12 {
-  padding: 3rem;
-}
-
-.p-3 {
-  padding: 0.75rem;
+.px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
 }
 
 .px-2 {
@@ -1013,11 +992,6 @@ video {
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
-}
-
-.px-1 {
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
 }
 
 .ps-3 {
@@ -1151,22 +1125,6 @@ video {
 
 .outline {
   outline-style: solid;
-}
-
-.outline-dotted {
-  outline-style: dotted;
-}
-
-.outline-double {
-  outline-style: double;
-}
-
-.outline-xu-blue {
-  outline-color: #3A53A5;
-}
-
-.outline-xu-gold {
-  outline-color: #A19158;
 }
 
 .ring {

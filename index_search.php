@@ -96,20 +96,44 @@ $query_run = mysqli_query($con, $query);
 <div class="flex justify-center mt-4">
     <?php
     // Include search query parameter in pagination links
-    $pagination_url = "index_search.php";
-    if (!empty($search_query)) {
-        $pagination_url .= "?search_query=$search_query&page=";
+    $pagination_url = "index.php";
+    if (isset($_GET['search_query'])) {
+        $pagination_url .= "?search_query={$_GET['search_query']}&page=";
     } else {
         $pagination_url .= "?page=";
     }
 
-    $query = "SELECT COUNT(*) AS total FROM purchase_requests $query_condition";
+    // Fetch total number of pages
+    $query = "SELECT COUNT(*) AS total FROM purchase_requests";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_assoc($result);
     $total_pages = ceil($row['total'] / $results_per_page);
 
-    for ($i = 1; $i <= $total_pages; $i++) {
-        echo "<a href='$pagination_url$i' class='m-2 px-4 py-2 bg-blue-500 text-blue-50 rounded-full hover:bg-blue-400'>$i</a>";
+    // Calculate start and end page numbers
+    $visible_pages = 5; // Number of visible page links
+    $start_page = max(1, $page - floor($visible_pages / 2));
+    $end_page = min($total_pages, $start_page + $visible_pages - 1);
+
+    // Display first page link
+    if ($start_page > 1) {
+        echo "<a href='{$pagination_url}1' class='m-2 px-4 py-2 bg-xu-blue text-blue-50 rounded-full hover:bg-blue-400'>1</a>";
+        if ($start_page > 2) {
+            echo "<span class='mx-2'>...</span>";
+        }
+    }
+
+    // Display page links within range
+    for ($i = $start_page; $i <= $end_page; $i++) {
+        $active_class = ($i == $page) ? 'btn bg-primary' : 'btn bg-xu-blue hover:bg-blue-400';
+        echo "<a href='{$pagination_url}{$i}' class='m-2 px-4 py-2 $active_class text-blue-50 rounded-full'>$i</a>";
+    }
+
+    // Display last page link
+    if ($end_page < $total_pages) {
+        if ($end_page < $total_pages - 1) {
+            echo "<span class='mx-2'>...</span>";
+        }
+        echo "<a href='{$pagination_url}{$total_pages}' class='m-2 px-4 py-2 bg-xu-blue text-blue-50 rounded-full hover:bg-blue-400'>$total_pages</a>";
     }
     ?>
 </div>
