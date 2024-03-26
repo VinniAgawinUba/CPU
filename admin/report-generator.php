@@ -1,84 +1,98 @@
-<?php
-include('config/dbcon.php');
-
-// Fetch data from the database
-$sql = "SELECT DATE(requested_date) AS date, COUNT(*) AS count
-        FROM purchase_requests
-        GROUP BY DATE(requested_date)
-        ORDER BY DATE(requested_date)";
-$result = mysqli_query($con, $sql);
-
-$dataPoints = array();
-
-// Process fetched data and structure it for CanvasJS
-while ($row = mysqli_fetch_assoc($result)) {
-    // Convert date to UNIX timestamp and format as milliseconds for JavaScript
-    $timestamp = strtotime($row['date']) * 1000;
-    $count = $row['count'];
-
-    // Push the formatted data to dataPoints array
-    $dataPoints[] = array("x" => $timestamp, "y" => $count);
-}
-
-// Close the database connection
-mysqli_close($con);
-?>
-
-
-<a href="index.php" class="btn btn-danger float-end">BACK</a>
-
-
 <!DOCTYPE HTML>
 <html>
-<head>  
-<script>
-window.onload = function () {
-    var chart = new CanvasJS.Chart("chartContainer", {
-        animationEnabled: true,
-        exportEnabled: true,
-        theme: "light1",
-        title:{
-            text: "Purchase Requests Over Time"
-        },
-        axisX:{
-            title: "Date",
-            labelAngle: -50, // Rotate labels for better fit
-            intervalType: "day", // Optional: specify interval type for labels
-            valueFormatString: "YYYY-MM-DD", // Format for axis labels
-            labelFormatter: function (e) {
-                // Convert Unix timestamp to JavaScript Date object
-                var date = new Date(e.value);
-                // Get the month name
-                var monthNames = ["January", "February", "March", "April", "May", "June",
-                    "July", "August", "September", "October", "November", "December"
-                ];
-                var month = monthNames[date.getMonth()];
-                // Get the day of the month
-                var day = date.getDate();
-                // Get the year
-                var year = date.getFullYear();
-                // Concatenate the parts to form the desired format
-                return month + " " + day + " " + year;
-            }
-        },
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
-
-        axisY:{
-            title: "Number of Requests",
-            includeZero: true
-        },
-        data: [{
-            type: "column",
-            dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-        }]
-    });
-    chart.render();
-}
-</script>
+    <style>
+        #chartContainer {
+            height: 370px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-<div id="chartContainer" style="height: 370px; width: 100%;"></div>
-<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <input type="text" id="dateRangePicker" name="dateRangePicker" />
+
+    <div id="chartContainer"></div>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize date range picker
+            $('#dateRangePicker').daterangepicker({
+                opens: 'left' // Set the calendar to open on the left
+            }, function(start, end, label) {
+                // Fetch data for the selected date range
+                fetchData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+            });
+
+            // Function to fetch data for the selected date range
+            function fetchData(startDate, endDate) {
+                $.ajax({
+                    url: 'javascript-fetch_data.php', // PHP script to fetch data from database
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        startDate: startDate,
+                        endDate: endDate
+                    },
+                    success: function(response) {
+                        // Update chart with fetched data
+                        updateChart(response);
+                    }
+                });
+            }
+
+            // Function to update chart with fetched data
+            function updateChart(data) {
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    animationEnabled: true,
+                    exportEnabled: true,
+                    theme: "light1",
+                    title: {
+                        text: "Purchase Requests Over Time"
+                    },
+                    axisX: {
+                        title: "Date",
+                        labelAngle: -50, // Rotate labels for better fit
+                        intervalType: "day", // Optional: specify interval type for labels
+                        valueFormatString: "YYYY-MM-DD", // Format for axis labels
+                        labelFormatter: function (e) {
+                            // Convert Unix timestamp to JavaScript Date object
+                            var date = new Date(e.value);
+                            // Get the month name
+                            var monthNames = ["January", "February", "March", "April", "May", "June",
+                                "July", "August", "September", "October", "November", "December"
+                            ];
+                            var month = monthNames[date.getMonth()];
+                            // Get the day of the month
+                            var day = date.getDate();
+                            // Get the year
+                            var year = date.getFullYear();
+                            // Concatenate the parts to form the desired format
+                            return month + " " + day + " " + year;
+                        }
+                    },
+                    axisY: {
+                        title: "Number of Requests",
+                        includeZero: true
+                    },
+                    data: [{
+                        type: "column",
+                        dataPoints: data // Use fetched data
+                    }]
+                });
+                chart.render();
+            }
+
+            // Initially fetch data for the default date range
+            var startDate = moment().subtract(7, 'days').format('YYYY-MM-DD'); // Default start date (7 days ago)
+            var endDate = moment().format('YYYY-MM-DD'); // Default end date (today)
+            fetchData(startDate, endDate);
+        });
+    </script>
 </body>
 </html>
-
