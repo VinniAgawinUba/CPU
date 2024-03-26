@@ -7,7 +7,7 @@ $startDate = $_POST['startDate'];
 $endDate = $_POST['endDate'];
 
 // Fetch data from the database based on the selected date range
-$sql = "SELECT DATE(requested_date) AS date, COUNT(*) AS count, GROUP_CONCAT(CONCAT_WS(':', id, purchase_request_number, unit_dept_college, requestor_user_email)) AS additional_info
+$sql = "SELECT DATE(requested_date) AS date, COUNT(*) AS count, GROUP_CONCAT(CONCAT_WS(':', id, purchase_request_number, unit_dept_college, requestor_user_email, requested_date)) AS additional_info
         FROM purchase_requests
         WHERE requested_date >= '$startDate' AND requested_date <= '$endDate'
         GROUP BY DATE(requested_date)
@@ -39,7 +39,8 @@ while ($row = mysqli_fetch_assoc($result)) {
             "id" => $additionalColumns[0],
             "purchase_request_number" => $additionalColumns[1],
             "unit_dept_college" => $additionalColumns[2],
-            "requestor_user_email" => $additionalColumns[3]
+            "requestor_user_email" => $additionalColumns[3],
+            "requested_date" => $additionalColumns[4]
         );
     }
 }

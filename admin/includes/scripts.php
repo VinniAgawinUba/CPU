@@ -1,4 +1,4 @@
-<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="js/simple-datatables.min.js" crossorigin="anonymous"></script>
 <script src="js/jquery.dataTables.js"></script> <!-- Move this line up -->
@@ -61,6 +61,8 @@
             $('#myPurchaseRequestsFront').DataTable({
                 "order": [[ 0, "desc" ]]
             });
+
+            
 
             } );
         </script>

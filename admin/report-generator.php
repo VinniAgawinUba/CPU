@@ -12,6 +12,9 @@ include('includes/header.php');
     <script src="js/daterangepicker.min.js"></script>
     <script src="js/canvasjs.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/dataTables.min.js"></script>
+    <link rel="stylesheet" href="css/dataTables.dataTables.min.css" />
+    
 
     <style>
         #chartContainer {
@@ -38,6 +41,7 @@ include('includes/header.php');
                     <th>Purchase Request Number</th>
                     <th>Unit/Dept/College</th>
                     <th>Requestor User Email</th>
+                    <th>Requested Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -135,10 +139,16 @@ include('includes/header.php');
                     row += "<td>" + rowData.purchase_request_number + "</td>";
                     row += "<td>" + rowData.unit_dept_college + "</td>";
                     row += "<td>" + rowData.requestor_user_email + "</td>";
+                    // Format date to ex. March 20 2024 12pm
+                    row += "<td>" + moment(rowData.requested_date).format('MMMM D YYYY h:mma') + "</td>";
                     row += "</tr>";
                     $("#additionalTable tbody").append(row);
                 }
+
+                // Initialize DataTable
+                $('#additionalTable').DataTable();
             }
+
 
 
             // Initially fetch data for the default date range
@@ -149,6 +159,8 @@ include('includes/header.php');
     </script>
 </body>
 </html>
+
+
 
 <?php
 include('includes/footer.php');
