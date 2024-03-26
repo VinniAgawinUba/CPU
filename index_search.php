@@ -23,7 +23,12 @@ $query_condition = "";
 if (!empty($search_query)) {
     $search_conditions = array();
     foreach ($search_columns as $column) {
-        $search_conditions[] = "$column LIKE '%$search_query%'";
+        if ($column == 'requested_date') {
+            // Use DATE_FORMAT to format the date from the database
+            $search_conditions[] = "DATE_FORMAT($column, '%M %e %Y') LIKE '%$search_query%'";
+        } else {
+            $search_conditions[] = "$column LIKE '%$search_query%'";
+        }
     }
     $query_condition = "WHERE " . implode(" OR ", $search_conditions);
 }
@@ -31,6 +36,7 @@ if (!empty($search_query)) {
 // Query to fetch requests with pagination and search
 $query = "SELECT * FROM purchase_requests $query_condition ORDER BY id DESC LIMIT $offset, $results_per_page";
 $query_run = mysqli_query($con, $query);
+
 
 ?>
 
