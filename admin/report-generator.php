@@ -19,6 +19,9 @@
 
     <div id="chartContainer"></div>
 
+    <div id="additionalInfo"></div>
+
+
     <script>
         $(document).ready(function () {
             // Initialize date range picker
@@ -40,9 +43,17 @@
                         endDate: endDate
                     },
                     success: function(response) {
+                        var chartData = response.dataPoints; // Chart data
+                        var additionalInfo = response.additionalInfo; // Additional information
+
                         // Update chart with fetched data
-                        updateChart(response);
+                        updateChart(chartData);
+
+                        // Render additional information
+                        renderAdditionalInfo(additionalInfo);
                     }
+
+
                 });
             }
 
@@ -87,6 +98,19 @@
                 });
                 chart.render();
             }
+
+            function renderAdditionalInfo(info) {
+                // Example: Render additional information in a div with id "additionalInfo"
+                var additionalInfoDiv = document.getElementById("additionalInfo");
+                additionalInfoDiv.innerHTML = ""; // Clear previous content
+
+                for (var i = 0; i < info.length; i++) {
+                    var p = document.createElement("p");
+                    p.textContent = info[i];
+                    additionalInfoDiv.appendChild(p);
+                }
+            }
+
 
             // Initially fetch data for the default date range
             var startDate = moment().subtract(7, 'days').format('YYYY-MM-DD'); // Default start date (7 days ago)
