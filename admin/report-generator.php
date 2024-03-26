@@ -129,26 +129,25 @@ include('includes/header.php');
 
             function renderAdditionalInfo(info) {
                 // Clear previous table data
-                $("#additionalTable tbody").empty();
+                var table = $('#additionalTable').DataTable();
+                table.clear().draw(); // Clear the table content
 
                 // Render additional information in table
                 for (var i = 0; i < info.length; i++) {
                     var rowData = info[i];
-                    var row = "<tr>";
-                    row += "<td>" + rowData.id + "</td>";
-                    row += "<td>" + rowData.purchase_request_number + "</td>";
-                    row += "<td>" + rowData.unit_dept_college + "</td>";
-                    row += "<td>" + rowData.requestor_user_email + "</td>";
-                    // Format date to ex. March 20 2024 12pm
-                    row += "<td>" + moment(rowData.requested_date).format('MMMM D YYYY h:mma') + "</td>";
-                    row += "</tr>";
-                    $("#additionalTable tbody").append(row);
+                    var row = [
+                        rowData.id,
+                        rowData.purchase_request_number,
+                        rowData.unit_dept_college,
+                        rowData.requestor_user_email,
+                        moment(rowData.requested_date).format('MMMM D YYYY h:mma')
+                    ];
+                    table.row.add(row).draw(); // Add the row and redraw the table
                 }
-
-                // Initialize DataTable
-                $('#additionalTable').DataTable();
             }
 
+
+            
 
 
             // Initially fetch data for the default date range
