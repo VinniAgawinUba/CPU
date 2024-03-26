@@ -26,7 +26,7 @@ elseif($_SESSION['auth_role']==3)
     $super_user = false;
     $department_editor = true;
 }
-
+$current_user_email = $_SESSION['auth_user']['user_email'];
 ?>
 
 
@@ -127,7 +127,7 @@ elseif($_SESSION['auth_role']==3)
                             if ($department_editor)
                             {
                                 // Retrieve the updated query from the URL, if not available use default query
-                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE status NOT IN ('completed', 'partially-completed', 'rejected', 'approved') ORDER BY id DESC";
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE '$current_user_email' NOT IN (COALESCE(signed_1_by, ''), COALESCE(signed_2_by, ''), COALESCE(signed_3_by, ''), COALESCE(signed_4_by, ''), COALESCE(signed_5_by, '')) ORDER BY id DESC";
                             }
                             $request_run = mysqli_query($con, $request);
                             if (mysqli_num_rows($request_run) > 0) {
@@ -369,7 +369,7 @@ document.querySelectorAll('.filter-btn').forEach(function(button) {
 document.querySelectorAll('.filter-view').forEach(function(button) {
     button.addEventListener('click', function() {
         var status = this.getAttribute('data-status'); // Get the selected status
-        var current_user_email = '<?php echo $_SESSION['auth_user']['email']; ?>';
+        var current_user_email = '<?php echo $_SESSION['auth_user']['user_email']; ?>';
         // Send AJAX request to generate query dynamically
         $.ajax({
             url: 'javascript-generate_query.php',

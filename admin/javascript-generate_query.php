@@ -35,10 +35,11 @@ switch ($status) {
         $request = 'SELECT * FROM purchase_requests ORDER BY id DESC';
         break;
     case 'not_signed':
-        $request = "SELECT * FROM purchase_requests WHERE signed_1_by = '$current_user_email' ORDER BY id DESC";
+        $request = "SELECT * FROM purchase_requests WHERE '$current_user_email' NOT IN (COALESCE(signed_1_by, ''), COALESCE(signed_2_by, ''), COALESCE(signed_3_by, ''), COALESCE(signed_4_by, ''), COALESCE(signed_5_by, '')) ORDER BY id DESC";
+
         break;
     case 'signed_by_me':
-        $request = "SELECT * FROM purchase_requests WHERE signed_1_by = '$current_user_email' ORDER BY id DESC";
+        $request = "SELECT * FROM purchase_requests WHERE '$current_user_email' IN (signed_1_by, signed_2_by, signed_3_by, signed_4_by, signed_5_by) ORDER BY id DESC";
         break;
     // Add cases for other statuses as needed
 }
