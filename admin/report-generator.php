@@ -29,8 +29,21 @@ include('includes/header.php');
     <div id="chartContainer"></div>
     
 
-    <!-- Additional information will be rendered here Cant put in stuff here-->
+    <!-- Additional information will be rendered here -->
     <div id="additionalInfo">
+        <table id="additionalTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Purchase Request Number</th>
+                    <th>Unit/Dept/College</th>
+                    <th>Requestor User Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Additional information will be rendered here -->
+            </tbody>
+        </table>
     </div>
 
 
@@ -38,7 +51,7 @@ include('includes/header.php');
         $(document).ready(function () {
             // Initialize date range picker
             $('#dateRangePicker').daterangepicker({
-                opens: 'right' // Set the calendar to open on the left
+                opens: 'right' // Set the calendar to open on the right
             }, function(start, end, label) {
                 // Fetch data for the selected date range
                 fetchData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
@@ -64,8 +77,6 @@ include('includes/header.php');
                             // Render additional information
                             renderAdditionalInfo(additionalInfo);
                         }
-
-
                     });
                 }
 
@@ -113,23 +124,19 @@ include('includes/header.php');
             }
 
             function renderAdditionalInfo(info) {
-                // Example: Render additional information in a div with id "additionalInfo"
-                var additionalInfoDiv = document.getElementById("additionalInfo");
-                additionalInfoDiv.innerHTML = ""; // Clear previous content
+                // Clear previous table data
+                $("#additionalTable tbody").empty();
 
-                var hr = document.createElement("hr");
-                additionalInfoDiv.appendChild(hr);
-
-                // Create a new Header element
-                var Header = document.createElement("h3");
-                Header.textContent = "Additional Information (Based on Selected Date Range)";
-                additionalInfoDiv.appendChild(Header);
-
+                // Render additional information in table
                 for (var i = 0; i < info.length; i++) {
-                     // Create a new paragraph element for each additional info
-                    var p = document.createElement("p");
-                    p.textContent = info[i];
-                    additionalInfoDiv.appendChild(p);
+                    var rowData = info[i];
+                    var row = "<tr>";
+                    row += "<td>" + rowData.id + "</td>";
+                    row += "<td>" + rowData.purchase_request_number + "</td>";
+                    row += "<td>" + rowData.unit_dept_college + "</td>";
+                    row += "<td>" + rowData.requestor_user_email + "</td>";
+                    row += "</tr>";
+                    $("#additionalTable tbody").append(row);
                 }
             }
 
