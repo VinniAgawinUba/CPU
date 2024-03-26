@@ -1,11 +1,11 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <link href="css/daterangepicker.css" rel="stylesheet" type="text/css" />
+    <script src="js/daterangepicker.min.js"></script>
+    <script src="js/canvasjs.min.js"></script>
 
     <style>
         #chartContainer {
