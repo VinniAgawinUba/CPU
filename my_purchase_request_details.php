@@ -85,6 +85,7 @@ $query_run = mysqli_query($con, $query);
                     <h4>Items</h4>
                 </div>
                 <div class="card-body">
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <?php
