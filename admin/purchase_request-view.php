@@ -57,12 +57,13 @@ elseif($_SESSION['auth_role']==3)
                                     Filter by Status
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="filterDropdown">
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="all">All</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="pending">Pending</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="approved">Approved</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="rejected">Rejected</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="partially-completed">Partially Completed</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="completed">Completed</a></li>
+                                    <li><a class="dropdown-item filter-btn" data-status="all">All</a></li>
+                                    <li><a class="dropdown-item filter-btn" data-status="pending">Pending</a></li>
+                                    <li><a class="dropdown-item filter-btn" data-status="approved">Approved</a></li>
+                                    <li><a class="dropdown-item filter-btn" data-status="rejected">Rejected</a></li>
+                                    <li><a class="dropdown-item filter-btn" data-status="partially-completed">Partially Completed</a></li>
+                                    <li><a class="dropdown-item filter-btn" data-status="completed">Completed</a></li>
+                                    
                                     
                                     <!-- Add more items for other statuses as needed -->
                                 </ul>
@@ -71,9 +72,9 @@ elseif($_SESSION['auth_role']==3)
                                     Show (For Signers Only)
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="filterView">
-                                    <li><a class="dropdown-item filter-view" href="#" data-status="all">All</a></li>
-                                    <li><a class="dropdown-item filter-view" href="#" data-status="pending">Not Signed</a></li>
-                                    <li><a class="dropdown-item filter-view" href="#" data-status="hidden">Signed by me</a></li>
+                                    <li><a class="dropdown-item filter-view" data-status="all">All</a></li>
+                                    <li><a class="dropdown-item filter-view" data-status="not_signed">Not Signed</a></li>
+                                    <li><a class="dropdown-item filter-view" data-status="signed_by_me">Signed by me</a></li>
                                     
                                     <!-- Add more items for other statuses as needed -->
                                 </ul>
@@ -125,7 +126,8 @@ elseif($_SESSION['auth_role']==3)
                             //If Department Editor, show only purchase requests  that are not completed, partially-completed, or rejected or approved
                             if ($department_editor)
                             {
-                                $request = "SELECT * FROM purchase_requests WHERE status NOT IN ('completed', 'partially-completed', 'rejected', 'approved') ORDER BY id DESC";
+                                // Retrieve the updated query from the URL, if not available use default query
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE status NOT IN ('completed', 'partially-completed', 'rejected', 'approved') ORDER BY id DESC";
                             }
                             $request_run = mysqli_query($con, $request);
                             if (mysqli_num_rows($request_run) > 0) {
@@ -335,6 +337,58 @@ elseif($_SESSION['auth_role']==3)
             }
         });
     });
+</script>
+
+<!-- JavaScript for Filter Buttons -->
+<script>
+  // Add event listener to filter buttons
+document.querySelectorAll('.filter-btn').forEach(function(button) {
+    button.addEventListener('click', function() {
+        var status = this.getAttribute('data-status'); // Get the selected status
+        // Send AJAX request to generate query dynamically
+        $.ajax({
+            url: 'javascript-generate_query.php',
+            type: 'POST',
+            data: {status: status},
+            success: function(response) {
+                // Remove extra quotes from the response
+                response = response.replace(/^"(.*)"$/, '$1'); // Removes quotes from both ends of the string
+                // Redirect to the purchase_request-view.php page with the generated query
+                window.location.href = 'purchase_request-view.php?request=' + encodeURIComponent(response); // Encode the response to ensure URL safety
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+});
+
+</script>
+<script>
+    // Add event listener to filter buttons
+document.querySelectorAll('.filter-view').forEach(function(button) {
+    button.addEventListener('click', function() {
+        var status = this.getAttribute('data-status'); // Get the selected status
+        var current_user_email = '<?php echo $_SESSION['auth_user']['email']; ?>';
+        // Send AJAX request to generate query dynamically
+        $.ajax({
+            url: 'javascript-generate_query.php',
+            type: 'POST',
+            data: {status: status, current_user_email: current_user_email},
+            success: function(response) {
+                // Remove extra quotes from the response
+                response = response.replace(/^"(.*)"$/, '$1'); // Removes quotes from both ends of the string
+                // Redirect to the purchase_request-view.php page with the generated query
+                window.location.href = 'purchase_request-view.php?request=' + encodeURIComponent(response); // Encode the response to ensure URL safety
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+});
+
+
 </script>
 
 
