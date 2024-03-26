@@ -16,10 +16,12 @@
 </head>
 <body>
     <input type="text" id="dateRangePicker" name="dateRangePicker" />
-
     <div id="chartContainer"></div>
+    
 
-    <div id="additionalInfo"></div>
+    <!-- Additional information will be rendered here Cant put in stuff here-->
+    <div id="additionalInfo">
+    </div>
 
 
     <script>
@@ -105,7 +107,13 @@
                 var additionalInfoDiv = document.getElementById("additionalInfo");
                 additionalInfoDiv.innerHTML = ""; // Clear previous content
 
+                // Create a new Header element
+                var Header = document.createElement("h3");
+                Header.textContent = "Additional Information (Based on Selected Date Range)";
+                additionalInfoDiv.appendChild(Header);
+
                 for (var i = 0; i < info.length; i++) {
+                     // Create a new paragraph element for each additional info
                     var p = document.createElement("p");
                     p.textContent = info[i];
                     additionalInfoDiv.appendChild(p);

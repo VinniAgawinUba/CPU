@@ -25,7 +25,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     $timestamp = strtotime($row['date']) * 1000;
     $count = intval($row['count']);
 
-    // Split additional information (user IDs) into an array
+    // Split additional information (user IDs) into an array THIS IS HERE BECAUSE A DATE MAY HAVE MULTIPLE REQUESTS SO TO PREVENT OVERWRITING OR DUPLICATING THE ADDITIONAL COLUMN
     $user_ids = explode(',', $row['user_ids']); // Split the user IDs into an array
 
     // Push the formatted data to dataPoints array
