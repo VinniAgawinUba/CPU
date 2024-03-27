@@ -177,7 +177,7 @@ include('includes/header.php');
                 datasets: [{
                     data: counts,
                     backgroundColor: [
-                        'rgba(131, 138, 137, 0.5)', // pending Grey
+                        'rgba(207, 205, 204, 0.5)', // pending Grey
                         'rgba(54, 162, 235, 0.5)', // approved Blue
                         'rgba(251, 255, 0, 0.5)',//partially-completed Yellow
                         'rgba(255, 99, 132, 0.5)',//rejected Red
@@ -185,7 +185,7 @@ include('includes/header.php');
                         // Add more colors as needed
                     ],
                     borderColor: [
-                        'rgba(131, 138, 137, 1)', // pending
+                        'rgba(207, 205, 204, 1)', // pending
                         'rgba(54, 162, 235, 1)', // approved
                         'rgba(251, 255, 0, 1)',//partially-completed Yellow
                         'rgba(255, 99, 132, 1)',//rejected Red
@@ -245,14 +245,14 @@ function renderPieChart2(labels, counts) {
             datasets: [{
                 data: counts,
                 backgroundColor: [
-                    'rgba(11, 230, 70, 0.5)', // completed Green
-                    'rgba(255, 99, 132, 0.5)', // rejected Red
+                    'rgba(11, 230, 70, 0.5)', // Acknowledged Green
+                    'rgba(255, 99, 132, 0.5)', // Not Acknowledged Red
                     
                     // Add more colors as needed
                 ],
                 borderColor: [
-                    'rgba(11, 230, 70, 1)', // completed Green
-                    'rgba(255, 99, 132, 1)', // rejected Red
+                    'rgba(11, 230, 70, 1)', // Acknowledged Green
+                    'rgba(255, 99, 132, 1)', // Not Acknowledged Red
                     // Add more colors as needed
                 ],
                 borderWidth: 1
