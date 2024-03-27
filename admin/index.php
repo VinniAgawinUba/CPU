@@ -32,25 +32,25 @@ include('includes/header.php');
                     <div class="card bg-warning text-white mb-4">
                         <div class="card-body">Report Generation Charts</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="report-generator.php">Generate Charts</a>
+                            <a class="small text-white stretched-link" href="report-total.php">Total # of Requests</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-success text-white mb-4">
-                        <div class="card-body">Success Card</div>
+                        <div class="card-body">Report Generation Charts</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="#">View Details</a>
+                            <a class="small text-white stretched-link" href="report-status.php">Requests statuses</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-danger text-white mb-4">
-                        <div class="card-body">Danger Card</div>
+                        <div class="card-body">Report Generation Charts</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="#">View Details</a>
+                            <a class="small text-white stretched-link" href="report-items.php">Items Chart</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
@@ -110,7 +110,7 @@ include('includes/header.php');
                             </div>
                 </div>
                             
-                        </div>
+            </div>
 </div>
 <script>
     $(document).ready(function () {
