@@ -133,7 +133,7 @@ include('includes/header.php');
                             return new Date(point.x).toLocaleDateString(); // Convert Unix timestamp to Date object and format it
                         }),
                         datasets: [{
-                            label: 'Total Number of Requests',
+                            label: 'Total Number of Requests by date',
                             data: data.map(function(point) {
                                 return point.y;
                             }),

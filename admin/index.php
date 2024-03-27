@@ -208,7 +208,21 @@ include('includes/header.php');
                     borderWidth: 1
                 }]
             },
-            plugins: [ChartDataLabels],
+            plugins: [{
+                    afterDatasetsDraw: function(chart) {
+                        var ctx = chart.ctx;
+                        ctx.save();
+                        ctx.fillStyle = 'black';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.font = 'bold 12px Arial';
+                        var total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        ctx.fillText('Total: ' + total, chart.width -50 , chart.height - 10);
+                        ctx.restore();
+                        }
+                    }, 
+                    ChartDataLabels
+                    ],
             options: {
                 responsive: true,
                 plugins: {
@@ -296,7 +310,21 @@ function renderPieChart2(labels, counts) {
                 borderWidth: 1
             }]
         },
-        plugins: [ChartDataLabels],
+        plugins: [{
+                    afterDatasetsDraw: function(chart) {
+                        var ctx = chart.ctx;
+                        ctx.save();
+                        ctx.fillStyle = 'black';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.font = 'bold 12px Arial';
+                        var total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        ctx.fillText('Total: ' + total, chart.width -50 , chart.height - 10);
+                        ctx.restore();
+                        }
+                    }, 
+                    ChartDataLabels
+                    ],
         options: {
             responsive: true,
             plugins: {
