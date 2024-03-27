@@ -18,6 +18,8 @@ $query_run = mysqli_query($con, $query);
 
 ?>
 
+<!--Horizontal Rule Line-->
+<hr style="width:80%; margin:auto; color:#00478a; background:#429ef5; height: 3px;">
 
 <div class="container p-5">
     

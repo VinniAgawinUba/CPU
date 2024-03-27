@@ -49,6 +49,9 @@ $query_run = mysqli_query($con, $query);
 
     </script>
 
+<!--Horizontal Rule Line-->
+<hr style="width:80%; margin:auto; color:#00478a; background:#429ef5; height: 3px;">
+
 <!-- Container for Table -->
 <div class="container mx-auto px-4 sm:px-8 shadow">
     <div class="py-8">

@@ -31,7 +31,8 @@ include('authentication.php');
   </style>
 
 
-
+<!--Horizontal Rule Line-->
+<hr style="width:80%; margin:auto; color:#00478a; background:#429ef5; height: 3px;">
 
 <div class="container mx-auto p-6" style="background-image: url('assets/images/BG.png'); border-radius:4%;">
     <?php include('message.php'); ?>
