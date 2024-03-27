@@ -26,7 +26,7 @@ elseif($_SESSION['auth_role']==3)
     $super_user = false;
     $department_editor = true;
 }
-
+$current_user_email = $_SESSION['auth_user']['user_email'];
 ?>
 
 
@@ -47,26 +47,45 @@ elseif($_SESSION['auth_role']==3)
                         <a href="purchase_request-add.php" class="btn btn-primary float-end">Add Purchase Request</a>
                         </h4>
                         <div class="btn-group float-end" role="group" aria-label="Basic example">
+                    </div>
     
 
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="overflow-x: auto;">
                         <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     Filter by Status
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="filterDropdown">
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="all">All</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="pending">Pending</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="approved">Approved</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="rejected">Rejected</a></li>
-                                    <li><a class="dropdown-item filter-btn" href="#" data-status="completed">Completed</a></li>
+                                    <li><a class="dropdown-item filter-btn" data-status="all">All</a></li>
+                                    <li><a class="dropdown-item filter-btn" data-status="pending">Pending</a></li>
+                                    <li><a class="dropdown-item filter-btn" data-status="approved">Approved</a></li>
+                                    <li><a class="dropdown-item filter-btn" data-status="rejected">Rejected</a></li>
+                                    <li><a class="dropdown-item filter-btn" data-status="partially-completed">Partially Completed</a></li>
+                                    <li><a class="dropdown-item filter-btn" data-status="completed">Completed</a></li>
+                                    
                                     
                                     <!-- Add more items for other statuses as needed -->
                                 </ul>
+
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="filterView" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Show (For Signers Only)
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="filterView">
+                                    <li><a class="dropdown-item filter-view" data-status="all">All</a></li>
+                                    <li><a class="dropdown-item filter-view" data-status="not_signed">Not Signed by me</a></li>
+                                    <li><a class="dropdown-item filter-view" data-status="signed_by_me">Signed by me</a></li>
+                                    
+                                    <!-- Add more items for other statuses as needed -->
+                                </ul>
+
+                                    <a class="btn btn-danger" href="purchase_request-view.php" style="color:white;">Clear Filters</a>
                                 
                         </div>
-                    </div>
+
+                       
+
+                    <div class="card-body" style="overflow-x: auto;">
 
 
 
@@ -79,7 +98,7 @@ elseif($_SESSION['auth_role']==3)
                                 <th>Requestor Name</th>
                                 <th>Unit/Dept/College</th>
                                 <th>Iptel#/Email</th>
-                                <th>Purchase Type</th>
+                                <th>Acknowledged by CPU</th>
                                 <th>Endorsed by</th>
                                 <th>Requested Date</th>
                                 <th>Status</th>
@@ -87,17 +106,33 @@ elseif($_SESSION['auth_role']==3)
                                 <th>Edit</th>
                                 <?php if ($super_user) { ?><th>Delete</th><?php } ?>
                                 <?php if ($super_user) { ?><th>Assigned To</th><?php } ?>
+                                <th>Print</th>
+
+                                <!-- If Super User or admin, see Item Details Column -->
+                                <?php if ($super_user || $admin) { ?><th>Item Details</th><?php } ?>
+                                
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            if($super_user || $department_editor)
+                            //If Super User, show all purchase requests
+                            if($super_user)
                             {
-                                $request = "SELECT * FROM purchase_requests ORDER BY id DESC";
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests ORDER BY id DESC";
+                                //$request = "SELECT * FROM purchase_requests ORDER BY id DESC";
                             }
-                            else
+                            //If Admin, show only purchase requests assigned to the logged in user
+                            if ($admin)
                             {
-                                $request = "SELECT * FROM purchase_requests WHERE assigned_user = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
+                                // Retrieve the updated query from the URL, if not available use default query
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
+                                //$request = "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
+                            }
+                            //If Department Editor, show only purchase requests  that are not completed, partially-completed, or rejected or approved
+                            if ($department_editor)
+                            {
+                                // Retrieve the updated query from the URL, if not available use default query
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE '$current_user_email' NOT IN (COALESCE(signed_1_by, ''), COALESCE(signed_2_by, ''), COALESCE(signed_3_by, ''), COALESCE(signed_4_by, ''), COALESCE(signed_5_by, '')) ORDER BY id DESC";
                             }
                             $request_run = mysqli_query($con, $request);
                             if (mysqli_num_rows($request_run) > 0) {
@@ -157,7 +192,9 @@ elseif($_SESSION['auth_role']==3)
                                             </td>
                                             <td style="color:<?= $Changetext_color ?>">
                                             <?php 
-                                            echo $row['purchase_types']
+                                            echo 
+                                            //If acknowledged_by_cpu = 1, echo "CPU Acknowledged", else echo "Not Acknowledged"
+                                            $row['acknowledged_by_cpu'] == 1 ? "CPU Acknowledged" : "Not Acknowledged";
                                             ?>
                                             </td>
                                         </td>
@@ -166,7 +203,7 @@ elseif($_SESSION['auth_role']==3)
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['status']; ?></td>
                                         
                                         <td>
-                                            <a href="purchase_request_history.php?request_id=<?= $row['id']; ?>" class="btn btn-success">History</a>
+                                            <a href="purchase_request_history.php?request_id=<?= $row['id']; ?>" class="btn btn-secondary">History</a>
                                         </td>
 
                                         <td>
@@ -175,55 +212,192 @@ elseif($_SESSION['auth_role']==3)
 
                                         <!-- If Super User, see Delete Button -->
                                         <?php if ($super_user) { ?>
-                                        <td>
-                                        <form id="deleteForm" action="code.php" method="POST">
-                                            <input type="hidden" name="id" value="<?= $row['id']; ?>">
-                                            <button type="submit" name="request_delete_btn" value="<?=$row['id']?>" class="btn btn-danger deleteButton" id="deleteButton">Delete</button>
-                                        </form>
+                                            <td>
+                                                <form id="deleteForm<?= $row['id']; ?>" action="code.php" method="POST">
+                                                    <input type="hidden" name="id" value="<?= $row['id']; ?>">
+                                                    <button type="submit" name="purchase_request_delete_btn" id="purchase_request_delete_btn"class="btn btn-danger deleteButton">Delete</button>
+                                                </form>
+                                            </td>
 
-                                        </td>
                                         <?php } ?>
-                                        <!-- If Super User, see Assigned User -->
+
+                                        <!-- If Super User, see Assigned User Column -->
                                         <?php if ($super_user) { ?>
-                                        <td style="color:<?= $Changetext_color ?>">
-                                        <?php 
-                                                if($row['assigned_user_id'] > 0)
-                                                {
-                                                    $user_query = "SELECT * FROM users WHERE id = ".$row['assigned_user'];
-                                                    $user_query_run = mysqli_query($con, $user_query);
-                                                    if(mysqli_num_rows($user_query_run) > 0)
-                                                    {
-                                                        foreach($user_query_run as $user_list)
-                                                        {
-                                                            echo $user_list['fname'].' '.$user_list['lname'];
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        echo "No Assigned User Found";
-                                                    }
+                                        <td>
+                                        <select class="assigned-user" data-request-id="<?= $row['id']; ?>">
+                                            <option>--Select User--</option>
+                                            <?php
+                                            // Fetch all admin users from the database
+                                            $user_query = "SELECT * FROM users WHERE role_as = 1 ORDER BY id DESC";
+                                            $user_query_run = mysqli_query($con, $user_query);
+                                            if (mysqli_num_rows($user_query_run) > 0) {
+                                                foreach ($user_query_run as $user_list) {
+                                                    $selected = ($user_list['id'] == $row['assigned_user_id']) ? 'selected' : ''; // Check if user is assigned
+                                                    echo '<option value="' . $user_list['id'] . '" ' . $selected . '>' . $user_list['email'] . '</option>';
                                                 }
-                                                else
-                                                {
-                                                    echo "No Assigned User Found";
-                                                }
-                                                
-                                                ?>
+                                            } else {
+                                                echo '<option>No Users Found</option>';
+                                            }
+                                            ?>
+                                        </select>
                                         </td>
                                             <?php } ?>
+                                             <!-- Java Script to update assigned user (Redirects to javascript-update_assigned_user.php) -->
+                                             <script>
+                                            // Add event listener to all assigned user dropdowns
+                                            document.querySelectorAll('.assigned-user').forEach(function(select) {
+                                                select.addEventListener('change', function() {
+                                                    // Get the selected value and request id
+                                                    var newUserId = this.value;
+                                                    var requestId = this.getAttribute('data-request-id');
+
+                                                    // Send AJAX request to update assigned user
+                                                    var xhr = new XMLHttpRequest();
+                                                    xhr.open('POST', 'javascript-update_assigned_user.php', true);
+                                                    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                                                    xhr.onload = function() {
+                                                        if (xhr.status === 200) {
+                                                            var response = JSON.parse(xhr.responseText);
+                                                            if (response.success) {
+                                                                // Update successful, you can update UI if needed
+                                                                console.log('Assigned user updated successfully');
+                                                                //reload page
+                                                                location.reload();
+                                                            } else {
+                                                                console.error('Error updating assigned user');
+                                                            }
+                                                        }
+                                                    };
+                                                    xhr.send('id=' + requestId + '&assigned_user_id=' + newUserId);
+                                                });
+                                            });
+                                        </script>
+
+                                            
+                                        <td>
+                                            <!-- Print Button -->
+                                            <a href="print-template.php?id=<?= $row['id']; ?>" class="btn btn-success">Print</a>
+                                        </td>
+
+                                        <!-- If Super User or admin, see Item Details -->
+                                        <?php if ($super_user || $admin) { ?>
+                                        <td >
+                                            <a href="purchase_request_item_details.php?request_id=<?= $row['id']; ?>" class="btn btn-info" style="color:white;">Item Details</a>
+                                        </td>
+                                        <?php } ?>
+
+
                                     </tr>
                                     <?php
                                 }
+                            }
+                            else
+                            {
+                                echo "No Record Found";
                             } 
                             ?>
                             
                         </tbody>
                     </table>
+                    </div>
                         
                     </div>
             </div>
         </div>
+        </div>
 </div>
+
+<!-- Delete Confirmation Script -->
+<!-- JavaScript for Delete Button Confirmation (Buttons Should have class of deleteButton) -->
+<script>
+    // Select all elements with the class 'deleteButton'
+    var deleteButtons = document.querySelectorAll(".deleteButton");
+    
+    // Iterate over each delete button and attach event listener
+    deleteButtons.forEach(function(button) {
+        button.addEventListener("click", function(event) {
+            if (confirm("Are you sure you want to delete this Request?")) {
+                // Find the closest form and submit it
+                this.closest(".deleteForm").submit();
+            } else {
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+
+<!-- JavaScript for Hide Button Confirmation (Buttons Should have class of hideButton) -->
+<script>
+    // Select all elements with the class 'deleteButton'
+    var hideButtons = document.querySelectorAll(".hideButton");
+    
+    // Iterate over each delete button and attach event listener
+    hideButtons.forEach(function(button) {
+        button.addEventListener("click", function(event) {
+            if (confirm("Are you sure you want to Hide this Request?")) {
+                // Find the closest form and submit it
+                this.closest(".hideForm").submit();
+            } else {
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+
+<!-- JavaScript for Filter Buttons -->
+<script>
+  // Add event listener to filter buttons
+document.querySelectorAll('.filter-btn').forEach(function(button) {
+    button.addEventListener('click', function() {
+        var status = this.getAttribute('data-status'); // Get the selected status
+        // Send AJAX request to generate query dynamically
+        $.ajax({
+            url: 'javascript-generate_query.php',
+            type: 'POST',
+            data: {status: status},
+            success: function(response) {
+                // Remove extra quotes from the response
+                response = response.replace(/^"(.*)"$/, '$1'); // Removes quotes from both ends of the string
+                // Redirect to the purchase_request-view.php page with the generated query
+                window.location.href = 'purchase_request-view.php?request=' + encodeURIComponent(response); // Encode the response to ensure URL safety
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+});
+
+</script>
+<script>
+    // Add event listener to filter buttons
+document.querySelectorAll('.filter-view').forEach(function(button) {
+    button.addEventListener('click', function() {
+        var status = this.getAttribute('data-status'); // Get the selected status
+        var current_user_email = '<?php echo $_SESSION['auth_user']['user_email']; ?>';
+        // Send AJAX request to generate query dynamically
+        $.ajax({
+            url: 'javascript-generate_query.php',
+            type: 'POST',
+            data: {status: status, current_user_email: current_user_email},
+            success: function(response) {
+                // Remove extra quotes from the response
+                response = response.replace(/^"(.*)"$/, '$1'); // Removes quotes from both ends of the string
+                // Redirect to the purchase_request-view.php page with the generated query
+                window.location.href = 'purchase_request-view.php?request=' + encodeURIComponent(response); // Encode the response to ensure URL safety
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+});
+
+
+</script>
+
+
+
         
 <?php
 include('includes/footer.php');

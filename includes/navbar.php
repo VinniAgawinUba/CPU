@@ -6,8 +6,8 @@
     
       <!-- XU Logo -->
 
-  <a href="index.php" style="width:400px;"> 
-    <img src="assets/images/XU_LOGO.png" alt="Logo" style="width: 80%;">
+  <a href="index.php" style="width:300px;"> 
+    <img src="assets/images/XULOGO.png" alt="Logo" style="width: 90%;">
     
   </a>
   
@@ -70,7 +70,11 @@
     <a class="nav-link active customfont" href="index.php">HOME</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link customfont" href="requests.php">REQUESTS</a>
+    <a class="nav-link customfont" href="form.php">REQUEST FORM</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link customfont" href="myrequests.php"> MY REQUESTS</a>
+
   </li>
   
 </ul>

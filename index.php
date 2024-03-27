@@ -13,13 +13,15 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $results_per_page;
 
 // Query to fetch requests with pagination
-$query = "SELECT * FROM requests ORDER BY id DESC LIMIT $offset, $results_per_page";
+$query = "SELECT * FROM purchase_requests ORDER BY id DESC LIMIT $offset, $results_per_page";
 $query_run = mysqli_query($con, $query);
 
 ?>
 
+<!--Horizontal Rule Line-->
+<hr style="width:80%; margin:auto; color:#00478a; background:#429ef5; height: 3px;">
 
-<div class="container">
+<div class="container p-5">
     
     <div class="grid grid-cols-3 gap-10">
         <?php
@@ -27,61 +29,45 @@ $query_run = mysqli_query($con, $query);
         {
             foreach($query_run as $item)
             {
-                //statuses
-                $statuses = [
-                    0 => "Received by CPU",
-                    1 => "Left CPU office",
-                    2 => "Received by Registrar",
-                    3 => "Left Registrar office",
-                    4 => "Received by VPadmin",
-                    5 => "Left VPadmin office",
-                    6 => "Received by President",
-                    7 => "Left President office",
-                    8 => "Approved",
-                ];
-                 // Fetch college name
-                 $college_query = "SELECT name FROM college WHERE id = {$item['college_id']}";
-                 $college_result = mysqli_query($con, $college_query);
-                 $college_data = mysqli_fetch_assoc($college_result);
-                 $college_name = $college_data['name'];
- 
-                 // Fetch department name
-                 $department_query = "SELECT name FROM department WHERE id = {$item['department_id']}";
-                 $department_result = mysqli_query($con, $department_query);
-                 $department_data = mysqli_fetch_assoc($department_result);
-                 $department_name = $department_data['name'];
+    
 
                 // Check if request_received_date is older than 30 days from the current day
-                $received_date = strtotime($item['request_received_date']);
+                $received_date = strtotime($item['requested_date']);
                 $current_date = strtotime(date('Y-m-d'));
                 $difference = ($current_date - $received_date) / (60 * 60 * 24); // Difference in days
 
-                // Add a CSS class based on the condition
-                $card_class = '';
-                if ($difference >= 30 && $item['status'] != 8) {
+                 // Add a CSS class based on the condition
+                 $card_class = '';
+                 $text_color = 'black';
+                 if ($difference >= 30 && ($item['status'] != 'approved' && ($item['status'] != 'completed'))) {
                     $card_class = 'bg-red-500'; // Older than or equal to 30 days, set background to red
                     $text_color = 'text-white';
-                } elseif ($difference >= 15 && $item['status'] != 8) {
+                 } 
+                 elseif ($difference >= 15 && ($item['status'] != 'approved' && ($item['status'] != 'completed'))) {
                     $card_class = 'bg-yellow-500'; // Older than or equal to 15 days but less than 30, set background to yellow
                     $text_color = 'text-white';
-                } elseif ($item['status'] == 8) {
-                    $card_class = 'bg-green-500 text-white'; // Status is 8 (Approved), set background to green
+                 } 
+                 elseif ($item['status'] == 'rejected'){
+                    $card_class = 'bg-red-500'; // Older than or equal to 30 days, set background to red
                     $text_color = 'text-white';
-                }
+                 }
+                 elseif ($item['status'] == 'approved' || $item['status'] == 'completed') {
+                    $card_class = 'bg-green-500'; // Status is (Approved), set background to green
+                    $text_color = 'text-white';
+                 }
 
                 ?>
-                <div class="max-w-sm rounded overflow-hidden shadow-lg hover:scale-105 hover:outline-dotted hover:text-purple-800 <?= $card_class ?>">
-                    <div class="px-6 py-4 <?= $text_color ?>">
-                        <div class="font-bold text-xl mb-2 text-current">Request: <?= $item['name']; ?></div>
-                        <p class="text-current text-base mb-2">ID: <?= $item['id']; ?></p>
-                        <p class="text-current text-base mb-2">College: <?= $college_name; ?></p>
-                        <p class="text-current text-base mb-2">Department: <?= $department_name; ?></p>
-                        <p class="text-current text-base mb-2">Received Date: <?= $item['request_received_date']; ?></p>
-                        <p class="text-current text-base mb-2">Expected Delivery Date: <?= $item['expected_delivery_date']; ?></p>
+                <div class="max-w-sm rounded overflow-hidden shadow-lg hover:scale-105 hover:outline-dotted hover:text-blue-600 <?= $card_class?>">
+                    <div class="px-6 py-4 <?=$text_color?>">
+                        <div class="font-bold text-xl mb-2">ID: <?= $item['id']; ?></div>
+                        <p class="text-current text-base mb-2">Unit/Dept: <?= $item['unit_dept_college'];; ?></p>
+                        <p class="text-current text-base mb-2">iptel#/email: <?= $item['iptel_email']; ?></p>
+                        <p class="text-current text-base mb-2">Acknowledged by CPU? <input type = "checkbox" name = "acknowledged_by_cpu" <?= $item['acknowledged_by_cpu'] =='1' ? 'checked': '' ; ?> width = "70px" height = "70px"></p>
+                        <p class="text-current text-base mb-2">Requested Date: <?= date('F j Y h:i A', strtotime($item['requested_date'])); ?></p>
                         <p class="text-current text-base mb-2">
-                         Status: <?= $statuses[$item['status']] ?? "Unknown Status"; ?>
+                         Status: <?= $item['status']; ?>
                         </p>
-                        <!-- You can add more project details here -->
+                        <!-- You can add more request details here -->
                     </div>
                 </div>
                 <?php
@@ -89,20 +75,59 @@ $query_run = mysqli_query($con, $query);
         }
         ?>
     </div>
+<!-- Break Lines Cuz Footer is not footering -->
+<br>
+<br>
+<br>
+<br>
 
     <!-- Pagination links -->
-    <div class="flex justify-center mt-4">
-        <?php
-        $query = "SELECT COUNT(*) AS total FROM requests";
-        $result = mysqli_query($con, $query);
-        $row = mysqli_fetch_assoc($result);
-        $total_pages = ceil($row['total'] / $results_per_page);
+<div class="flex justify-center mt-4">
+    <?php
+    // Include search query parameter in pagination links
+    $pagination_url = "index.php";
+    if (isset($_GET['search_query'])) {
+        $pagination_url .= "?search_query={$_GET['search_query']}&page=";
+    } else {
+        $pagination_url .= "?page=";
+    }
 
-        for ($i = 1; $i <= $total_pages; $i++) {
-            echo "<a href='index.php?page=$i' class='m-2 px-4 py-2 bg-blue-500 text-blue-50 rounded-full hover:bg-blue-400'>$i</a>";
+    // Fetch total number of pages
+    $query = "SELECT COUNT(*) AS total FROM purchase_requests";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_assoc($result);
+    $total_pages = ceil($row['total'] / $results_per_page);
+
+    // Calculate start and end page numbers
+    $visible_pages = 5; // Number of visible page links
+    $start_page = max(1, $page - floor($visible_pages / 2));
+    $end_page = min($total_pages, $start_page + $visible_pages - 1);
+
+    // Display first page link
+    if ($start_page > 1) {
+        echo "<a href='{$pagination_url}1' class='m-2 px-4 py-2 bg-xu-blue text-blue-50 rounded-full hover:bg-blue-400'>1</a>";
+        if ($start_page > 2) {
+            echo "<span class='mx-2'>...</span>";
         }
-        ?>
-    </div>
+    }
+
+    // Display page links within range
+    for ($i = $start_page; $i <= $end_page; $i++) {
+        $active_class = ($i == $page) ? 'btn bg-primary' : 'btn bg-xu-blue hover:bg-blue-400';
+        echo "<a href='{$pagination_url}{$i}' class='m-2 px-4 py-2 $active_class text-blue-50 rounded-full'>$i</a>";
+    }
+
+    // Display last page link
+    if ($end_page < $total_pages) {
+        if ($end_page < $total_pages - 1) {
+            echo "<span class='mx-2'>...</span>";
+        }
+        echo "<a href='{$pagination_url}{$total_pages}' class='m-2 px-4 py-2 bg-xu-blue text-blue-50 rounded-full hover:bg-blue-400'>$total_pages</a>";
+    }
+    ?>
+</div>
+
+
 </div>
 
 <!-- Footer -->

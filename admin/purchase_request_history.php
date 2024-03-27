@@ -144,13 +144,13 @@ elseif($_SESSION['auth_role']==3)
                                         <?php 
                                                 if($row['assigned_user_id'] > 0)
                                                 {
-                                                    $user_query = "SELECT * FROM users WHERE id = ".$row['assigned_user'];
+                                                    $user_query = "SELECT * FROM users WHERE id = ".$row['assigned_user_id'];
                                                     $user_query_run = mysqli_query($con, $user_query);
                                                     if(mysqli_num_rows($user_query_run) > 0)
                                                     {
                                                         foreach($user_query_run as $user_list)
                                                         {
-                                                            echo $user_list['fname'].' '.$user_list['lname'];
+                                                            echo $user_list['email'].' | '.$user_list['fname'].' '.$user_list['lname'];;
                                                         }
                                                     }
                                                     else
@@ -210,7 +210,7 @@ elseif($_SESSION['auth_role']==3)
 
 
                     <!-- Request History Table -->
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped" id="myRequestDetailsHistory">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -258,7 +258,7 @@ elseif($_SESSION['auth_role']==3)
             </div>
         </div>
 </div>
-        
+
 <?php
 include('includes/footer.php');
 

@@ -26,10 +26,12 @@ elseif($_SESSION['auth_role']==3)
     $super_user = false;
     $department_editor = true;
 }
-
 //Query to get request details
 $request_id = $_GET['id'];
+//Item Status Choices
+$status_choices = array('pending', 'approved', 'for_pricing', 'for_po','issued_po','for_delivery_by_supplier','for_pickup_at_supplier','for_tagging','for_delivery_to_requesting_unit','rejected','completed');
 
+//Query to get request details
 $request_query = "SELECT * FROM purchase_requests WHERE id = '$request_id' LIMIT 1";
 $request_query_run = mysqli_query($con, $request_query);
 if(mysqli_num_rows($request_query_run) > 0) 
@@ -39,8 +41,9 @@ if(mysqli_num_rows($request_query_run) > 0)
    
 
 }
-
 ?>
+
+
 
   <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -57,126 +60,175 @@ if(mysqli_num_rows($request_query_run) > 0)
     #sig canvas { width: 100% !important; height: auto; }
   </style>
 
-<div class="container mx-auto p-6 bg-yellow-100 shadow-black">
+<div class="container mx-auto p-6 bg-blue-100 shadow-black">
     <?php include('message.php'); ?>
-    <h1 class="text-3xl font-bold mt-8 mb-4">XAVIER UNIVERSITY CENTRAL PURCHASING UNIT<a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a></h1>
+    <h1 class="text-3xl font-bold mt-8 mb-4 justify-centeritems-center">XAVIER UNIVERSITY CENTRAL PURCHASING UNIT<a href="purchase_request-view.php" class="btn btn-danger float-end">BACK</a></h1>
     <form action="code.php" method="post">
-      <!-- Hidden input to store the request ID -->
-        <input type="hidden" name="request_id" value="<?=$request_id?>">
-        <!-- Hidden input to store the user name -->
-        <input type="hidden" name="user_name" value="<?=$_SESSION['auth_user']['user_name']?>">
-        
+    <!-- Hidden request_id -->
+    <input type="hidden" name="request_id" value="<?php echo $request_id; ?>">
+    <!-- Hidden user_name, user_id, user_email -->
+    <input type="hidden" name="user_name" value="<?php echo $_SESSION['auth_user']['user_name']; ?>">
+    <input type="hidden" name="user_id" value="<?php echo $_SESSION['auth_user']['user_id']; ?>">
+    <input type="hidden" name="user_email" value="<?php echo $_SESSION['auth_user']['user_email']; ?>">
+    
+    <!-- Checkbox To Change status to acknowledged-by-cpu -->
+    <div class = "col-md-12 mb-3 bg-white">
+        <label for="">Acknowledged by CPU</label>
+        <input type = "checkbox" name = "acknowledged_by_cpu" <?= $request_row['acknowledged_by_cpu'] =='1' ? 'checked': '' ; ?> width = "70px" height = "70px">
+    </div>
+
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Purchase Request</legend>
         <div class="mb-3">
           <label for="purchase_request_number" class="form-label">PURCHASE REQUEST#:</label>
           <input type="text" id="purchase_request_number" name="purchase_request_number" class="form-control" required value="<?=$request_row['purchase_request_number']?>">
         </div>
+
         
-        <div class="mb-3">
-    <label class="form-label">REQUEST TO PURCHASE:</label>
-    <?php
-    $purchase_types = array('CAPEX', 'ICT_ITEMS', 'CONSUMABLES', 'SERVICES');
-    $selected_types = explode(',', $request_row['purchase_types']);
-    foreach ($purchase_types as $type) {
-        $checked = '';
-        if (in_array($type, $selected_types)) {
-            $checked = 'checked';
+        
+        
+      </fieldset>
+
+      <!-- ITEMS -->
+      <fieldset class="mb-4 bg-white shadow-md rounded p-4">
+        <legend class="font-bold">Items</legend>
+        <p class="mb-2">Please include complete specifications/details or attach additional information on items.</p>
+        <p class="mb-2">CPU may refuse to receive request without complete specifications or details.</p>
+        
+        <table class="table table-responsive table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="width:60px">ITEM#</th>
+            <th style="width:60px">QTY/UNIT</th>
+            <th style="width:550px">DESCRIPTION</th>
+            <th style="width:550px">JUSTIFICATION</th>
+            <th style="width:60px">ITEM STATUS</th>
+            <th style="width:80px">REMOVE</th> <!-- Empty header for remove button -->
+        </tr>
+    </thead>
+    <tbody id="itemRows">
+        <!-- Query Existing items from items table -->
+        <?php
+        $query = "SELECT * FROM items WHERE purchase_request_id = '$request_id'";
+        $query_run = mysqli_query($con, $query);
+        if (mysqli_num_rows($query_run) > 0) {
+            while ($row = mysqli_fetch_assoc($query_run)) {
+                $item_number = $row['item_number'];
+                $item_qty = $row['item_qty'];
+                $item_description = $row['item_description'];
+                $item_justification = $row['item_justification'];
+                $item_status = $row['item_status'];
+        ?>
+                <tr class="item-row mb-2">
+                    <td style="width:60px">
+                        <!-- ITEM# -->
+                        <input type="text" name="item_number[]" class="form-control" style="width:60px" value="<?php echo $item_number; ?>">
+                    </td>
+                    <td>
+                        <!-- QTY/UNIT -->
+                        <input type="text" name="item_qty[]" class="form-control" style="width:60px" value="<?php echo $item_qty; ?>" required>
+                    </td>
+                    <td>
+                        <!-- DESCRIPTION -->
+                        <textarea name="item_description[]" class="form-control" style="width:500px" required><?php echo $item_description; ?></textarea>
+                    </td>
+                    <td>
+                        <!-- JUSTIFICATION -->
+                        <textarea type="text" name="item_justification[]" class="form-control" style="width:500px" required><?php echo $item_justification; ?></textarea>
+                    </td>
+                    <td>
+                        <!-- ITEM STATUS -->
+                        <select name="item_status[]" class="form-control" style="width:60px" required>
+                            <?php
+                            foreach ($status_choices as $status) {
+                                if ($status == $item_status) {
+                                    echo "<option value='$status' selected>$status</option>";
+                                } else {
+                                    echo "<option value='$status'>$status</option>";
+                                }
+                            }
+                            ?>
+                        </select>
+                    </td>
+                    <td>
+                        <!-- Remove Button -->
+                        <button type="button" class="btn btn-danger btn-remove-item" style="width:80px" required>Remove</button>
+                    </td>
+                </tr>
+            <?php
+            }
+        } else {
+            ?>
+            <tr class="item-row mb-2">
+                <td style="width:60px">
+                    <!-- ITEM# -->
+                    <input type="text" name="item_number[]" class="form-control" style="width:60px" value="1">
+                </td>
+                <td>
+                    <!-- QTY/UNIT -->
+                    <input type="text" name="item_qty[]" class="form-control" style="width:60px" required>
+                </td>
+                <td>
+                    <!-- DESCRIPTION -->
+                    <textarea name="item_description[]" class="form-control" style="width:500px" required></textarea>
+                </td>
+                <td>
+                    <!-- JUSTIFICATION -->
+                    <textarea type="text" name="item_justification[]" class="form-control" style="width:500px" required> </textarea>
+                </td>
+                <td>
+                    <!-- ITEM STATUS -->
+                    <select name="item_status[]" class="form-control" style="width:60px" required>
+                        <?php
+                        foreach ($status_choices as $status) {
+                            echo "<option value='$status'>$status</option>";
+                        }
+                        ?>
+                    </select>
+                </td>
+                <td>
+                    <!-- Remove Button -->
+                    <button type="button" class="btn btn-danger btn-remove-item" style="width:80px" required>Remove</button>
+                </td>
+            </tr>
+        <?php
         }
         ?>
-        <div class="form-check">
-            <input type="checkbox" id="<?= $type ?>" name="purchase_type[]" value="<?= $type ?>" class="form-check-input" <?= $checked ?>>
-            <label for="<?= $type ?>" class="form-check-label"><?= $type ?></label>
-        </div>
-        <?php
-    }
-    ?>
-    <!-- Add other checkboxes for purchase types -->
-</div>
+        <!-- Dynamically generated rows will be added here -->
+    </tbody>
+</table>
 
+        <button type="button" class="btn btn-primary btn-add-item">Add Item</button>
       </fieldset>
-      
-
-        <!-- ITEMS -->
-      <fieldset class="mb-4 bg-white shadow-md rounded p-4">
-    <legend class="font-bold">Items</legend>
-    <p class="mb-2">Please include complete specifications/details or attach additional information on items.</p>
-    <p class="mb-2">CPU may refuse to receive request without complete specifications or details.</p>
-    <div class="mb-3" id="itemRows">
-    <?php
-// Retrieve items associated with the purchase request
-$sql_items = "SELECT * FROM items WHERE purchase_request_id = $request_id";
-$result_items = $con->query($sql_items);
-
-// Check if there are any items
-if ($result_items->num_rows > 0) {
-    // Output data of each row
-    while($row_item = $result_items->fetch_assoc()) {
-        // Output HTML for each item
-        ?>
-        <div class="item-row mb-2">
-            <label class="form-label">Item:</label>
-            <div class="row bg-gray-100">
-                <div class="col-md-3">
-                    <label for="item_qty">Qty/Unit:</label>
-                    <input type="text" name="item_qty[]" class="form-control" placeholder="Qty/Unit" value="<?= $row_item['item_qty'] ?>">
-                </div>
-                <div class="col-md-3">
-                    <label for="item_type">Item:</label>
-                    <textarea name="item_type[]" class="form-control" placeholder="ITEMS -Please include complete specifications/details -CPU will refuse to receive request without complete specifications or details"><?= $row_item['item_type'] ?></textarea>
-                </div>
-                <div class="col-md-5">
-                    <label for="item_type">Justification:</label>
-                    <?php 
-                    // Output checkboxes based on stored values
-                    $justifications = ['additional', 'replacement', 'new'];
-                    foreach($justifications as $justification) {
-                        $checked = (in_array($justification, explode(',', $row_item['item_justification']))) ? 'checked' : '';
-                        echo "<div class='form-check'>
-                                <input type='checkbox' id='$justification' name='item_justification[]' value='$justification' class='form-check-input' $checked>
-                                <label for='$justification' class='form-check-label'>$justification</label>
-                            </div>";
-                    }
-                    ?>
-                    <div>
-                        <label for="item_reason">Reason for request:</label>
-                        <input type="text" name="item_reason[]" class="form-control mt-1" placeholder="Pls specify needs & reasons" value="<?= $row_item['item_reason'] ?>" required>
-                    </div>
-                    <div>
-                        <label for="item_date_condition">Date Purchased & Condition (if replacement):</label>
-                        <input type="text" name="item_date_condition[]" class="form-control mt-1" placeholder="Indicate date purchased & condition if replacement" value="<?= $row_item['item_date_condition'] ?>">
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-danger btn-remove-item">Remove</button>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-} else {
-    // No items found message
-    echo "No items found.";
-}
-?>
-
-    </div>
-    <button type="button" class="btn btn-primary btn-add-item">Add Item</button>
-</fieldset>
 
 
-
-      <!-- Requesting Person Information -->
-      <fieldset class="mb-4 bg-white shadow-md rounded p-4">
-        <legend class="font-bold">Requesting Person Information</legend>
-        <p class="italic m-3">Requesting person will be contacted if more information is needed</p>
-        <div class="mb-3">
-          <label for="printed_name" class="form-label">Requested by:</label>
-          <input type="text" id="printed_name" name="printed_name" class="form-control" required placeholder="Printed Name" value="<?=$request_row['printed_name']?>">
-        </div>
-        
-        <!-- Signature Requestor-->
-        <?php
+      <!-- Requestor Information -->
+<fieldset class="mb-4 bg-white shadow-md rounded p-4">
+    <legend class="font-bold">Requestor Information</legend>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td>Unit/Dept:</td>
+                <td>
+                    <input type="text" id="unit_dept_college" name="unit_dept_college" class="form-control" required placeholder="Unit/Dept" value="<?=$request_row['unit_dept_college']?>">
+                </td>
+            </tr>
+            <tr>
+                <td>Requested by:</td>
+                <td>
+                    <input type="text" id="printed_name" name="printed_name" class="form-control" required placeholder="Requestor Name" value="<?=$request_row['printed_name']?>">
+                </td>
+            </tr>
+            <tr>
+                <td>Approved by: (Unit Head)</td>
+                <td>
+                    <input type="text" id="endorsed_by_dean" name="endorsed_by_dean" class="form-control" required placeholder="Unit Head Name" value="<?=$request_row['endorsed_by_dean']?>">
+                </td>
+            </tr>
+            <tr>
+                <td>Unit Head Signature:</td>
+                <td>
+                <?php
         //if the requestor has already signed, display the signature else display the signature pad
         if($request_row['signed_Requestor'] != '')
         {
@@ -192,51 +244,42 @@ if ($result_items->num_rows > 0) {
         else
         {
             echo '<div class="mb-3">
-            <label for="signed_Requestor">Signature:</label>
             <div id="sigRequestor" class="kbw-signature"></div>
             <button id="clearRequestor" class="btn btn-primary">Clear Signature</button>
             <textarea id="signature64_Requestor" name="signed_Requestor" style="display:none"></textarea>
             </div>';
         }
         ?>
+                </td>
+            </tr>
+            
+            <tr>
+                <td>IPTel#/E-mail Address:</td>
+                <td>
+                    <input type="text" id="iptel_email" name="iptel_email" class="form-control" required value="<?=$request_row['iptel_email']?>">
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+</fieldset>
 
-        <div class="mb-3">
-          <label for="unit_dept_college" class="form-label">Unit/Dept/College:</label>
-          <input type="text" id="unit_dept_college" name="unit_dept_college" class="form-control" value="<?=$request_row['unit_dept_college']?>">
-        </div>
-        <div class="mb-3">
-          <label for="iptel_email" class="form-label">IPTel#/E-mail Address:</label>
-          <input type="text" id="iptel_email" name="iptel_email" class="form-control" value="<?=$request_row['iptel_email']?>">
-        </div>
-      </fieldset>
 
-      <fieldset class="mb-4 bg-white shadow-md rounded p-4">
-        <legend class="font-bold">Remarks by College Dean/Principal</legend>
-        <div class="mb-3">
-          <textarea id="remarks_dean" name="remarks_dean" class="form-control" rows="4"><?=$request_row['remarks_dean']?></textarea>
-        </div>
-      </fieldset>
 
-      <fieldset class="mb-4 bg-white shadow-md rounded p-4">
-        <legend class="font-bold">Endorsed by: College Dean/Principal</legend>
-        <div class="mb-3">
-          <input type="text" id="endorsed_by_dean" name="endorsed_by_dean" class="form-control" value="<?=$request_row['endorsed_by_dean']?>">
-        </div>
-      </fieldset>
-
-      <!-- Signatures for Approvals -->
-      <fieldset class="mb-4 bg-white shadow-md rounded p-4">
-        <legend class="font-bold">Approvals</legend>
-
-        <!-- Vice President -->
-        <div class="mb-3">
-          <label for="vice_president" class="form-label">1-VICE PRESIDENT (CLUSTER):</label>
-          <input type="text" id="vice_president_remarks" name="vice_president_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['vice_president_remarks']?>">
-          <label for="vice_president" class="form-label">Approved By:</label>
-          <input type="text" id="vice_president_approved" name="vice_president_approved" class="form-control" value="<?=$request_row['vice_president_approved']?>">
-          
-          <!-- Signature -->
-          <?php
+<!-- Signatures for Approvals -->
+<fieldset class="mb-4 bg-white shadow-md rounded p-4">
+    <legend class="font-bold">Approvals</legend>
+    <table class="table table-bordered">
+        <tbody>
+            <!-- Vice President -->
+            <tr>
+                <td>1-Cluster Vice President (if above P50,000):</td>
+                <td>
+                    <input type="text" id="vice_president_remarks" name="vice_president_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['vice_president_remarks']?>">
+                    <br>
+                    <input type="text" id="vice_president_approved" name="vice_president_approved" class="form-control" placeholder="Approved By" value="<?=$request_row['vice_president_approved']?>">
+                    <br>
+                    <?php
           //if the vice president has already signed, display the signature else display the signature pad
             if($request_row['signed_1'] != '')
             {
@@ -252,23 +295,23 @@ if ($result_items->num_rows > 0) {
             else
             {
                 echo '<div class="mb-3">
-                <label for="signed_1">Signature:</label>
                 <div id="sig1" class="kbw-signature"></div>
                 <button id="clear1" class="btn btn-primary">Clear Signature</button>
                 <textarea id="signature64_1" name="signed_1" style="display:none"></textarea>
                 </div>';
             }
           ?>
-        
-        <!-- Vice President for Administration -->
-        <div class="mb-3">
-          <label for="vice_president_administration" class="form-label">2-VICE PRESIDENT FOR ADMINISTRATION:</label>
-          <input type="text" id="vice_president_administration_remarks" name="vice_president_administration_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['vice_president_administration_remarks']?>">
-          <label for="vice_president_administration" class="form-label">Approved By:</label>
-          <input type="text" id="vice_president_administration_approved" name="vice_president_administration_approved" class="form-control" value="<?=$request_row['vice_president_administration_approved']?>">
-          
-          <!-- Signature -->
-            <?php
+                </td>
+            </tr>
+            <!-- Vice President for Administration -->
+            <tr>
+                <td>2-VICE PRESIDENT FOR ADMINISTRATION:</td>
+                <td>
+                    <input type="text" id="vice_president_administration_remarks" name="vice_president_administration_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['vice_president_administration_remarks']?>">
+                    <br>
+                    <input type="text" id="vice_president_administration_approved" name="vice_president_administration_approved" class="form-control" placeholder="Approved By" value="<?=$request_row['vice_president_administration_approved']?>">
+                    <br>
+                    <?php
             //if the vice president for administration has already signed, display the signature else display the signature pad
             if($request_row['signed_2'] != '')
             {
@@ -283,26 +326,26 @@ if ($result_items->num_rows > 0) {
             }
             else
             {
-                echo '<div class="mb-3">
-                <label for="signed_2">Signature:</label>
+                echo '<div class="mb-3"> 
                 <div id="sig2" class="kbw-signature"></div>
                 <button id="clear2" class="btn btn-primary">Clear Signature</button>
                 <textarea id="signature64_2" name="signed_2" style="display:none"></textarea>
                 </div>';
             }
             ?>
-
-        <!--Budget Controller-->
-        <div class="mb-3">
-          <label for="budget_controller" class="form-label">3-BUDGET CONTROLLER:</label>
-          <input type="text" id="budget_controller_remarks" name="budget_controller_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['budget_controller_remarks']?>">
-          <label for="budget_controller" class="form-label">Approved By:</label>
-          <input type="text" id="budget_controller_approved" name="budget_controller_approved" class="form-control" value="<?=$request_row['budget_controller_approved']?>">
-          <label for="budget_controller" class="form-label">Acct. Code:</label>
-          <input type="text" id="budget_controller_code" name="budget_controller_code" class="form-control" placeholder="Input Acct. Code" value="<?=$request_row['budget_controller_code']?>">
-          
-          <!-- Signature -->
-          <?php
+                </td>
+            </tr>
+            <!-- Budget Controller -->
+            <tr>
+                <td>3-BUDGET CONTROLLER:</td>
+                <td>
+                    <input type="text" id="budget_controller_remarks" name="budget_controller_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['budget_controller_remarks']?>">
+                    <br>
+                    <input type="text" id="budget_controller_approved" name="budget_controller_approved" class="form-control" placeholder="Approved By" value="<?=$request_row['budget_controller_approved']?>">
+                    <br>
+                    <input type="text" id="budget_controller_code" name="budget_controller_code" class="form-control" placeholder="Acct. Code" value="<?=$request_row['budget_controller_code']?>">
+                    <br>
+                    <?php
             //if the budget controller has already signed, display the signature else display the signature pad
                 if($request_row['signed_3'] != '')
                 {
@@ -318,23 +361,23 @@ if ($result_items->num_rows > 0) {
                 else
                 {
                     echo '<div class="mb-3">
-                    <label for="signed_3">Signature:</label>
                     <div id="sig3" class="kbw-signature"></div>
                     <button id="clear3" class="btn btn-primary">Clear Signature</button>
                     <textarea id="signature64_3" name="signed_3" style="display:none"></textarea>
                     </div>';
                 }
             ?>
-
-        <!--University Treasurer-->
-        <div class="mb-3">
-            <label for="university_treasurer" class="form-label">4-UNIVERSITY TREASURER:</label>
-            <input type="text" id="university_treasurer_remarks" name="university_treasurer_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['university_treasurer_remarks']?>">
-            <label for="university_treasurer" class="form-label">Approved By:</label>
-            <input type="text" id="university_treasurer_approved" name="university_treasurer_approved" class="form-control" value="<?=$request_row['university_treasurer_approved']?>">
-            
-            <!-- Signature -->
-            <?php
+                </td>
+            </tr>
+            <!-- University Treasurer -->
+            <tr>
+                <td>4-UNIVERSITY TREASURER:</td>
+                <td>
+                    <input type="text" id="university_treasurer_remarks" name="university_treasurer_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['university_treasurer_remarks']?>">
+                    <br>
+                    <input type="text" id="university_treasurer_approved" name="university_treasurer_approved" class="form-control" placeholder="Approved By" value="<?=$request_row['university_treasurer_approved']?>">
+                    <br>
+                    <?php
             //if the university treasurer has already signed, display the signature else display the signature pad
                 if($request_row['signed_4'] != '')
                 {
@@ -350,23 +393,23 @@ if ($result_items->num_rows > 0) {
                 else
                 {
                     echo '<div class="mb-3">
-                    <label for="signed_4">Signature:</label>
                     <div id="sig4" class="kbw-signature"></div>
                     <button id="clear4" class="btn btn-primary">Clear Signature</button>
                     <textarea id="signature64_4" name="signed_4" style="display:none"></textarea>
                     </div>';
                 }
             ?>
-
-        <!--OFFICE OF THE PRESIDENT (for budget re-alignment only) :-->
-        <div class="mb-3">
-            <label for="office_of_the_president" class="form-label">5-OFFICE OF THE PRESIDENT (for budget re-alignment only) :</label>
-            <input type="text" id="office_of_the_president_remarks" name="office_of_the_president_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['office_of_the_president_remarks']?>">
-            <label for="office_of_the_president" class="form-label">Approved By:</label>
-            <input type="text" id="office_of_the_president_approved" name="office_of_the_president_approved" class="form-control" value="<?=$request_row['office_of_the_president_approved']?>">
-            
-            <!-- Signature -->
-            <?php
+                </td>
+            </tr>
+            <!-- OFFICE OF THE PRESIDENT -->
+            <tr>
+                <td>5-OFFICE OF THE PRESIDENT (for budget re-alignment only):</td>
+                <td>
+                    <input type="text" id="office_of_the_president_remarks" name="office_of_the_president_remarks" class="form-control" placeholder="Remarks" value="<?=$request_row['office_of_the_president_remarks']?>">
+                    <br>
+                    <input type="text" id="office_of_the_president_approved" name="office_of_the_president_approved" class="form-control" placeholder="Approved By" value="<?=$request_row['office_of_the_president_approved']?>">
+                    <br>
+                    <?php
             //if the office of the president has already signed, display the signature else display the signature pad
                 if($request_row['signed_5'] != '')
                 {
@@ -382,31 +425,23 @@ if ($result_items->num_rows > 0) {
                 else
                 {
                     echo '<div class="mb-3">
-                    <label for="signed_5">Signature:</label>
                     <div id="sig5" class="kbw-signature"></div>
                     <button id="clear5" class="btn btn-primary">Clear Signature</button>
                     <textarea id="signature64_5" name="signed_5" style="display:none"></textarea>
                     </div>';
                 }
             ?>
-        <!-- Add more approval sections as needed -->
-        
-      </fieldset>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>
 
-  
-      
-
-
-      
-      <!-- Save Request Button (saves the request without changing status)-->
 
       <button type="submit" name="request_update_btn_front" class="btn btn-primary">Update Request Details</button>
     </form>
-    <!-- End of Form -->
-
   </div>
 
-  <hr>
   <div>
     <!-- FIELDSET REJECTION, APPROVAL, COMPLETION SECTION-->
     <fieldset class="mb-4 bg-white shadow-md rounded p-4">
@@ -427,6 +462,8 @@ if ($result_items->num_rows > 0) {
   </div>
 </div>
 
+<!-- Approve & Request Should only be visible if user is super_user or admin -->
+<?php if($super_user || $admin) { ?>
 
 <!-- Approve Request Forms (sets status to approved) -->
 <div class="mb-4 row">
@@ -463,7 +500,7 @@ if ($result_items->num_rows > 0) {
       </fieldset>
   </div>
   
-  
+    <?php } ?>
 
   <!-- Bootstrap JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -472,55 +509,61 @@ if ($result_items->num_rows > 0) {
       const itemRows = document.getElementById('itemRows');
       const addItemButton = document.querySelector('.btn-add-item');
 
+      <?php
+      // Get Biggest item number by Quering the items table with the largest item number
+      $query = "SELECT * FROM items WHERE purchase_request_id = '$request_id'";
+      $query_run = mysqli_query($con, $query);
+      if (mysqli_num_rows($query_run) > 0) {
+          // Get the largest item number
+          $item_number = mysqli_num_rows($query_run) + 1;
+      } else {
+          $item_number = 1;
+      }
+      ?>
+      itemNumber = <?php echo $item_number; ?>;
+
+
       addItemButton.addEventListener('click', function () {
-        const itemRow = document.createElement('div');
+        const itemRow = document.createElement('tr');
         itemRow.classList.add('item-row', 'mb-2');
         itemRow.innerHTML = `
-        <label class="form-label">Item:</label>
-        <div class="row bg-gray-100">
-            <div class="col-md-3">
-                <label for="item_qty">Qty/Unit:</label>
-                <input type="text" name="item_qty[]" id="item_qty" class="form-control" placeholder="Qty/Unit">
-            </div>
-            <div class="col-md-3">
-                <label for="item_type">Item:</label>
-                <textarea name="item_type[]" id="item_type" class="form-control" placeholder="ITEMS -Please include complete specifications/details -CPU will refuse to receive request without complete specifications or details"></textarea>
-            </div>
-            <div class="col-md-5">
-                <label for="item_type">Justification:</label>
-                <div class="form-check">
-                    <input type="checkbox" id="additional" name="item_justification[]" value="additional" class="form-check-input">
-                    <label for="additional" class="form-check-label">Additional</label>
-                </div>
-                
-                <div class="form-check">
-                    <input type="checkbox" id="replacement" name="item_justification[]" value="replacement" class="form-check-input">
-                    <label for="replacement" class="form-check-label">Replacement</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" id="new" name="item_justification[]" value="new" class="form-check-input">
-                    <label for="new" class="form-check-label">New</label>
-                </div>
-                <div>
-                    <label for="item_reason">Reason for request:</label>
-                    <input type="text" name="item_reason[]" id="item_reason" class="form-control mt-1" placeholder="Pls specify needs & reasons">
-                </div>
-                <div>
-                    <label for="item_date_condition">Date Purchased & Condition (if replacement):</label>
-                    <input type="text" name="item_date_condition[]" id="item_date_condition" class="form-control mt-1" placeholder="Indicate date purchased & condition if replacement">
-                </div>
-            </div>
-            <div class="col-auto">
-                <button type="button" class="btn btn-danger btn-remove-item">Remove</button>
-            </div>
-        </div>
+            <td style="width:60px">
+                <!-- ITEM# -->
+                <input type="text" name="item_number[]" class="form-control" style="width:60px" value="${itemNumber}">
+            </td>
+            <td>
+                <!-- QTY/UNIT -->
+                <input type="text" name="item_qty[]" class="form-control" style="width:60px" required>
+            </td>
+            <td>
+                <!-- DESCRIPTION -->
+                <textarea name="item_description[]" class="form-control" style="width:500px" required></textarea>
+            </td>
+            <td>
+                <!-- JUSTIFICATION -->
+                <textarea type="text" name="item_justification[]" class="form-control" style="width:500px" required> </textarea>
+            </td>
+            <td>
+                <!-- ITEM STATUS -->
+                <select name="item_status[]" class="form-control" style="width:60px" required> 
+                      <option value='pending'>pending</option>;
+                </select>
+
+            </td>
+            <td>
+                <!-- Remove Button -->
+                <button type="button" class="btn btn-danger btn-remove-item" style="width:80px" required>Remove</button>
+            </td>
         `;
         itemRows.appendChild(itemRow);
-      });
+        itemNumber++; // Increment item number
+    });
+
 
       itemRows.addEventListener('click', function (event) {
         if (event.target.classList.contains('btn-remove-item')) {
           event.target.closest('.item-row').remove();
+          itemNumber--; // Decrement item number
         }
       });
 
@@ -569,12 +612,9 @@ if ($result_items->num_rows > 0) {
 
       // Add more signature scripts as needed
 
-
-      
-
     });
   </script>
-  
+
   <!-- Delete Signature Script -->
 <script>
 $(document).ready(function(){
@@ -610,7 +650,6 @@ $(document).ready(function(){
     });
 });
 </script>
-
 
 <?php
 include('includes/footer.php');

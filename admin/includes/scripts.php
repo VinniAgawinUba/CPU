@@ -1,8 +1,8 @@
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script> <!-- Move this line up -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" /> <!-- Move this line up -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="js/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="js/jquery.dataTables.js"></script> <!-- Move this line up -->
+<link rel="stylesheet" href="css/jquery.dataTables.css" /> <!-- Move this line up -->
 
 
 <script src="js/scripts.js"></script>
@@ -52,6 +52,17 @@
             $('#myPurchaseRequests').DataTable({
                 "order": [[ 0, "desc" ]]
             });
+            $('#myItemHistory').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myRequestDetailsHistory').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+            $('#myPurchaseRequestsFront').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+
+            
 
             } );
         </script>
@@ -118,30 +129,15 @@
     });
 </script>
 
-<!-- JavaScript for Filter Buttons -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const tableRows = document.querySelectorAll('#myPurchaseRequests tbody tr');
 
-        filterButtons.forEach(function (button) {
-            button.addEventListener('click', function () {
-                const status = this.getAttribute('data-status');
 
-                tableRows.forEach(function (row) {
-                    // If the status is 'all' or the row status matches the button status
-                    if (status === 'all' || row.cells[8].textContent.trim() === status  ){
-                        row.style.display = '';
-                    }
-                    
-                    else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-        });
-    });
-</script>
+
+
+
+
+
+
+
 
 
 </body>

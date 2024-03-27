@@ -1,3 +1,4 @@
+
 <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
@@ -12,18 +13,7 @@
                                 Registered Users
                             </a>
 
-                            <!--- Inventory -->
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseInventory" aria-expanded="false" aria-controls="collapseInventory">
-                                <div class="sb-nav-link-icon"><i class="fas fa-boxes-stacked"></i></div>
-                                Inventory
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseInventory" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="inventory-add.php">Add Inventory</a>
-                                    <a class="nav-link" href="inventory-view.php">View Inventory</a>
-                                </nav>
-                            </div>
+                           
 
                             <!--- Purchase Request -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePurchaseRequest" aria-expanded="false" aria-controls="collapsePurchaseRequest">
@@ -38,32 +28,10 @@
                                 </nav>
                             </div>
 
-                            <!--- Requests -->
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRequests" aria-expanded="false" aria-controls="collapseRequests">
-                                <div class="sb-nav-link-icon"><i class="fas fa-sheet-plastic"></i></div>
-                                Requests
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseRequests" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="request-add.php">Add Requests</a>
-                                    <a class="nav-link" href="request-view.php">View Requests</a>
-                                </nav>
-                            </div>
+                            
 
 
-                            <!--- Faculty -->
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseFaculty" aria-expanded="false" aria-controls="collapseFaculty">
-                                <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                                Faculty
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseFaculty" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="faculty-add.php">Add Faculty</a>
-                                    <a class="nav-link" href="faculty-view.php">View Faculty</a>
-                                </nav>
-                            </div>
+                           
 
                             
 
@@ -108,13 +76,7 @@
                                     </a>
                                 </nav>
                             </div>
-                            <div class="sb-sidenav-menu-heading">Addons</div>
                             
-                            
-                            <a class="nav-link" href="tables.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Tables
-                            </a>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
