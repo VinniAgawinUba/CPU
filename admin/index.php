@@ -9,6 +9,8 @@ include('includes/header.php');
     <script src="js/chart.js"></script>
     <script src="js/dataTables.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/chartjs-plugin-datalabels.js"></script>
+
 
 
 <div class="container-fluid px-4">
@@ -177,30 +179,62 @@ include('includes/header.php');
                 datasets: [{
                     data: counts,
                     backgroundColor: [
-                        'rgba(207, 205, 204, 0.5)', // pending Grey
-                        'rgba(54, 162, 235, 0.5)', // approved Blue
-                        'rgba(251, 255, 0, 0.5)',//partially-completed Yellow
-                        'rgba(255, 99, 132, 0.5)',//rejected Red
-                        'rgba(11, 230, 70, 0.5)',//completed Green
-                        // Add more colors as needed
-                    ],
-                    borderColor: [
-                        'rgba(207, 205, 204, 1)', // pending
-                        'rgba(54, 162, 235, 1)', // approved
+                        'rgba(90, 90, 90, 1)', // pending Grey
+                        'rgba(54, 162, 235, 1)', // approved Blue
                         'rgba(251, 255, 0, 1)',//partially-completed Yellow
-                        'rgba(255, 99, 132, 1)',//rejected Red
+                        'rgba(255, 0, 0, 1)',//rejected Red
                         'rgba(11, 230, 70, 1)',//completed Green
                         // Add more colors as needed
                     ],
+                    borderColor: [
+                        'rgba(90, 90, 90, 1)', // pending Grey
+                        'rgba(54, 162, 235, 1)', // approved Blue
+                        'rgba(251, 255, 0, 1)',//partially-completed Yellow
+                        'rgba(255, 0, 0, 1)',//rejected Red
+                        'rgba(11, 230, 70, 1)',//completed Green
+                        // Add more colors as needed
+                    ],
+
+                    textbackgroundcolor:[
+                        //Black
+                        'rgba(255, 255, 255, 1)',
+                        'rgba(255, 255, 255, 1)',
+                        'rgba(0, 0, 0, 0.5)',
+                        'rgba(255, 255, 255, 1)',
+                        'rgba(255, 255, 255, 1)',
+                        
+                    ],
+
                     borderWidth: 1
                 }]
             },
+            plugins: [ChartDataLabels],
             options: {
                 responsive: true,
                 plugins: {
                     legend: {
                         display: false, // Hide the default legend
+                    },
+                    datalabels: {
+                    color: function(context) {
+                        return context.dataset.backgroundColor;
+                    },
+                    //Background color of the labels (Black)
+                    backgroundColor: function(context) {
+                        return context.dataset.textbackgroundcolor;
+                    },
+                    //borderradius
+                    borderRadius: 10,
+                    formatter: (value, ctx) => {
+                        let label = ctx.chart.data.labels[ctx.dataIndex];
+                        let dataset = ctx.chart.data.datasets[ctx.datasetIndex];
+                        let total = dataset.data.reduce((acc, data) => acc + data, 0);
+                        let percentage = ((value / total) * 100).toFixed(1) + '%';
+                        return `${label}: ${value} (${percentage})`;
                     }
+
+                }
+                    
                 },
                 tooltips: {
                     callbacks: {
@@ -245,34 +279,46 @@ function renderPieChart2(labels, counts) {
             datasets: [{
                 data: counts,
                 backgroundColor: [
-                    'rgba(11, 230, 70, 0.5)', // Acknowledged Green
-                    'rgba(255, 99, 132, 0.5)', // Not Acknowledged Red
-                    
+                    'rgba(11, 230, 70, 1)', // Acknowledged Green
+                    'rgba(255, 0, 0, 1)', // Not Acknowledged Red
                     // Add more colors as needed
                 ],
                 borderColor: [
                     'rgba(11, 230, 70, 1)', // Acknowledged Green
-                    'rgba(255, 99, 132, 1)', // Not Acknowledged Red
+                    'rgba(255, 0, 0, 1)', // Not Acknowledged Red
                     // Add more colors as needed
                 ],
+                textbackgroundcolor:[
+                        //Black
+                        'rgba(0, 0, 0, 1)',
+                    ],
+
                 borderWidth: 1
             }]
         },
+        plugins: [ChartDataLabels],
         options: {
             responsive: true,
             plugins: {
                 legend: {
                     display: false, // Hide the default legend
-                }
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        var label = data.labels[tooltipItem.index] || '';
-                        var value = data.datasets[0].data[tooltipItem.index];
-                        var total = data.datasets[0].data.reduce((a, b) => a + b, 0);
-                        var percentage = Math.round((value / total) * 100);
-                        return `${label}: ${value} (${percentage}%)`;
+                },
+                datalabels: {
+                    color: function(context) {
+                        return context.dataset.backgroundColor;
+                    },
+                    //Background color of the labels (Black)
+                    backgroundColor: function(context) {
+                        return context.dataset.textbackgroundcolor;
+                    },
+                    //borderradius
+                    borderRadius: 10,
+                    formatter: (value, ctx) => {
+                        let label = ctx.chart.data.labels[ctx.dataIndex];
+                        let dataset = ctx.chart.data.datasets[ctx.datasetIndex];
+                        let total = dataset.data.reduce((acc, data) => acc + data, 0);
+                        let percentage = ((value / total) * 100).toFixed(1) + '%';
+                        return `${label}: ${value} (${percentage})`;
                     }
                 }
             }
@@ -287,6 +333,7 @@ function renderPieChart2(labels, counts) {
         legend.appendChild(div);
     });
 }
+
 
     
 </script>

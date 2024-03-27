@@ -51,6 +51,7 @@ include('includes/header.php');
     <script src="js/chart.js"></script>
     <script src="js/dataTables.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/chartjs-plugin-datalabels.js"></script>
     <script>
         $(document).ready(function () {
             // Initialize date range picker
@@ -112,10 +113,33 @@ include('includes/header.php');
                 }),
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
+                borderWidth: 1,
+                textBackgroundColor: 'rgba(255, 90, 100, 1)', // Background color for datalabels
             }]
         },
+        plugins: [ChartDataLabels], // Enable datalabels plugin
         options: {
+            //Datalabel configurations
+            plugins: {
+                datalabels: {
+                    backgroundColor: function(context) {
+                        return context.dataset.textBackgroundColor;
+                    },
+                    color: 'white',
+                    font: {
+                        weight: 'bold'
+                    },
+
+                    formatter: function (value, ctx) {
+                        let label = ctx.chart.data.labels[ctx.dataIndex];
+                        let dataset = ctx.chart.data.datasets[ctx.datasetIndex];
+                        let total = dataset.data.reduce((acc, data) => acc + data, 0);
+                        return `${value}`;
+                    }
+                }
+            },
+
+                        
             // Customizing chart appearance
             responsive: true, //Resizes the chart canvas when its container does
             Animation: {
