@@ -42,6 +42,8 @@ include('authentication.php');
     <input type="hidden" name="user_id" value="<?php echo $_SESSION['auth_user']['user_id']; ?>">
     <input type="hidden" name="user_email" value="<?php echo $_SESSION['auth_user']['user_email']; ?>">
 
+    
+
       <fieldset class="mb-4 bg-blue-900 bg-opacity-50 shadow-md rounded p-4">
         <legend class="font-bold text-white">Purchase Request</legend>
         

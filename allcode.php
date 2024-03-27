@@ -35,9 +35,9 @@ if(isset($_POST['request_add_btn_front'])){
     $requestor_signature = $_POST['signed_Requestor'];
 
     //Requestor User Information
-    $requestor_user_id = $_SESSION['auth_user']['user_id'];
-    $requestor_user_email = $_SESSION['auth_user']['user_email'];
-    $requestor_user_name = $_SESSION['auth_user']['user_name'];
+    $requestor_user_id = $_POST['user_id'];
+    $requestor_user_email = $POST['user_email'];
+    $requestor_user_name = $_POST['user_name'];
   
      // Signatures
      $signatures = array(

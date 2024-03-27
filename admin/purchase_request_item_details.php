@@ -171,10 +171,10 @@ elseif($_SESSION['auth_role']==3)
                                 }
                             } 
                             if ($difference >= 30 && $row['status'] != 'approved') {
-                                echo "<tr><td colspan='100%' class='text-center text-white bg-danger'>This request is older than 30 days and has not been approved</td></tr>";
+                                echo "<tr><td colspan='100%' class='text-center text-white bg-danger'>This request is older than 30 days</td></tr>";
                             } 
                             elseif ($difference >= 15 && $row['status'] != 'approved') {
-                                echo "<tr><td colspan='100%' class='text-center text-white bg-warning'>This request is older than 15 days and has not been approved</td></tr>";
+                                echo "<tr><td colspan='100%' class='text-center text-white bg-warning'>This request is older than 15 days</td></tr>";
                             } 
                             elseif ($row['status'] == 'pending') {
                                 echo "<tr><td colspan='100%' class='text-center'>This request is still pending</td></tr>";

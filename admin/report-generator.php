@@ -8,23 +8,26 @@ include('includes/header.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chart Example</title>
+    <title>Report Generation Charts</title>
     <link href="css/daterangepicker.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="css/dataTables.dataTables.min.css" />
-    <style>
-        /* Your CSS styles here */
-    </style>
+    
 </head>
 <body>
+     
     <div id="mainWrapper">
+        <!-- button for printing chart only -->
+     <button id="printBtn" onclick="printChart()" class="btn bg-success" style="color:white; position: absolute; left:0; right:0; margin-left: auto; margin-right: auto; width: 100px; white-space: nowrap;">Print Chart</button>
         <!-- Date range picker input field -->
         <input type="text" id="dateRangePicker" name="dateRangePicker" class="form-control bg-primary" style="margin-top:20px; height:50px; font-size: large; width: 300px; text-align:center; color:white; font-size:24px; font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;" />
-        <div>
+        
+        <div class="chart-container" style="position: relative; height:40vh; width:80vw">
         <!-- Chart will be rendered here -->
         <canvas id="myChart"></canvas>
         </div>
+        
         <!-- Additional information will be rendered here -->
-        <div id="additionalInfo" style="border:3px solid #ccc">
+        <div id="additionalInfo" style="border:3px solid #ccc" class="TableDiv">
             <table id="additionalTable" class="table table-bordered table-striped">
                 <thead>
                     <tr>
@@ -45,8 +48,9 @@ include('includes/header.php');
     <script src="js/jquery.min.js"></script>
     <script src="js/moment.min.js"></script>
     <script src="js/daterangepicker.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/chart.js"></script>
     <script src="js/dataTables.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
             // Initialize date range picker
@@ -88,10 +92,11 @@ include('includes/header.php');
                 });
             }
 
+            // Function to update the chart with new data
             function updateChart(data) {
     //clear the canvas and create a new chart
-    $('#myChart').remove();
-    $('#mainWrapper').append('<canvas id="myChart"></canvas>');
+    $('#myChart').remove(); // This is my <canvas> element
+    $('.chart-container').append('<canvas id="myChart"><canvas>'); // Redraw chart in the container
 
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
@@ -111,20 +116,20 @@ include('includes/header.php');
             }]
         },
         options: {
+            // Customizing chart appearance
+            responsive: true, //Resizes the chart canvas when its container does
+            Animation: {
+                duration: 2000,
+                easing: 'easeInOutCubic'
+            },
+
             scales: {
-                x: [{
-                    type: 'time',
-                    time: {
-                        unit: 'day',
-                        displayFormats: {
-                            day: 'MMM D YYYY' // Format for day labels
-                        }
-                    },
+                x: {
                     scaleLabel: {
                         display: true,
                         labelString: 'Date Range'
                     }
-                }],
+                },
                 y: {
                     scaleLabel: {
                         display: true,
@@ -144,8 +149,19 @@ include('includes/header.php');
             // Function to render additional information
             function renderAdditionalInfo(info) {
                 var table = $('#additionalTable').DataTable();
-                table.clear().draw(); // Clear the table content
 
+                // Check if DataTable is already initialized
+                if ($.fn.dataTable.isDataTable('#additionalTable')) {
+                    // If DataTable is already initialized, just redraw the table
+                    table.clear().draw();
+                } else {
+                    // If DataTable is not initialized, initialize it
+                    table = $('#additionalTable').DataTable({
+                        "order": [[ 0, "desc" ]]
+                    });
+                }
+
+                // Add rows to the table
                 for (var i = 0; i < info.length; i++) {
                     var rowData = info[i];
                     var row = [
@@ -164,6 +180,16 @@ include('includes/header.php');
             var endDate = moment().format('YYYY-MM-DD'); // Default end date (today)
             fetchData(startDate, endDate);
         });
+
+         // Function to print chart and date range picker
+         function printChart() {
+            // Hide unwanted elements before printing
+            $('.TableDiv').hide(); // Hide the table
+            $('#printBtn').hide(); // Hide the print button
+            window.print(); // Print the page
+            $('.TableDiv').show(); // Show the table again after printing
+            $('#printBtn').show(); // Show the print button again after printing
+        }
     </script>
 </body>
 </html>
