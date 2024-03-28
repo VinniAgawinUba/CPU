@@ -70,6 +70,9 @@ if(mysqli_num_rows($request_query_run) > 0)
     <input type="hidden" name="user_name" value="<?php echo $_SESSION['auth_user']['user_name']; ?>">
     <input type="hidden" name="user_id" value="<?php echo $_SESSION['auth_user']['user_id']; ?>">
     <input type="hidden" name="user_email" value="<?php echo $_SESSION['auth_user']['user_email']; ?>">
+
+    <!-- Hidden input to store the request requestor email-->
+    <input type="hidden" name="requestor_email" value="<?=$request_row['requestor_user_email']?>">
     
     <!-- Checkbox To Change status to acknowledged-by-cpu -->
     <div class = "col-md-12 mb-3 bg-white">

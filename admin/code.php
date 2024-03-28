@@ -199,10 +199,13 @@ $iptel_email = $_POST['iptel_email'];
 $requestor_signature = $_POST['signed_Requestor'];
 $acknowledged_by_cpu = $_POST['acknowledged_by_cpu'] == true ? '1' : '0'; // Set acknowledged-by-cpu to 1/true if checkbox is checked, otherwise set to 0/false
 
-//User Information
+//Updater User Information
 $updater_user_id = $_POST['user_id'];
 $updater_user_email = $_POST['user_email'];
 $updater_user_name = $_POST['user_name'];
+
+//Requestor User Information
+$requestor_user_email = $_POST['requestor_email'];
 
  // Signatures
  $signatures = array(
@@ -274,7 +277,95 @@ budget_controller_approved = '$budget_controller_approved', budget_controller_co
 signed_3 = '$budget_controller_signature', university_treasurer_remarks = '$university_treasurer_remarks', 
 university_treasurer_approved = '$university_treasurer_approved', signed_4 = '$university_treasurer_signature', 
 office_of_the_president_remarks = '$office_of_the_president_remarks', office_of_the_president_approved = '$office_of_the_president_approved', 
-signed_5 = '$office_of_the_president_signature', acknowledged_by_cpu = '$acknowledged_by_cpu' WHERE id = '$id'";
+signed_5 = '$office_of_the_president_signature' WHERE id = '$id'";
+
+
+//if acknowledged by cpu is checked then update only the acknowledged by cpu AND send email notification
+if ($acknowledged_by_cpu == '1') {
+    $sql_purchase_request = "UPDATE purchase_requests SET acknowledged_by_cpu = '$acknowledged_by_cpu' WHERE id = '$id'";
+    // Send email notification to the user_requestor_email
+        $mail = new PHPMailer(true); // Passing `true` enables exceptions
+        try {
+            // Server settings
+            $mail->isSMTP(); // Set mailer to use SMTP
+            $mail->Host = 'smtp.gmail.com'; // Specify main and backup SMTP servers
+            $mail->SMTPAuth = true; // Enable SMTP authentication
+            $mail->Username = 'vinniuba1@gmail.com'; // SMTP username (your Gmail email address)TO BE REPLACED WITH WEBSITE EMAIL
+            $mail->Password = 'buqn wpcc yhlx lvoz'; // SMTP password USE APP PASSWORD FOUND IN GOOGLE SETTINGS
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
+            $mail->Port = 587; // TCP port to connect to
+    
+            // Sender and recipient
+            $mail->setFrom('vinniuba1@gmail.com', 'EMAIL BOT :)'); // Sender's email address and name
+            // Recipient's email address (Requestor's email address)
+            $mail->addAddress( ''. $requestor_user_email .'');
+
+    
+            // Define a variable to hold the status text
+    $status_text = 'Your request has been acknowledged by the Central Procurement Unit.';
+
+
+    // Email content
+    $mail->isHTML(true); // Set email format to HTML
+    $mail->Subject = 'Request Status Update';
+
+    // Constructing HTML email body
+    $body = '
+        <html>
+        <head>
+            <title>Request Status Update</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    border: 1px solid #ccc;
+                    border-radius: 10px;
+                }
+                h1 {
+                    color: #007bff;
+                }
+                p {
+                    line-height: 1.6;
+                }
+                .footer {
+                    margin-top: 20px;
+                    padding-top: 20px;
+                    border-top: 1px solid #ccc;
+                }
+                .footer p {
+                    font-size: 12px;
+                    color: #777;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Purchase Request Notification</h1>
+                <p>Your request has been updated to: <strong>' . $status_text . '</strong></p>
+                <div class="footer">
+                    <p>This is an automated email notification. Please do not reply.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+    ';
+
+    $mail->Body = $body;
+
+    // Send email
+    $mail->send();
+            echo 'Message has been sent';
+        } catch (Exception $e) {
+            echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+        }
+    
+}
+
+
 // Execute Purchase Request query
 if ($con->query($sql_purchase_request) === TRUE) {
 
