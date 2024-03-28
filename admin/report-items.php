@@ -44,6 +44,8 @@ include('includes/header.php');
                                         <canvas id="pieChart1"></canvas>
                                         </div>
 
+                                        <div id="total-count"></div>
+
                                         <!-- Custom legend for percentage breakdown -->
                                         <div id="legend1">
                                             <!-- Legend for percentage breakdown -->
@@ -124,22 +126,47 @@ function fetchData(startDate, endDate) {
             startDate: startDate,
             endDate: endDate
         },
-        success: function(response) {
+                success: function(response) {
+            console.log('testing',response);
             var items = response.items; // Items data
-            var count = response.count; // Count of items
 
             // Update chart with fetched data
             updateChart1(items);
 
+            // Calculate total count
+            var totalCount = items.length;
+
+            // Display total count
+            $('#total-count').text('Total Count: ' + totalCount);
+
+            //Display total count per item_status
+            var groupedData = groupItemsByDateAndStatus(items);
+            var legend = '';
+            for (var status in groupedData) {
+                var count = 0;
+                for (var date in groupedData[status]) {
+                    count += groupedData[status][date];
+                }
+                var percentage = ((count / totalCount) * 100).toFixed(2);
+                legend += '<div>' + status + ': ' + count + ' (' + percentage + '%)</div>';
+            }
+            $('#legend1').html(legend);
+            
+            
             // Render additional information
             renderAdditionalInfo(items);
         }
+
     });
 }
 
+// Function to update chart with item data
 function updateChart1(data) {
     // Group items by date and status
     var groupedData = groupItemsByDateAndStatus(data);
+
+    var totalCount = data.reduce((total, point) => total + point.count, 0);
+    
 
     // Extract unique dates for x-axis labels
     var uniqueDates = [...new Set(data.map(item => formatDate(item.item_date_requested)))];
@@ -162,6 +189,10 @@ function updateChart1(data) {
         });
     }
 
+    // Calculate total count
+    var totalCount = 0;
+    data.forEach(item => totalCount++);
+
     // Clear canvas and create a new chart
     $('#pieChart1').remove();
     $('.chart-container1').append('<canvas id="pieChart1"><canvas>');
@@ -179,6 +210,19 @@ function updateChart1(data) {
                 legend: {
                     display: true,
                     position: 'right'
+                },
+                afterDatasetsDraw: function(chart) {
+                    var ctx = chart.ctx;
+                    ctx.save();
+                    ctx.fillStyle = 'black';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.font = 'bold 12px Arial';
+
+                    // Display total count
+                    ctx.fillText('Total Count: ' + totalCount, chart.width - 50, chart.height - 40);
+
+                    ctx.restore();
                 }
             },
             scales: {
@@ -209,6 +253,10 @@ function updateChart1(data) {
         }
     });
 }
+
+
+
+
 
 // Function to group items by date and status
 function groupItemsByDateAndStatus(data) {
