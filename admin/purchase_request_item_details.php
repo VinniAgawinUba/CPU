@@ -28,6 +28,17 @@ elseif($_SESSION['auth_role']==3)
     $department_editor = true;
 }
 
+$request_id = $_GET['request_id'];
+//Check if at least 1 item is completed, then update purchase request status to partially completed
+$query = "SELECT * FROM items WHERE purchase_request_id = $request_id AND item_status = 'completed'";
+$result = mysqli_query($con, $query);
+if (mysqli_num_rows($result) > 0) {
+    $query = "UPDATE purchase_requests SET status = 'partially-completed' WHERE id = $request_id";
+    mysqli_query($con, $query);
+    echo "<script>console.log('Purchase Request status updated to partially_completed');</script>";
+}
+echo "<script>console.log('Purchase Request status updated to partially_completed');</script>";
+
 ?>
 
 

@@ -81,7 +81,7 @@ if(mysqli_num_rows($request_query_run) > 0)
         <legend class="font-bold">Purchase Request</legend>
         <div class="mb-3">
           <label for="purchase_request_number" class="form-label">PURCHASE REQUEST#:</label>
-          <input type="text" id="purchase_request_number" name="purchase_request_number" class="form-control" required value="<?=$request_row['purchase_request_number']?>">
+          <input type="text" id="purchase_request_number" name="purchase_request_number" class="form-control" value="<?=$request_row['purchase_request_number']?>">
         </div>
 
         

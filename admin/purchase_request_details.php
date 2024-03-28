@@ -3,8 +3,6 @@ include('authentication.php');
 include('includes/header.php');
 include('includes/scripts.php');
 
-// Check authentication and role
-
 ?>
 
 <div class="container-fluid px-4">

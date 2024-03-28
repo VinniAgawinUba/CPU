@@ -282,7 +282,7 @@ include('includes/header.php');
 function renderPieChart2(labels, counts) {
     // Modify data labels to use "Acknowledged" or "Not Acknowledged"
     var labelsModified = labels.map(function(label) {
-        return label === '0' ? 'Acknowledged by CPU' : 'Not Acknowledged by CPU';
+        return label === '0' ? 'Not Acknowledged by CPU' : 'Acknowledged by CPU';
     });
 
     var ctx = document.getElementById('pieChart2').getContext('2d');
@@ -293,13 +293,13 @@ function renderPieChart2(labels, counts) {
             datasets: [{
                 data: counts,
                 backgroundColor: [
-                    'rgba(11, 230, 70, 1)', // Acknowledged Green
                     'rgba(255, 0, 0, 1)', // Not Acknowledged Red
+                    'rgba(11, 230, 70, 1)', // Acknowledged Green
                     // Add more colors as needed
                 ],
                 borderColor: [
-                    'rgba(11, 230, 70, 1)', // Acknowledged Green
                     'rgba(255, 0, 0, 1)', // Not Acknowledged Red
+                    'rgba(11, 230, 70, 1)', // Acknowledged Green
                     // Add more colors as needed
                 ],
                 textbackgroundcolor:[
