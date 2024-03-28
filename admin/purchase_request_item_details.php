@@ -35,9 +35,9 @@ $result = mysqli_query($con, $query);
 if (mysqli_num_rows($result) > 0) {
     $query = "UPDATE purchase_requests SET status = 'partially-completed' WHERE id = $request_id";
     mysqli_query($con, $query);
-    echo "<script>console.log('Purchase Request status updated to partially_completed');</script>";
+
+
 }
-echo "<script>console.log('Purchase Request status updated to partially_completed');</script>";
 
 ?>
 
@@ -406,6 +406,8 @@ echo "<script>console.log('Purchase Request status updated to partially_complete
         
 <?php
 include('includes/footer.php');
+
+
 
 ?>
 

@@ -361,7 +361,9 @@ if ($acknowledged_by_cpu == '1') {
         <body>
             <div class="container">
                 <h1>Purchase Request Notification</h1>
-                <p>Your request has been updated to: <strong>' . $status_text . '</strong></p>
+                <h2>Purchase Request ID: ' . $purchase_request_id . '</h2>
+                <p>Purchase Request Number: ' . $purchase_request_number . '</p>
+                <p><strong>' . $status_text . '</strong></p>
                 <div class="footer">
                     <p>This is an automated email notification. Please do not reply.</p>
                 </div>
@@ -606,11 +608,22 @@ if(isset($_POST['request_approve_btn'])) {
     $last_modified_by = $_POST['user_name'];
     //Specify change made Unique to each action
     $change_made = "Request Approved";
+    $approved = 'approved';
 
     // Your SQL query to update data in the database
-    $update_query = "UPDATE purchase_requests SET status = 'approved', approval_remarks = '$approval_remarks' WHERE id = '$request_id'";
+    $update_query = "UPDATE purchase_requests SET status = '$approved', approval_remarks = '$approval_remarks' WHERE id = '$request_id'";
     // Executing the query
     $query_run = mysqli_query($con, $update_query);
+
+    //get the requestor email
+    $sql = "SELECT requestor_user_email, purchase_request_number FROM purchase_requests WHERE id = '$request_id'";
+    $result = $con->query($sql);
+    $row = $result->fetch_assoc();
+    $requestor_email = $row['requestor_user_email'];
+    $purchase_request_number = $row['purchase_request_number'];
+
+
+    sendEmail($requestor_email, $approved, $request_id, $purchase_request_number, $approval_remarks);
 
     if($query_run) {
         // If query executed successfully, Insert into purchase_requests_history
@@ -633,12 +646,22 @@ if(isset($_POST['request_complete_btn'])) {
     $last_modified_by = $_POST['user_name'];
     //Specify change made Unique to each action
     $change_made = "Request Completed";
+    $completed = 'completed';
 
 
     // Your SQL query to update data in the database
-    $update_query = "UPDATE purchase_requests SET status = 'completed', completed_remarks = '$completion_remarks' WHERE id = '$request_id'";
+    $update_query = "UPDATE purchase_requests SET status = '$completed', completed_remarks = '$completion_remarks' WHERE id = '$request_id'";
     // Executing the query
     $query_run = mysqli_query($con, $update_query);
+
+    //get the requestor email
+    $sql = "SELECT requestor_user_email, purchase_request_number FROM purchase_requests WHERE id = '$request_id'";
+    $result = $con->query($sql);
+    $row = $result->fetch_assoc();
+    $requestor_email = $row['requestor_user_email'];
+    $purchase_request_number = $row['purchase_request_number'];
+
+    sendEmail($requestor_email, $approved, $request_id, $purchase_request_number, $completion_remarks);
 
     if($query_run) {
         // If query executed successfully, Insert into purchase_requests_history
@@ -661,11 +684,21 @@ if(isset($_POST['request_reject_btn'])) {
     $last_modified_by = $_POST['user_name'];
     //Specify change made Unique to each action
     $change_made = "Request Rejected";
+    $rejected = 'rejected';
 
     // Your SQL query to update data in the database
-    $update_query = "UPDATE purchase_requests SET status = 'rejected', rejection_reason = '$rejection_reason' WHERE id = '$request_id'";
+    $update_query = "UPDATE purchase_requests SET status = '$rejected', rejection_reason = '$rejection_reason' WHERE id = '$request_id'";
     // Executing the query
     $query_run = mysqli_query($con, $update_query);
+
+    //get the requestor email
+    $sql = "SELECT requestor_user_email, purchase_request_number FROM purchase_requests WHERE id = '$request_id'";
+    $result = $con->query($sql);
+    $row = $result->fetch_assoc();
+    $requestor_email = $row['requestor_user_email'];
+    $purchase_request_number = $row['purchase_request_number'];
+
+    sendEmail($requestor_email, $rejected, $request_id, $purchase_request_number, $rejection_reason);
 
     if($query_run) {
         // If query executed successfully, Insert into purchase_requests_history
@@ -1022,6 +1055,91 @@ if(isset($_POST['logout_btn'])){
     $_SESSION['message'] = "Logged Out Successfully";
     header('location: ../login.php');
     exit(0);
+}
+
+//PHPMAILER Function for status email notification
+function sendEmail($requestor_user_email, $status_text, $purchase_request_id, $purchase_request_number, $remarks) {
+    // Send email notification to the user_requestor_email
+    $mail = new PHPMailer(true); // Passing `true` enables exceptions
+    try {
+        // Server settings
+        $mail->isSMTP(); // Set mailer to use SMTP
+        $mail->Host = 'smtp.gmail.com'; // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true; // Enable SMTP authentication
+        $mail->Username = 'vinniuba1@gmail.com'; // SMTP username (your Gmail email address)TO BE REPLACED WITH WEBSITE EMAIL
+        $mail->Password = 'buqn wpcc yhlx lvoz'; // SMTP password USE APP PASSWORD FOUND IN GOOGLE SETTINGS
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
+        $mail->Port = 587; // TCP port to connect to
+
+        // Sender and recipient
+        $mail->setFrom('vinniuba1@gmail.com', 'EMAIL BOT :)'); // Sender's email address and name
+        // Recipient's email address (Requestor's email address)
+        $mail->addAddress( ''. $requestor_user_email .'');
+
+
+        // Define a variable to hold the status text
+
+
+// Email content
+$mail->isHTML(true); // Set email format to HTML
+$mail->Subject = 'Request Status Update';
+
+// Constructing HTML email body
+$body = '
+    <html>
+    <head>
+        <title>Request Status Update</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+            }
+            h1 {
+                color: #007bff;
+            }
+            p {
+                line-height: 1.6;
+            }
+            .footer {
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid #ccc;
+            }
+            .footer p {
+                font-size: 12px;
+                color: #777;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Purchase Request Notification</h1>
+            <h2>Purchase Request ID: ' . $purchase_request_id . '</h2>
+            <p>Purchase Request Number: ' . $purchase_request_number . '</p>
+            <p>Your request has been updated to: <strong>' . $status_text . '</strong></p>
+            <p>Remarks: <strong>' . $remarks . '</strong></p>
+            <div class="footer">
+                <p>This is an automated email notification. Please do not reply.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+';
+
+$mail->Body = $body;
+
+// Send email
+$mail->send();
+        echo 'Message has been sent';
+    } catch (Exception $e) {
+        echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+    }
 }
 
 ?>
