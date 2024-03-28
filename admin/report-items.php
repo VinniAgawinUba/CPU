@@ -139,7 +139,7 @@ function fetchData(startDate, endDate) {
             // Display total count
             $('#total-count').text('Total Count: ' + totalCount);
 
-            //Display total count per item_status
+            //Display total count per item_status and percentage breakdown, with proper coloring
             var groupedData = groupItemsByDateAndStatus(items);
             var legend = '';
             for (var status in groupedData) {
@@ -151,6 +151,11 @@ function fetchData(startDate, endDate) {
                 legend += '<div>' + status + ': ' + count + ' (' + percentage + '%)</div>';
             }
             $('#legend1').html(legend);
+
+            //Color the legend based on the chart colors with background
+            $('#legend1 div').each(function(index) {
+                $(this).css('background-color', getStatusColor(Object.keys(groupedData)[index]));
+            });
             
             
             // Render additional information
@@ -211,19 +216,7 @@ function updateChart1(data) {
                     display: true,
                     position: 'right'
                 },
-                afterDatasetsDraw: function(chart) {
-                    var ctx = chart.ctx;
-                    ctx.save();
-                    ctx.fillStyle = 'black';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.font = 'bold 12px Arial';
-
-                    // Display total count
-                    ctx.fillText('Total Count: ' + totalCount, chart.width - 50, chart.height - 40);
-
-                    ctx.restore();
-                }
+                
             },
             scales: {
                 x: {
@@ -240,6 +233,19 @@ function updateChart1(data) {
                     }
                 }
             },
+            plugins:[{afterDatasetsDraw: function(chart) {
+                    var ctx = chart.ctx;
+                    ctx.save();
+                    ctx.fillStyle = 'black';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.font = 'bold 12px Arial';
+
+                    // Display total count
+                    ctx.fillText('Total Count: ' + totalCount, chart.width - 50, chart.height - 40);
+
+                    ctx.restore();
+                }}],
             tooltips: {
                 callbacks: {
                     label: function(context) {
