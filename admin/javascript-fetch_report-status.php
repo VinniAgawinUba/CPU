@@ -7,7 +7,7 @@ $startDate = $_POST['startDate'];
 $endDate = $_POST['endDate'];
 
 // Fetch data from the database based on the selected date range
-$sql = "SELECT DATE(requested_date) AS date, status, COUNT(*) AS count, GROUP_CONCAT(CONCAT_WS(':', id, purchase_request_number, status, unit_dept_college, requestor_user_email, requested_date)) AS additional_info
+$sql = "SELECT DATE(requested_date) AS date, status, COUNT(*) AS count, GROUP_CONCAT(CONCAT_WS(':', id, purchase_request_number, status, unit_dept_college, requestor_user_email, acknowledged_by_cpu,requested_date)) AS additional_info
         FROM purchase_requests
         WHERE requested_date >= '$startDate' AND requested_date <= '$endDate'
         GROUP BY status, DATE(requested_date)
@@ -42,7 +42,8 @@ while ($row = mysqli_fetch_assoc($result)) {
             "status" => $additionalColumns[2],
             "unit_dept_college" => $additionalColumns[3],
             "requestor_user_email" => $additionalColumns[4],
-            "requested_date" => $additionalColumns[5],
+            "acknowledged_by_cpu" => $additionalColumns[5],
+            "requested_date" => $additionalColumns[6],
         );
         //Add status to dataPoints array after x and y
         //$dataPoints[] = array("date" => $timestamp, "count" => $count, "status" => $status);

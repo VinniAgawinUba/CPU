@@ -114,6 +114,7 @@ include('includes/header.php');
     <script src="js/dataTables.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/chartjs-plugin-datalabels.js"></script>
+    
     <script>
         
         $(document).ready(function () {
@@ -152,6 +153,7 @@ include('includes/header.php');
 
                         // Update chart with fetched data
                         updateChart1(chartData);
+                        updateChart2(additionalInfo);
 
                         // Render additional information
                         renderAdditionalInfo(additionalInfo);
@@ -160,7 +162,7 @@ include('includes/header.php');
             }
 
            // Function to update the chart with new data
-function updateChart1(data) {
+           function updateChart1(data) {
     // Calculate total count
     var totalCount = data.reduce((total, point) => total + point.count, 0);
 
@@ -169,48 +171,157 @@ function updateChart1(data) {
     $('.chart-container1').append('<canvas id="pieChart1"><canvas>'); // Redraw chart in the container
 
     var ctx = document.getElementById('pieChart1').getContext('2d');
+
+    // Define labels array outside the datasets loop
+    var labels = data.map(function(point) {
+        return point.status;
+    });
+
+    // Extract unique statuses from the data
+    var uniqueStatuses = [...new Set(data.map(point => point.status))];
+
+    // Create datasets for each unique status
+    var datasets = uniqueStatuses.map(status => {
+        return {
+            label: status,
+            data: data.filter(point => point.status === status).map(point => point.count),
+            backgroundColor: getStatusColor(status),
+            borderColor: getStatusBorderColor(status),
+            borderWidth: 1,
+            hidden: false // By default, datasets are visible
+        };
+    });
+
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
+            labels: labels, // Use the labels array here
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true, // Display the legend
+                    position: 'right'
+                }
+            },
+            scales: {
+                x: {
+                    type: 'category',
+                    labels: data.map(function(point) {
+                        return new Date(point.date).toLocaleDateString();
+                    }),
+                    position: 'bottom', // Position the x-axis at the top
+                    grid: {
+                        display: false // Hide the grid lines
+                    }
+                },
+                
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1 // Set the step size for the y-axis
+                    }
+                }
+            }
+        },
+        plugins: [{
+    afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        ctx.save();
+        ctx.fillStyle = 'black';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = 'bold 12px Arial';
+        
+        // Calculate and display total count for all statuses
+        var totalCount = chart.data.datasets.reduce((acc, dataset) => {
+            return acc + dataset.data.reduce((a, b) => a + b, 0);
+        }, 0);
+        ctx.fillText('Total: ' + totalCount, chart.width - 60, chart.height - 20);
+        
+        // Calculate and display count for each status
+        chart.data.datasets.forEach(function(dataset, i) {
+            var statusCount = dataset.data.reduce((a, b) => a + b, 0);
+            ctx.fillText(dataset.label + ': ' + statusCount, chart.width - 60, chart.height - 40 - (i * 20));
+        });
+        
+        ctx.restore();
+    }
+}]
+
+    });
+
+    // Toggle dataset visibility on legend click
+    document.getElementById('pieChart1').onclick = function(evt) {
+        var activePoints = myChart.getElementsAtEventForMode(evt, 'dataset', { intersect: true, hidden: true });
+        if (activePoints.length > 0) {
+            var index = activePoints[0].index;
+            var dataset = myChart.data.datasets[index];
+            dataset.hidden = !dataset.hidden;
+            myChart.update();
+        }
+    };
+}
+
+function getStatusColor(status) {
+    switch (status) {
+        case 'pending':
+            return 'rgba(200, 200, 200, 0.2)';
+        case 'approved':
+            return 'rgba(50, 50, 255, 0.2)';
+        case 'rejected':
+            return 'rgba(255, 50, 50, 0.2)';
+        case 'completed':
+            return 'rgba(0, 255, 0, 0.2)';
+        case 'partially-completed':
+            return 'rgba(255, 255, 50, 0.2)';
+        default:
+            return 'rgba(0, 0, 0, 0.2)'; // Default color
+    }
+}
+
+function getStatusBorderColor(status) {
+    switch (status) {
+        case 'pending':
+            return 'rgba(200, 200, 200, 1)';
+        case 'approved':
+            return 'rgba(50, 50, 255, 1)';
+        case 'rejected':
+            return 'rgba(255, 50, 50, 1)';
+        case 'completed':
+            return 'rgba(0, 255, 0, 1)';
+        case 'partially-completed':
+            return 'rgba(255, 255, 50, 1)';
+        default:
+            return 'rgba(0, 0, 0, 1)'; // Default border color
+    }
+}
+
+
+
+// Update chart 2
+function updateChart2(data) {
+    // Convert the 'acknowledged_by_cpu' property to numbers for accurate counting
+    var acknowledgedCount = data.filter(point => Number(point.acknowledged_by_cpu) === 1).length;
+    var unacknowledgedCount = data.filter(point => Number(point.acknowledged_by_cpu) === 0).length;
+
+    //clear the canvas and create a new chart
+    $('#pieChart2').remove(); // This is my <canvas> element
+    $('.chart-container2').append('<canvas id="pieChart2"><canvas>'); // Redraw chart in the container
+
+    var ctx = document.getElementById('pieChart2').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
             // Labels for the sections in the chart
-            labels: data.map(function(point) {
-                return point.status;
-            }),
+            labels: ['Acknowledged', 'Unacknowledged'],
             datasets: [{
-                // Data to be displayed (number of requests grouped by date and status)
-                data: data.map(function(point) {
-                    return point.count
-                }),
-                backgroundColor: data.map(function(point) {
-                    // Generate dynamic background color based on status
-                    if (point.status === 'pending') {
-                        return 'rgba(200, 200, 200, 0.2)';
-                    } else if (point.status === 'approved') {
-                        return 'rgba(50, 255, 50, 0.2)';
-                    } else if (point.status === 'rejected') {
-                        return 'rgba(255, 50, 50, 0.2)';
-                    } else if (point.status === 'completed') {
-                        return 'rgba(0, 255, 0, 0.2)';
-                    } else if (point.status === 'partially-completed') {
-                        return 'rgba(50, 255, 50, 0.2)';
-                    }
-                    // Add more conditions for other statuses if needed
-                }),
-                borderColor: data.map(function(point) {
-                    // Generate dynamic border color based on status
-                    if (point.status === 'pending') {
-                        return 'rgba(200, 200, 200, 1)';
-                    } else if (point.status === 'approved') {
-                        return 'rgba(50, 255, 50, 1)';
-                    } else if (point.status === 'rejected') {
-                        return 'rgba(255, 50, 50, 1)';
-                    } else if (point.status === 'completed') {
-                        return 'rgba(0, 255, 0, 1)';
-                    } else if (point.status === 'partially-completed') {
-                        return 'rgba(50, 255, 50, 1)';
-                    }
-                    // Add more conditions for other statuses if needed
-                }),
+                // Data to be displayed (number of requests)
+                data: [acknowledgedCount, unacknowledgedCount],
+                backgroundColor: ['rgba(50, 255, 50, 0.2)', 'rgba(255, 50, 50, 0.2)'],
+                borderColor: ['rgba(50, 255, 50, 1)', 'rgba(255, 50, 50, 1)'],
                 borderWidth: 1,
                 label: 'Number of Requests'
             }]
@@ -232,51 +343,40 @@ function updateChart1(data) {
                         return null;
                     }
                 }
-            },
-            scales: {
-                x: {
-                    type: 'category',
-                    labels: data.map(function(point) {
-                        return new Date(point.date).toLocaleDateString();
-                    }),
-                    position: 'top', // Position the x-axis at the top
-                    grid: {
-                        display: false // Hide the grid lines
-                    }
-                },
-                x1: {
-                    type: 'category',
-                    labels: data.map(function(point) {
-                        return point.status;
-                    }),
-                    position: 'bottom', // Position the second x-axis at the bottom
-                    grid: {
-                        display: false // Hide the grid lines
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1 // Set the step size for the y-axis
-                    }
-                }
             }
         },
         plugins: [{
-            afterDatasetsDraw: function(chart) {
-                var ctx = chart.ctx;
-                ctx.save();
-                ctx.fillStyle = 'black';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.font = 'bold 12px Arial';
-                var total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                ctx.fillText('Total: ' + total, chart.width - 30, chart.height - 10);
-                ctx.restore();
-            }
-        }]
+    afterDatasetsDraw: function(chart) {
+        var ctx = chart.ctx;
+        ctx.save();
+        ctx.fillStyle = 'black';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = 'bold 12px Arial';
+        
+        // Calculate and display total count for both acknowledged and unacknowledged
+        var total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+        
+        // Retrieve count for acknowledged and unacknowledged sections
+        var acknowledged = chart.data.datasets[0].data[0];
+        var unacknowledged = chart.data.datasets[0].data[1];
+        
+        // Display the counts separately
+        ctx.fillText('Acknowledged: ' + acknowledged, chart.width - 100, chart.height - 50);
+        ctx.fillText('Unacknowledged: ' + unacknowledged, chart.width - 100, chart.height - 30);
+        
+        // Display the total count
+        ctx.fillText('Total: ' + total, chart.width - 100, chart.height - 10);
+        
+        ctx.restore();
+    }
+}]
+
     });
 }
+
+
+//End of update chart 2
 
 
 
