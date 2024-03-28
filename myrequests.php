@@ -77,21 +77,8 @@ $query_run = mysqli_query($con, $query);
                         </thead>
                         <tbody>
                             <?php
-                            //If Super User, show all purchase requests
-                            if($super_user)
-                            {
-                                $request = "SELECT * FROM purchase_requests ORDER BY id DESC";
-                            }
-                            //If Admin, show only purchase requests assigned to the logged in user
-                            if ($admin)
-                            {
-                                $request = "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
-                            }
-                            //If Department Editor, show only purchase requests  that are not completed, partially-completed, or rejected or approved
-                            if ($department_editor)
-                            {
-                                $request = "SELECT * FROM purchase_requests WHERE status NOT IN ('completed', 'partially-completed', 'rejected', 'approved') ORDER BY id DESC";
-                            }
+                            // Fetch data from the database
+                            $request = "SELECT * FROM purchase_requests WHERE requestor_user_email = '".$_SESSION['auth_user']['user_email']."' ORDER BY id DESC";
                             $request_run = mysqli_query($con, $request);
                             if (mysqli_num_rows($request_run) > 0) {
                                 foreach ($request_run as $row) {

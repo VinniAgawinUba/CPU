@@ -130,66 +130,110 @@ include('authentication.php');
   </div>
 
   <script>
-      // jQuery noConflict mode to avoid conflicts with other libraries
-      jQuery.noConflict();
+    // jQuery noConflict mode to avoid conflicts with other libraries
+    jQuery.noConflict();
     document.addEventListener("DOMContentLoaded", function () {
-      const itemRows = document.getElementById('itemRows');
-      const addItemButton = document.querySelector('.btn-add-item');
-      let itemNumber = 1; // Initialize item number
+        const itemRows = document.getElementById('itemRows');
+        const addItemButton = document.querySelector('.btn-add-item');
+        let itemNumber = 1; // Initialize item number
 
-      addItemButton.addEventListener('click', function () {
-        const itemRow = document.createElement('tr');
-        itemRow.classList.add('item-row', 'mb-2');
-        itemRow.innerHTML = `
-            <td class="px-2 py-2" style="width:60px">
-                <!-- ITEM# -->
-                <input type="text" name="item_number[]" class="form-control" style="width:60px" value="${itemNumber}">
-            </td>
-            <td class="px-2 py-2">
-                <!-- QTY/UNIT -->
-                <input type="text" name="item_qty[]" class="form-control" style="width:60px" required>
-            </td>
-            <td class="px-2 py-2">
-                <!-- DESCRIPTION -->
-                <textarea name="item_description[]" class="form-control" style="width:550px" required></textarea>
-            </td>
-            <td class="px-2 py-2">
-                <!-- JUSTIFICATION -->
-                <textarea type="text" name="item_justification[]" class="form-control" style="width:550px" required> </textarea>
-            </td>
-            <td class="px-2 py-2">
-                <!-- Remove Button -->
-                <button type="button" class="btn btn-danger btn-remove-item bg-red-600" style="width:80px" required>Remove</button>
-            </td>
-        `;
-        itemRows.appendChild(itemRow);
-        itemNumber++; // Increment item number
-    });
-
-
-      itemRows.addEventListener('click', function (event) {
-        if (event.target.classList.contains('btn-remove-item')) {
-          event.target.closest('.item-row').remove();
-          itemNumber--; // Decrement item number
-        }
-      });
-
-      // Ensure jQuery is loaded before executing jQuery-dependent code
-    jQuery(document).ready(function() {
-        // Check if the container is properly selected
-        console.log(jQuery('#sigRequestor'));
-
-        // SignaturePad initialization
-        var sigRequestor = jQuery('#sigRequestor').signature({syncField: '#signature64_Requestor', syncFormat:'PNG'});
-        jQuery('#clearRequestor').click(function(e){
-            e.preventDefault();
-            sigRequestor.signature('clear');
-            jQuery("#signature64_Requestor").val('');
+        addItemButton.addEventListener('click', function () {
+            const itemRow = document.createElement('tr');
+            itemRow.classList.add('item-row', 'mb-2');
+            itemRow.innerHTML = `
+                <td class="px-2 py-2" style="width:60px">
+                    <!-- ITEM# -->
+                    <input type="text" name="item_number[]" class="form-control" style="width:60px" readonly value="${itemNumber}">
+                </td>
+                <td class="px-2 py-2">
+                    <!-- QTY/UNIT -->
+                    <input type="number" name="item_qty[]" class="form-control" style="width:60px" required>
+                </td>
+                <td class="px-2 py-2">
+                    <!-- DESCRIPTION -->
+                    <textarea name="item_description[]" class="form-control" style="width:550px" required maxlength="500"></textarea>
+                </td>
+                <td class="px-2 py-2">
+                    <!-- JUSTIFICATION -->
+                    <textarea type="text" name="item_justification[]" class="form-control" style="width:550px" required maxlength="500"> </textarea>
+                </td>
+                <td class="px-2 py-2">
+                    <!-- Remove Button -->
+                    <button type="button" class="btn btn-danger btn-remove-item bg-red-600" style="width:80px">Remove</button>
+                </td>
+            `;
+            itemRows.appendChild(itemRow);
+            itemNumber++; // Increment item number
         });
-    });
+
+        itemRows.addEventListener('click', function (event) {
+            if (event.target.classList.contains('btn-remove-item')) {
+                event.target.closest('.item-row').remove();
+                itemNumber--; // Decrement item number
+            }
+        });
+
+        // Ensure jQuery is loaded before executing jQuery-dependent code
+        jQuery(document).ready(function() {
+            // Check if the container is properly selected
+            console.log(jQuery('#sigRequestor'));
+
+            // SignaturePad initialization
+            var sigRequestor = jQuery('#sigRequestor').signature({syncField: '#signature64_Requestor', syncFormat:'PNG'});
+            jQuery('#clearRequestor').click(function(e){
+                e.preventDefault();
+                sigRequestor.signature('clear');
+                jQuery("#signature64_Requestor").val('');
+            });
+        });
+
+        // Custom validation functions
+        function validateForm() {
+            var itemQtyInputs = document.querySelectorAll('input[name="item_qty[]"]');
+
+            for (var i = 0; i < itemQtyInputs.length; i++) {
+                if (!itemQtyInputs[i].value.match(/^\d+$/)) {
+                    alert('Quantity must be a number.');
+                    return false; // Exit the function and prevent form submission
+                }
+            }
+
+            return true; // All inputs passed validation, allow form submission
+        }
+
+        // Form submission event
+        document.querySelector('form').addEventListener('submit', function(event) {
+            if (!validateForm()) {
+                event.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
+
+        // Enforce character limits programmatically
+        const descriptionInputs = document.querySelectorAll('textarea[name="item_description[]"]');
+        const justificationInputs = document.querySelectorAll('textarea[name="item_justification[]"]');
+
+        descriptionInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value.length > 500) {
+                    this.value = this.value.slice(0, 500);
+                    alert('Description exceeds maximum character limit (500 characters).');
+                }
+            });
+        });
+
+        justificationInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value.length > 500) {
+                    this.value = this.value.slice(0, 500);
+                    alert('Justification exceeds maximum character limit (500 characters).');
+                }
+            });
+        });
 
     });
-  </script>
+</script>
+
+
   
 
 <!-- Dont Load Footer PHP (Causes Multiple Jquery js file conflicts), Use Hard coded footer instead -->

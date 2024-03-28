@@ -280,34 +280,45 @@ include('includes/header.php');
 
     // Function to render the pie chart 2
 function renderPieChart2(labels, counts) {
-    // Modify data labels to use "Acknowledged" or "Not Acknowledged"
-    var labelsModified = labels.map(function(label) {
+     // Modify data labels to use "Acknowledged" or "Not Acknowledged"
+     var labelsModified = labels.map(function(label) {
         return label === '0' ? 'Not Acknowledged by CPU' : 'Acknowledged by CPU';
     });
 
     var ctx = document.getElementById('pieChart2').getContext('2d');
+    
+    // Count acknowledged and not acknowledged items
+    var acknowledgedCount = counts[labels.indexOf('1')]; // Assuming '1' represents acknowledged
+    var notAcknowledgedCount = counts[labels.indexOf('0')]; // Assuming '0' represents not acknowledged
+
+    
+    // Determine background colors dynamically
+    var backgroundColors = [];
+    var borderColor = [];
+    //if all are acknowledged, green
+    if (notAcknowledgedCount === 0 || notAcknowledgedCount === undefined) {
+        backgroundColors.push('#11f011');
+        borderColor.push('#11f011');
+    //if all are not acknowledged, red
+    } else if (acknowledgedCount === 0 || acknowledgedCount === undefined) {
+        backgroundColors.push('red');
+        borderColor.push('red');
+    //if there are both acknowledged and not acknowledged, green and red
+    } else {
+        backgroundColors.push('red', '#11f011');
+        borderColor.push('red', '#11f011');
+    }
+    
     var pieChart = new Chart(ctx, {
         type: 'pie',
         data: {
             labels: labelsModified,
             datasets: [{
                 data: counts,
-                backgroundColor: [
-                    'rgba(255, 0, 0, 1)', // Not Acknowledged Red
-                    'rgba(11, 230, 70, 1)', // Acknowledged Green
-                    // Add more colors as needed
-                ],
-                borderColor: [
-                    'rgba(255, 0, 0, 1)', // Not Acknowledged Red
-                    'rgba(11, 230, 70, 1)', // Acknowledged Green
-                    // Add more colors as needed
-                ],
-                textbackgroundcolor:[
-                        //Black
-                        'rgba(0, 0, 0, 1)',
-                    ],
-
-                borderWidth: 1
+                backgroundColor: backgroundColors,
+                borderColor: borderColor,
+                borderWidth: 1,
+                textbackgroundcolor: 'black',
             }]
         },
         plugins: [{
