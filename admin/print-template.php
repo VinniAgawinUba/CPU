@@ -34,6 +34,10 @@ $pr_row = mysqli_fetch_assoc($pr_query_run);
 </head>
 
 <body>
+    <!-- XU Logo -->
+    <div class="logoDiv">
+        <img src="../assets/images/XULOGO.png" alt="XU Logo" class="xuLogo" style="width:200px">
+    </div>
 
     <?php
     // Loop through each page

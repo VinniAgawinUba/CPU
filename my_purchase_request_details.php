@@ -36,9 +36,9 @@ $query = "SELECT * FROM purchase_requests ORDER BY id DESC";
 $query_run = mysqli_query($con, $query);
 
 ?>
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+<link rel="stylesheet" href="css/dataTables.dataTables.css" />
+<script src="js/jquery.min.js"></script>
+<script src="js/dataTables.min.js"></script>
 
     <script type="text/javascript" language="javascript" class="init">
         jQuery(document).ready(function($) {

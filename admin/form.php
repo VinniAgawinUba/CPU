@@ -28,8 +28,6 @@ elseif($_SESSION['auth_role']==3)
 }
 ?>
 
-  <!-- Tailwind CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
 
   

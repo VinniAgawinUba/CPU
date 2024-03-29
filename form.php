@@ -15,11 +15,11 @@ include('authentication.php');
  
 
   <!--Include the jQuery and jQuery UI libraries so that Signatures work-->
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
-  <link type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet"> 
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="assets/js/jquery.min.js"></script> 
+  <link type="text/css" href="assets/css/jquery-ui.css" rel="stylesheet"> 
+  <script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
   <!-- Bootstrap JavaScript -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/bootstrap5.bundle.min.js"></script>
 
   <script type="text/javascript" src="assets/js/jquery.signature.min.js"></script>
   <link rel="stylesheet" type="text/css" href="assets/css/jquery.signature.css"></link>
