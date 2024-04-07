@@ -35,6 +35,13 @@ $result = mysqli_query($con, $query);
 if (mysqli_num_rows($result) > 0) {
     $query = "UPDATE purchase_requests SET status = 'partially-completed' WHERE id = $request_id";
     mysqli_query($con, $query);
+//Check if all items are completed, then update purchase request status to completed
+$query = "SELECT * FROM items WHERE purchase_request_id = $request_id AND item_status = 'completed'";
+$result = mysqli_query($con, $query);
+if (mysqli_num_rows($result) > 0) {
+    $query = "UPDATE purchase_requests SET status = 'completed' WHERE id = $request_id";
+    mysqli_query($con, $query);
+}
 
 
 }
@@ -78,7 +85,7 @@ if (mysqli_num_rows($result) > 0) {
                                 <th>Unit/Dept/College</th>
                                 <th>Iptel#/Email</th>
                                 <th>Purchase Type</th>
-                                <th>Endorsed by</th>
+                                <th>Unit Head Approval By</th>
                                 <th>Requested Date</th>
                                 <th>Status</th>
                                 <?php if ($super_user) { ?><th>Assigned To</th><?php } ?>
@@ -143,7 +150,7 @@ if (mysqli_num_rows($result) > 0) {
                                             ?>
                                             </td>
                                         </td>
-                                        <td style="color:<?= $Changetext_color ?>"><?= $row['endorsed_by_dean']; ?></td>
+                                        <td style="color:<?= $Changetext_color ?>"><?= $row['unit_head_approval_by']; ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['requested_date']; ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['status']; ?></td>
                                         

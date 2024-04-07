@@ -269,7 +269,7 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                        
 
                                         <!-- If Super User, see Assigned User Column -->
-                                        <?php if ($super_user) { ?>
+                                        <?php if ($super_user && $row['acknowledged_by_cpu']==1) { ?>
                                         <td>
                                         <select class="assigned-user" data-request-id="<?= $row['id']; ?>">
                                             <option>--Select User--</option>
@@ -277,7 +277,7 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                             // Fetch all admin users from the database
                                             $user_query = "SELECT * FROM users WHERE role_as = 1 ORDER BY id DESC";
                                             $user_query_run = mysqli_query($con, $user_query);
-                                            if (mysqli_num_rows($user_query_run) > 0) {
+                                            if (mysqli_num_rows($user_query_run) > 0 ) {
                                                 foreach ($user_query_run as $user_list) {
                                                     $selected = ($user_list['id'] == $row['assigned_user_id']) ? 'selected' : ''; // Check if user is assigned
                                                     echo '<option value="' . $user_list['id'] . '" ' . $selected . '>' . $user_list['email'] . '</option>';
@@ -288,7 +288,11 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                             ?>
                                         </select>
                                         </td>
-                                            <?php } ?>
+                                            <?php } 
+                                            else {
+                                                echo '<td>' . 'PLEASE ACKNOWLEDGE REQUEST FIRST' . '</td>';
+                                            }
+                                            ?>
                                              <!-- Java Script to update assigned user (Redirects to javascript-update_assigned_user.php) -->
                                              <script>
                                             // Add event listener to all assigned user dropdowns
