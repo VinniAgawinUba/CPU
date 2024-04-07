@@ -136,7 +136,7 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                             if ($admin)
                             {
                                 // Retrieve the updated query from the URL, if not available use default query
-                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' AND status != 'completed' ORDER BY id DESC";
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' AND status != 'completed' AND status != 'rejected' ORDER BY id DESC";
                                 //$request = "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
                             }
                             //If Department Editor, show only purchase requests  that are not completed, partially-completed, or rejected or approved
