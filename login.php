@@ -1,6 +1,19 @@
 <?php
 session_start();
 include('config/dbcon.php');
+// Check if a message URL parameter exists
+if(isset($_GET['message'])) {
+    $message = "";
+    // Set message based on the URL parameter value
+    switch($_GET['message']) {
+        case 'email_domain_not_allowed':
+            $message = "You cannot use this email domain. Please log in with a valid email address.";
+            break;
+        // Add more cases if needed
+    }
+    // Set session message
+    $_SESSION['message'] = $message;
+}
 
 if(isset($_SESSION['auth']))
 {
@@ -69,7 +82,6 @@ if(!isset($_SESSION['access_token']))
  $login_button = '<h4 class="btn bg-blue-500 text-cyan-50 hover:bg-blue-300 hover:text-cyan-50"><a href='.$google_client->createAuthUrl().'>Login with Google</a></h4>';
 }
 
-
 // Check if the user is already authenticated using Google
 if(isset($_SESSION['access_token'])) {
     // Fetch user data from Google
@@ -81,6 +93,13 @@ if(isset($_SESSION['access_token'])) {
     $email = $data['email'];
     $fname = $data['given_name'];
     $lname = $data['family_name'];
+
+    // Check if the email matches allowed domains
+    $allowedDomains = ['my.xu.edu.ph', 'xu.edu.ph'];
+    $emailDomain = substr($email, strrpos($email, '@') + 1);
+    if(in_array($emailDomain, $allowedDomains))
+    {
+        
 
     // Check if the user already exists in the database
     $query = "SELECT * FROM users WHERE email='$email' LIMIT 1";
@@ -99,7 +118,6 @@ if(isset($_SESSION['access_token'])) {
         mysqli_query($con, $insert_query);
     }
 
-
     // Set the session variables
     $_SESSION['auth'] = "true";
     $_SESSION['auth_user'] = [
@@ -113,6 +131,25 @@ if(isset($_SESSION['access_token'])) {
     $_SESSION['message'] = "Welcome $fname $lname";
     header('Location: index.php');
     exit;
+}
+    else {
+        //If the user is not allowed to login, revoke the OAuth token and destroy the session
+        unset($_SESSION['auth']);
+        unset($_SESSION['auth_user']);
+        unset($_SESSION['auth_role']);
+        
+    
+        $accesstoken= $_SESSION['access_token'];
+         
+        //Reset OAuth access token
+        $google_client->revokeToken($accesstoken);
+        
+        //Destroy entire session data.
+        session_destroy();
+
+        header('Location: login.php?message=email_domain_not_allowed');
+        exit;
+    }
 }
 
 include('includes/header.php');
@@ -170,3 +207,5 @@ include('includes/navbar.php');
 </div>
 
 <?php include('includes/footer.php');?>
+
+

@@ -902,6 +902,11 @@ if(isset($_POST['logout_btn'])){
     unset($_SESSION['auth_user']);
     unset($_SESSION['auth_role']);
 
+    $accesstoken= $_SESSION['access_token'];
+     
+    //Reset OAuth access token
+    $google_client->revokeToken($accesstoken);
+
     session_destroy();
 
     $_SESSION['message'] = "Logged Out Successfully";
