@@ -60,18 +60,15 @@ if(isset($_POST['request_add_btn_front'])){
   
     // Items Information
     $item_qty = $_POST['item_qty'];
-    //$item_types = $_POST['item_type'];
     $item_justifications = $_POST['item_justification'];
     $item_description = $_POST['item_description'];
-    //$item_reasons = $_POST['item_reason'];
-    //$item_date_conditions = $_POST['item_date_condition'];
     $item_number = $_POST['item_number'];
   
     
   
     // Insert Purchase Request into the database
-    $sql_purchase_request = "INSERT INTO purchase_requests (endorsed_by_dean, requestor_user_id, requestor_user_name, requestor_user_email,  printed_name, signed_Requestor, unit_dept_college, iptel_email) 
-            VALUES ('$endorsed_by_dean','$requestor_user_id', '$requestor_user_name', '$requestor_user_email',  '$printed_name', '$requestor_signature, ','$unit_dept_college', '$iptel_email')";
+    $sql_purchase_request = "INSERT INTO purchase_requests (requestor_user_id, requestor_user_name, requestor_user_email,  printed_name, unit_dept_college, iptel_email) 
+            VALUES ('$requestor_user_id', '$requestor_user_name', '$requestor_user_email',  '$printed_name','$unit_dept_college', '$iptel_email')";
   
     // Execute Purchase Request query
     if ($con->query($sql_purchase_request) === TRUE) {
@@ -138,6 +135,45 @@ if(isset($_POST['request_add_btn_front'])){
         }
     }
 
+     // Upload multiple files
+     if(isset($_FILES['request_documents'])) {
+        $file_count = count($_FILES['request_documents']['name']);
+        for($i = 0; $i < $file_count; $i++) {
+            $file_name = $_FILES['request_documents']['name'][$i];
+            $file_tmp = $_FILES['request_documents']['tmp_name'][$i];
+            $file_type = $_FILES['request_documents']['type'][$i];
+            $file_size = $_FILES['request_documents']['size'][$i];
+            $file_error = $_FILES['request_documents']['error'][$i];
+
+            if($file_error === UPLOAD_ERR_OK) {
+                $file_destination = 'uploads/request_documents/' . $file_name;
+                if(move_uploaded_file($file_tmp, $file_destination)) {
+                    // Insert file details into purchase_requests_attatchments table
+                    $query = "INSERT INTO purchase_requests_attachments (purchase_request_id, file_name, file_type, file_size, file_path) 
+                              VALUES ('$purchase_request_id', '$file_name', '$file_type', '$file_size', '$file_destination')";
+                    $query_run = mysqli_query($con, $query);
+
+                    if(!$query_run) {
+                        $_SESSION['message'] = "Error inserting file details into database";
+                        header('Location: form.php');
+                        exit(0);
+                    }
+                } else {
+                    $_SESSION['message'] = "Error moving uploaded file to destination folder";
+                    header('Location: form.php');
+                    exit(0);
+                }
+            } else {
+                $_SESSION['message'] = "Error uploading file: " . $_FILES['request_documents']['name'][$i];
+                header('Location: form.php');
+                exit(0);
+            }
+        }
+    } else {
+        // Debugging statement
+        echo "No request_documents uploaded";
+    }
+
   
         $_SESSION['message'] = "Successfully added a new request";
         header('location: form.php');
@@ -146,5 +182,7 @@ if(isset($_POST['request_add_btn_front'])){
       $_SESSION['message'] = "Error: " . $sql_purchase_request . "<br>" . $con->error;
         echo "Error: " . $sql_purchase_request . "<br>" . $con->error;
     } 
+
+   
   }
 ?>

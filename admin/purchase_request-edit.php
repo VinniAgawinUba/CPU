@@ -204,6 +204,29 @@ if(mysqli_num_rows($request_query_run) > 0)
         <button type="button" class="btn btn-primary btn-add-item">Add Item</button>
       </fieldset>
 
+      <!-- Purchase Request Attachments -->
+        <?php
+        // Query to get purchase request attachments based on the purchase_request_id
+        $attachments_query = "SELECT * FROM purchase_requests_attachments WHERE purchase_request_id = '$request_id'";
+        $attachments_query_run = mysqli_query($con, $attachments_query);
+
+        // Check if there are attachments available for this purchase request
+        if(mysqli_num_rows($attachments_query_run) > 0) {
+            // Display the attachments
+            echo '<fieldset class="mb-4 bg-white shadow-md rounded p-4">';
+            echo '<legend class="font-bold">Attachments</legend>';
+            echo '<div class="mb-3">';
+            // Loop through each attachment
+            while($attachment_row = mysqli_fetch_array($attachments_query_run)) {
+                // Display attachment details (e.g., file name, download link)
+                echo '<p>Attachments: <a href="../uploads/request_documents/' . $attachment_row['file_name'] . '" download>' . $attachment_row['file_name'] . '</a></p>';
+            }
+            echo '</div>';
+            echo '</fieldset>';
+        }
+        ?>
+
+
 
       <!-- Requestor Information -->
 <fieldset class="mb-4 bg-white shadow-md rounded p-4">

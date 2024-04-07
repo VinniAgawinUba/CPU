@@ -37,7 +37,7 @@ include('authentication.php');
 <div class="container mx-auto p-6" style="background-image: url('assets/images/BG.png'); border-radius:4%;">
     <?php include('message.php'); ?>
     <h1 class="text-3xl font-bold mt-8 mb-4 justify-centeritems-center text-white">XAVIER UNIVERSITY CENTRAL PURCHASING UNIT</h1>
-    <form action="allcode.php" method="post">
+    <form action="allcode.php" method="post" enctype="multipart/form-data">
     <!-- Hidden user_name, user_id, user_email -->
     <input type="hidden" name="user_name" value="<?php echo $_SESSION['auth_user']['user_name']; ?>">
     <input type="hidden" name="user_id" value="<?php echo $_SESSION['auth_user']['user_id']; ?>">
@@ -95,25 +95,19 @@ include('authentication.php');
                     <input type="text" id="printed_name" name="printed_name" class="form-control" required placeholder="Requestor Name">
                 </td>
             </tr>
-            <tr>
-                <td class="text-white">Approved by: (Unit Head)</td>
-                <td class="p-1">
-                    <input type="text" id="endorsed_by_dean" name="endorsed_by_dean" class="form-control" required placeholder="Unit Head Name">
-                </td>
-            </tr>
-            <tr>
-                <td class="text-white">Unit Head Signature:</td>
-                <td class="p-1">
-                    <div id="sigRequestor" class="kbw-signature"></div>
-                    <button id="clearRequestor" class="btn btn-primary">Clear Signature</button>
-                    <textarea id="signature64_Requestor" name="signed_Requestor" style="display:none"></textarea>
-                </td>
-            </tr>
+            
             
             <tr class="text-white bold">
                 <td>IPTel#/E-mail Address:</td>
                 <td class="px-1">
-                    <input type="text" id="iptel_email" name="iptel_email" class="form-control" required>
+                    <input type="text" readonly id="iptel_email" name="iptel_email" class="form-control" required value="<?php echo $_SESSION['auth_user']['user_email']; ?>">
+                </td>
+            </tr>
+
+            <tr class="text-white bold">
+                <td>Request File Attatchments:</td>
+                <td class="px-1">
+                <input type="file" name="request_documents[]" multiple class="form-control">
                 </td>
             </tr>
             
