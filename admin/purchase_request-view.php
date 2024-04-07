@@ -102,14 +102,13 @@ $current_user_email = $_SESSION['auth_user']['user_email'];
                                 <th>Endorsed by</th>
                                 <th>Requested Date</th>
                                 <th>Status</th>
-                                <th>History</th>
-                                <th>Edit</th>
-                                <?php if ($super_user) { ?><th>Delete</th><?php } ?>
+                                <th>Details</th>
                                 <?php if ($super_user) { ?><th>Assigned To</th><?php } ?>
-                                <th>Print</th>
-
+                                
                                 <!-- If Super User or admin, see Item Details Column -->
                                 <?php if ($super_user || $admin) { ?><th>Item Details</th><?php } ?>
+                                <th>Print</th>
+                                <th>History</th>
                                 
                             </tr>
                         </thead>
@@ -202,24 +201,13 @@ $current_user_email = $_SESSION['auth_user']['user_email'];
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['requested_date']; ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['status']; ?></td>
                                         
-                                        <td>
-                                            <a href="purchase_request_history.php?request_id=<?= $row['id']; ?>" class="btn btn-secondary">History</a>
-                                        </td>
+                                        
 
                                         <td>
-                                            <a href="purchase_request-edit.php?id=<?= $row['id']; ?>" class="btn btn-primary">Edit</a>
+                                            <a href="purchase_request-edit.php?id=<?= $row['id']; ?>" class="btn btn-primary">Details</a>
                                         </td>
 
-                                        <!-- If Super User, see Delete Button -->
-                                        <?php if ($super_user) { ?>
-                                            <td>
-                                                <form id="deleteForm<?= $row['id']; ?>" action="code.php" method="POST">
-                                                    <input type="hidden" name="id" value="<?= $row['id']; ?>">
-                                                    <button type="submit" name="purchase_request_delete_btn" id="purchase_request_delete_btn"class="btn btn-danger deleteButton">Delete</button>
-                                                </form>
-                                            </td>
-
-                                        <?php } ?>
+                                       
 
                                         <!-- If Super User, see Assigned User Column -->
                                         <?php if ($super_user) { ?>
@@ -274,10 +262,7 @@ $current_user_email = $_SESSION['auth_user']['user_email'];
                                         </script>
 
                                             
-                                        <td>
-                                            <!-- Print Button -->
-                                            <a href="print-template.php?id=<?= $row['id']; ?>" class="btn btn-success">Print</a>
-                                        </td>
+                                        
 
                                         <!-- If Super User or admin, see Item Details -->
                                         <?php if ($super_user || $admin) { ?>
@@ -285,6 +270,15 @@ $current_user_email = $_SESSION['auth_user']['user_email'];
                                             <a href="purchase_request_item_details.php?request_id=<?= $row['id']; ?>" class="btn btn-info" style="color:white;">Item Details</a>
                                         </td>
                                         <?php } ?>
+
+                                        <td>
+                                            <!-- Print Button -->
+                                            <a href="print-template.php?id=<?= $row['id']; ?>" class="btn btn-success">Print</a>
+                                        </td>
+
+                                        <td>
+                                            <a href="purchase_request_history.php?request_id=<?= $row['id']; ?>" class="btn btn-secondary">History</a>
+                                        </td>
 
 
                                     </tr>
