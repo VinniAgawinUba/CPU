@@ -290,7 +290,11 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                         </td>
                                             <?php } 
                                             else {
+                                                if ($super_user){
                                                 echo '<td>' . 'PLEASE ACKNOWLEDGE REQUEST FIRST' . '</td>';
+                                                }
+                                                elseif (!$super_user){
+                                                }
                                             }
                                             ?>
                                              <!-- Java Script to update assigned user (Redirects to javascript-update_assigned_user.php) -->

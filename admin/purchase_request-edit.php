@@ -97,7 +97,7 @@ if(mysqli_num_rows($request_query_run) > 0)
     <!-- Dropdown To Change unit_head_approval to either pending, recommending-approval, rejected (ONLY UNIT HEAD) -->
     <div class = "col-md-12 mb-3 bg-white">
         <label for="">Unit Head Approval</label>
-        <select name="unit_head_approval">
+        <select name="unit_head_approval" style="border: 2px solid;">
             <option value = "pending" <?= $request_row['unit_head_approval'] == 'pending' ? 'selected' : '' ?>>Pending</option>
             <option value = "recommending-approval" <?= $request_row['unit_head_approval'] == 'recommending-approval' ? 'selected' : '' ?>>Recommending Approval</option>
             <option value = "rejected" <?= $request_row['unit_head_approval'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
@@ -499,17 +499,50 @@ if(mysqli_num_rows($request_query_run) > 0)
   </div>
   
   <div>
+
+  <!-- ONLY SHOW FIELDSET SUPER USER, ADMIN, OR DEPARTMENT EDITOR-->
+<?php if ($super_user || $admin || $department_editor) { ?>
     <!-- FIELDSET REJECTION, APPROVAL, COMPLETION SECTION-->
     <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">REJECTION, APPROVAL, COMPLETION SECTION</legend>
-        <select name=status>
-            <option value="rejected">Rejected</option>
-            <option value="approved">Approved</option>
-            <option value="completed">Completed</option>
+        <select id="status-select" name="status">
+            <!--If super user or admin, display rejected, approved, completed-->
+            <?php if ($super_user || $admin) { ?>
+                <option>--SELECT STATUS--</option>
+                <option value="rejected" <?php if ($request_row['status'] == 'rejected') { echo 'selected'; } ?>>Rejected</option>
+                <option value="approved" <?php if ($request_row['status'] == 'approved') { echo 'selected'; } ?>>Approved</option>
+                <option value="completed" <?php if ($request_row['status'] == 'completed') { echo 'selected'; } ?>>Completed</option>
+            <?php } ?>
+
+            <!--If department_editor, display rejected-->
+            <?php if ($department_editor) { ?>
+                <option>--SELECT STATUS--</option>
+                <option value="rejected" <?php if ($request_row['status'] == 'rejected') { echo 'selected'; } ?>>Rejected</option>
+            <?php } ?>
         </select>
-        
-      </fieldset>
-  </div>
+    </fieldset>
+<?php } ?>
+
+<!-- DYNAMIC UPDATE JS STATUS -->
+<script>
+    document.getElementById('status-select').addEventListener('change', function() {
+        var status = this.value;
+        var requestId = <?php echo $request_row['id']; ?>; // Assuming you have the request ID available
+
+        // Make an AJAX request to update the status
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'javscript-update_status.php', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Handle response if needed
+                console.log(xhr.responseText);
+            }
+        };
+        xhr.send('status=' + encodeURIComponent(status) + '&request_id=' + encodeURIComponent(requestId));
+    });
+</script>
+
   
     
 

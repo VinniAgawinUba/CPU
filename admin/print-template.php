@@ -112,7 +112,7 @@ $pr_row = mysqli_fetch_assoc($pr_query_run);
                 <input id="requestor" type="text" class="requestor input_border_bottom" value="<?=$pr_row['printed_name']?>"></input>
             </div>
             <div class="col">
-                <input id="approved_by" type="text" class="approved_by input_border_bottom" value="<?=$pr_row['endorsed_by_dean']?>"></input>
+                <input id="approved_by" type="text" class="approved_by input_border_bottom" value="<?=$pr_row['unit_head_approval_by']?>"></input>
             </div>
             <div class="col">
                 <input id="cluster_vice_president" type="text" class="cluster_vice_president input_border_bottom" value="<?=$pr_row['vice_president_approved']?>"></input>
