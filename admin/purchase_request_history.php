@@ -67,7 +67,7 @@ elseif($_SESSION['auth_role']==3)
                                 <th>Unit/Dept/College</th>
                                 <th>Iptel#/Email</th>
                                 <th>Purchase Type</th>
-                                <th>Endorsed by</th>
+                                <th>Unit Head Approval By</th>
                                 <th>Requested Date</th>
                                 <th>Status</th>
                                 <?php if ($super_user) { ?><th>Assigned To</th><?php } ?>
@@ -132,7 +132,7 @@ elseif($_SESSION['auth_role']==3)
                                             ?>
                                             </td>
                                         </td>
-                                        <td style="color:<?= $Changetext_color ?>"><?= $row['endorsed_by_dean']; ?></td>
+                                        <td style="color:<?= $Changetext_color ?>"><?= $row['unit_head_approval_by']; ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['requested_date']; ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['status']; ?></td>
                                         

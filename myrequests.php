@@ -68,7 +68,7 @@ $query_run = mysqli_query($con, $query);
                                 <th>Unit/Dept/College</th>
                                 <th>Iptel#/Email</th>
                                 <th>Acknowledged by CPU</th>
-                                <th>Endorsed by</th>
+                                <th>Unit Head Approval</th>
                                 <th>Requested Date</th>
                                 <th>Status</th>
                                 <th>Details</th>
@@ -140,7 +140,7 @@ $query_run = mysqli_query($con, $query);
                                             $row['acknowledged_by_cpu'] == 1 ? "CPU Acknowledged" : "Not Acknowledged";
                                             ?>
                                             </td>
-                                        <td style="color:<?= $Changetext_color ?>"><?= $row['endorsed_by_dean']; ?></td>
+                                        <td style="color:<?= $Changetext_color ?>"><?= $row['unit_head_approval']; ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['requested_date']; ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['status']; ?></td>
                                         <td>

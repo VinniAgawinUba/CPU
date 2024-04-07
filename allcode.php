@@ -32,7 +32,7 @@ if(isset($_POST['request_add_btn_front'])){
     $unit_dept_college = $_POST['unit_dept_college'];
     $iptel_email = $_POST['iptel_email'];
     $requestor_signature = $_POST['signed_Requestor'];
-    $endorsed_by_dean = $_POST['endorsed_by_dean'];
+    $unit_head = $_POST['unit_head'];
 
     //Requestor User Information
     $requestor_user_id = $_POST['user_id'];
@@ -67,8 +67,8 @@ if(isset($_POST['request_add_btn_front'])){
     
   
     // Insert Purchase Request into the database
-    $sql_purchase_request = "INSERT INTO purchase_requests (requestor_user_id, requestor_user_name, requestor_user_email,  printed_name, unit_dept_college, iptel_email) 
-            VALUES ('$requestor_user_id', '$requestor_user_name', '$requestor_user_email',  '$printed_name','$unit_dept_college', '$iptel_email')";
+    $sql_purchase_request = "INSERT INTO purchase_requests (requestor_user_id, requestor_user_name, requestor_user_email, unit_head ,printed_name, unit_dept_college, iptel_email) 
+            VALUES ('$requestor_user_id', '$requestor_user_name', '$requestor_user_email', '$unit_head' , '$printed_name','$unit_dept_college', '$iptel_email')";
   
     // Execute Purchase Request query
     if ($con->query($sql_purchase_request) === TRUE) {

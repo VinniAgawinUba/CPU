@@ -7,24 +7,35 @@ include('includes/scripts.php');
 $admin = null;
 $super_user = null;
 $department_editor = null;
+$unit_head = null;
 //Check level
 if($_SESSION['auth_role']==1)
 {
     $admin = true;
     $super_user = false;
     $department_editor = false;
+    $unit_head = false;
 }
 elseif($_SESSION['auth_role']==2)
 {
     $admin = false;
     $super_user = true;
     $department_editor = false;
+    $unit_head = false;
 }
 elseif($_SESSION['auth_role']==3)
 {
     $admin = false;
     $super_user = false;
     $department_editor = true;
+    $unit_head = false;
+}
+elseif($_SESSION['auth_role']==4)
+{
+    $admin = false;
+    $super_user = false;
+    $department_editor = false;
+    $unit_head = true;
 }
 //Query to get request details
 $request_id = $_GET['id'];
@@ -74,18 +85,34 @@ if(mysqli_num_rows($request_query_run) > 0)
     <!-- Hidden input to store the request requestor email-->
     <input type="hidden" name="requestor_email" value="<?=$request_row['requestor_user_email']?>">
     
-    <!-- Checkbox To Change status to acknowledged-by-cpu -->
+    <?php if($super_user) {?>
+    <!-- Checkbox To Change status to acknowledged-by-cpu (ONLY ADMIN AND SUPER USER) -->
     <div class = "col-md-12 mb-3 bg-white">
         <label for="">Acknowledged by CPU</label>
         <input type = "checkbox" name = "acknowledged_by_cpu" <?= $request_row['acknowledged_by_cpu'] =='1' ? 'checked': '' ; ?> width = "70px" height = "70px">
     </div>
+    <?php } ?>
 
+    <?php if($unit_head) {?>
+    <!-- Dropdown To Change unit_head_approval to either pending, recommending-approval, rejected (ONLY UNIT HEAD) -->
+    <div class = "col-md-12 mb-3 bg-white">
+        <label for="">Unit Head Approval</label>
+        <select name="unit_head_approval">
+            <option value = "pending" <?= $request_row['unit_head_approval'] == 'pending' ? 'selected' : '' ?>>Pending</option>
+            <option value = "recommending-approval" <?= $request_row['unit_head_approval'] == 'recommending-approval' ? 'selected' : '' ?>>Recommending Approval</option>
+            <option value = "rejected" <?= $request_row['unit_head_approval'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
+        </select>
+    </div>
+    <?php } ?>
+
+    <?php if($super_user || $admin || $department_editor) {?>
       <fieldset class="mb-4 bg-white shadow-md rounded p-4">
         <legend class="font-bold">Purchase Request</legend>
         <div class="mb-3">
           <label for="purchase_request_number" class="form-label">PURCHASE REQUEST#:</label>
           <input type="text" id="purchase_request_number" name="purchase_request_number" class="form-control" value="<?=$request_row['purchase_request_number']?>">
         </div>
+        <?php } ?>
 
         
         
@@ -248,7 +275,7 @@ if(mysqli_num_rows($request_query_run) > 0)
             <tr>
                 <td>Approved by: (Unit Head)</td>
                 <td>
-                    <input type="text" id="endorsed_by_dean" name="endorsed_by_dean" class="form-control" required placeholder="Unit Head Name" value="<?=$request_row['endorsed_by_dean']?>">
+                    <input type="text" id="unit_head_approval_by" name="unit_head_approval_by" class="form-control" required placeholder="Unit Head Name" value="<?=$request_row['unit_head_approval_by']?>">
                 </td>
             </tr>
             <tr>
@@ -291,6 +318,9 @@ if(mysqli_num_rows($request_query_run) > 0)
 </fieldset>
 
 
+
+<!--AT THIS POINT ONLY SUPER USERS AND DEPARTMENT EDITORS CAN VIEW THE SIGNATURES-->
+<?php if($super_user || $department_editor) { ?>
 
 <!-- Signatures for Approvals -->
 <fieldset class="mb-4 bg-white shadow-md rounded p-4">
@@ -463,11 +493,12 @@ if(mysqli_num_rows($request_query_run) > 0)
     </table>
 </fieldset>
 
-
+<?php } ?>
       <button type="submit" name="request_update_btn_front" class="btn btn-primary">Update Request Details</button>
     </form>
   </div>
-
+  
+  <?php if($super_user || $admin || $department_editor) { ?>
   <div>
     <!-- FIELDSET REJECTION, APPROVAL, COMPLETION SECTION-->
     <fieldset class="mb-4 bg-white shadow-md rounded p-4">
@@ -487,6 +518,7 @@ if(mysqli_num_rows($request_query_run) > 0)
     </form>
   </div>
 </div>
+<?php } ?>
 
 <!-- Approve & Request Should only be visible if user is super_user or admin -->
 <?php if($super_user || $admin) { ?>
@@ -526,7 +558,8 @@ if(mysqli_num_rows($request_query_run) > 0)
       </fieldset>
   </div>
   
-    <?php } ?>
+    <?php }?>
+    
 
   <!-- Bootstrap JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

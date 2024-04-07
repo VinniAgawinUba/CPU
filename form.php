@@ -95,6 +95,23 @@ include('authentication.php');
                     <input type="text" id="printed_name" name="printed_name" class="form-control" required placeholder="Requestor Name">
                 </td>
             </tr>
+
+            <tr>
+                <td class="text-white">Unit Head:</td>
+                <td class="p-1">
+                    <select id="unit_head" name="unit_head" class="form-control" required>
+                        <option value="">--Select Unit Head--</option>
+                        <?php
+                            $sql = "SELECT * FROM users WHERE role_as = '4'";
+                            $result = mysqli_query($con, $sql);
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                echo '<option value="'.$row['id'].'">'.$row['fname'].' '.$row['lname'].'</option>';
+                            }
+                        ?>
+                        
+                    </select>
+                </td>
+            </tr>
             
             
             <tr class="text-white bold">
@@ -141,7 +158,7 @@ include('authentication.php');
                 </td>
                 <td class="px-2 py-2">
                     <!-- QTY/UNIT -->
-                    <input type="number" name="item_qty[]" class="form-control" style="width:60px" required>
+                    <input type="number" min=1 name="item_qty[]" class="form-control" style="width:60px" required>
                 </td>
                 <td class="px-2 py-2">
                     <!-- DESCRIPTION -->

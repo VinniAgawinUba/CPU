@@ -7,26 +7,38 @@ include('includes/scripts.php');
 $admin = null;
 $super_user = null;
 $department_editor = null;
+$unit_head = null;
 //Check level
 if($_SESSION['auth_role']==1)
 {
     $admin = true;
     $super_user = false;
     $department_editor = false;
+    $unit_head = false;
 }
 elseif($_SESSION['auth_role']==2)
 {
     $admin = false;
     $super_user = true;
     $department_editor = false;
+    $unit_head = false;
 }
 elseif($_SESSION['auth_role']==3)
 {
     $admin = false;
     $super_user = false;
     $department_editor = true;
+    $unit_head = false;
+}
+elseif($_SESSION['auth_role']==4)
+{
+    $admin = false;
+    $super_user = false;
+    $department_editor = false;
+    $unit_head = true;
 }
 $current_user_email = $_SESSION['auth_user']['user_email'];
+$current_user_id = $_SESSION['auth_user']['user_id'];
 ?>
 
 
@@ -98,10 +110,10 @@ $current_user_email = $_SESSION['auth_user']['user_email'];
                                 <th>Requestor Name</th>
                                 <th>Unit/Dept/College</th>
                                 <th>Iptel#/Email</th>
+                                <th>Unit Head Approval</th>
                                 <th>Acknowledged by CPU</th>
-                                <th>Endorsed by</th>
-                                <th>Requested Date</th>
                                 <th>Status</th>
+                                <th>Requested Date</th>
                                 <th>Details</th>
                                 <?php if ($super_user) { ?><th>Assigned To</th><?php } ?>
                                 
@@ -117,21 +129,27 @@ $current_user_email = $_SESSION['auth_user']['user_email'];
                             //If Super User, show all purchase requests
                             if($super_user)
                             {
-                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests ORDER BY id DESC";
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE status != 'completed' AND status != 'rejected' AND unit_head_approval = 'recommending-approval' ORDER BY id DESC";
                                 //$request = "SELECT * FROM purchase_requests ORDER BY id DESC";
                             }
                             //If Admin, show only purchase requests assigned to the logged in user
                             if ($admin)
                             {
                                 // Retrieve the updated query from the URL, if not available use default query
-                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' AND status != 'completed' ORDER BY id DESC";
                                 //$request = "SELECT * FROM purchase_requests WHERE assigned_user_id = '{$_SESSION['auth_user']['user_id']}' ORDER BY id DESC";
                             }
                             //If Department Editor, show only purchase requests  that are not completed, partially-completed, or rejected or approved
                             if ($department_editor)
                             {
                                 // Retrieve the updated query from the URL, if not available use default query
-                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE '$current_user_email' NOT IN (COALESCE(signed_1_by, ''), COALESCE(signed_2_by, ''), COALESCE(signed_3_by, ''), COALESCE(signed_4_by, ''), COALESCE(signed_5_by, '')) ORDER BY id DESC";
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE '$current_user_email' NOT IN (COALESCE(signed_1_by, ''), COALESCE(signed_2_by, ''), COALESCE(signed_3_by, ''), COALESCE(signed_4_by, ''), COALESCE(signed_5_by, '')) AND acknowledged_by_cpu = 1 ORDER BY id DESC";
+                            }
+                            //If Unit Head, show only purchase requests where unit_head_approval = pending
+                            if ($unit_head)
+                            {
+                                // Retrieve the updated query from the URL, if not available use default query
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE unit_head_approval = 'pending' AND unit_head = '$current_user_id' ORDER BY id DESC";
                             }
                             $request_run = mysqli_query($con, $request);
                             if (mysqli_num_rows($request_run) > 0) {
@@ -144,27 +162,67 @@ $current_user_email = $_SESSION['auth_user']['user_email'];
                                     // Add a CSS class based on the condition
                                     $row_class = '';
                                     $Changetext_color = 'black';
+                                    $acknowledged_by_cpu_color = '';
+                                    $acknowledged_by_cpu_textcolor = '';
+                                    $status_color = '';
+                                    $status_textcolor = '';
+                                    $unit_head_approval_color = '';
+                                    $unit_head_approval_textcolor = '';
+
+                                    //TIME
                                     if ($difference >= 30 && ($row['status'] != 'approved' && ($row['status'] != 'completed'))) {
                                         $row_class = 'bg-danger'; // Older than or equal to 30 days, set background to red
-                                        $Changetext_color = 'white'; // Set text color to white
+                                        $Changetext_color = 'black'; // Set text color to white
                                     } 
-                                    elseif ($difference >= 15 && ($row['status'] != 'approved' && ($row['status'] != 'completed'))) {
+                                    if ($difference >= 15 && ($row['status'] != 'approved' && ($row['status'] != 'completed'))) {
                                         $row_class = 'bg-warning'; // Older than or equal to 15 days but less than 30, set background to yellow
                                         $Changetext_color = 'black'; // Set text color to dark
                                     } 
-                                    elseif ($row['status'] == 'rejected'){
-                                        $row_class = 'bg-danger'; // Status is Not Approved, set background to blue
-                                        $Changetext_color = 'white'; // Set text color to white
+
+                                    //ACKNOWLEDGED BY CPU
+                                    if ($row['acknowledged_by_cpu'] == 1) {
+                                        $acknowledged_by_cpu_color = 'bg-success'; // CPU Acknowledged, set background to green
+                                        $acknowledged_by_cpu_textcolor = 'white'; // Set text color to white
+                                        
                                     }
-                                    elseif ($row['status'] == 'approved' || $row['status'] == 'completed') {
-                                        $row_class = 'bg-success'; // Status is Approved, set background to green
-                                        $Changetext_color = 'white'; // Set text color to white
+                                    if ($row['acknowledged_by_cpu'] == 0) {
+                                        $acknowledged_by_cpu_color = 'bg-light'; // CPU Not Acknowledged, set background to red
+                                        $acknowledged_by_cpu_textcolor = 'black'; // Set text color to white
                                     }
+
+                                    //UNIT HEAD APPROVAL
+                                    if ($row['unit_head_approval'] == 'recommending-approval') {
+                                        $unit_head_approval_color = 'bg-success'; // Unit Head Approval is Pending, set background to yellow
+                                        $unit_head_approval_textcolor = 'white'; // Set text color to white
+                                    }
+                                    if ($row['unit_head_approval'] == 'rejected') {
+                                        $unit_head_approval_color = 'bg-danger'; // Unit Head Approval is Rejected, set background to red
+                                        $unit_head_approval_textcolor = 'white'; // Set text color to white
+                                    }
+
+                                    //STATUS
+                                    if ($row['status'] == 'rejected'){
+                                        $status_color = 'bg-danger'; // Status is Not Approved, set background to blue
+                                        $status_textcolor = 'white'; // Set text color to white
+                                    }
+                                    if ($row['status'] == 'approved') {
+                                        $status_color = 'bg-success'; // Status is Pending, set background to yellow
+                                        $status_textcolor = 'white'; // Set text color to white
+                                    }
+                                    if ( $row['status'] == 'completed') {
+                                        $status_color = 'bg-success'; // Status is Approved, set background to green
+                                        $status_textcolor = 'white'; // Set text color to white
+                                    }
+                                    if ($row['status'] == 'partially-completed') {
+                                        $status_color = 'bg-info'; // Status is Partially Completed, set background to blue
+                                        $status_textcolor = 'white'; // Set text color to white
+                                    }
+                                    
                                      
                                     ?>
-                                    <tr class="<?= $row_class ?>">
-                                        <td style="color:<?= $Changetext_color ?>">
-                                            <a href="purchase_request_details.php?request_id=<?= $row['id']; ?>">
+                                    <tr>
+                                        <td class="<?= $row_class ?>" style="color:<?= $Changetext_color ?>">
+                                            <a href="purchase_request_details.php?request_id=<?= $row['id']; ?>" style="color:black">
                                                 <?= $row['id']; ?> 
                                             </a>
                                         
@@ -189,7 +247,8 @@ $current_user_email = $_SESSION['auth_user']['user_email'];
                                                 echo $row['iptel_email']
                                                 ?>
                                             </td>
-                                            <td style="color:<?= $Changetext_color ?>">
+                                            <td class="<?=$unit_head_approval_color?>" style="color:<?= $unit_head_approval_textcolor ?>"><?= $row['unit_head_approval']; ?></td>
+                                            <td class="<?=$acknowledged_by_cpu_color?>" style="color:<?= $acknowledged_by_cpu_textcolor ?>">
                                             <?php 
                                             echo 
                                             //If acknowledged_by_cpu = 1, echo "CPU Acknowledged", else echo "Not Acknowledged"
@@ -197,9 +256,9 @@ $current_user_email = $_SESSION['auth_user']['user_email'];
                                             ?>
                                             </td>
                                         </td>
-                                        <td style="color:<?= $Changetext_color ?>"><?= $row['endorsed_by_dean']; ?></td>
+                                        
+                                        <td class="<?=$status_color?>" style="color:<?= $status_textcolor ?>"><?= $row['status']; ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['requested_date']; ?></td>
-                                        <td style="color:<?= $Changetext_color ?>"><?= $row['status']; ?></td>
                                         
                                         
 

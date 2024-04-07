@@ -9,9 +9,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id']) && isset($_POST[
     // Sanitize and validate inputs
     $requestId = mysqli_real_escape_string($con, $_POST['id']);
     $newUserId = mysqli_real_escape_string($con, $_POST['assigned_user_id']);
+    
 
     // Update assigned user in the database
-    $update_query = "UPDATE purchase_requests SET assigned_user_id = '$newUserId' WHERE id = '$requestId'";
+    $update_query = "UPDATE purchase_requests SET assigned_user_id = '$newUserId', assigned_at_date = NOW() WHERE id = '$requestId'";
     $result = mysqli_query($con, $update_query);
 
     if ($result && mysqli_affected_rows($con) > 0){
