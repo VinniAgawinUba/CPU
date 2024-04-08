@@ -110,6 +110,32 @@ include('includes/header.php');
                                 </div>
                             </div>
                 </div>
+
+                <!-- Chart 3 -->
+                <div class="col-md-6">
+                            <div class="col-xl-12">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-area me-1"></i>
+                                        Stale/OverDue Requests
+                                    </div>
+
+                                    <div class="card-body">
+                                        <!-- Chart will be rendered here -->
+                                        <div class="chart-container3" style=" height:40vh; width:100vw">
+                                        <canvas id="barChart3"></canvas>
+                                        </div>
+
+                                        <!-- Custom legend for percentage breakdown -->
+                                        <div id="legend3">
+                                            <!-- Legend for percentage breakdown -->
+                                        </div>
+                                    
+                                    </div>
+
+                                </div>
+                            </div>
+                </div>
                             
             </div>
 </div>
@@ -169,6 +195,8 @@ include('includes/header.php');
             }
         });
     });
+
+    
 
     // Function to render the pie chart 1
     function renderPieChart1(labels, counts) {
@@ -298,16 +326,16 @@ function renderPieChart2(labels, counts) {
     var borderColor = [];
     //if all are acknowledged, green
     if (notAcknowledgedCount === 0 || notAcknowledgedCount === undefined) {
-        backgroundColors.push('#11f011');
-        borderColor.push('#11f011');
-    //if all are not acknowledged, red
+        backgroundColors.push('#A19158');
+        borderColor.push('#A19158');
+    //if all are not acknowledged, xu-blue
     } else if (acknowledgedCount === 0 || acknowledgedCount === undefined) {
-        backgroundColors.push('red');
-        borderColor.push('red');
-    //if there are both acknowledged and not acknowledged, green and red
+        backgroundColors.push('#283971');
+        borderColor.push('#283971');
+    //if there are both acknowledged and not acknowledged, green and xu-blue
     } else {
-        backgroundColors.push('red', '#11f011');
-        borderColor.push('red', '#11f011');
+        backgroundColors.push('#283971', '#A19158');
+        borderColor.push('#283971', '#A19158');
     }
     
     var pieChart = new Chart(ctx, {
@@ -319,7 +347,7 @@ function renderPieChart2(labels, counts) {
                 backgroundColor: backgroundColors,
                 borderColor: borderColor,
                 borderWidth: 1,
-                textbackgroundcolor: 'black',
+                textbackgroundcolor: 'white',
             }]
         },
         plugins: [{
@@ -372,6 +400,103 @@ function renderPieChart2(labels, counts) {
         div.innerHTML = `<span style="background-color:${pieChart.data.datasets[0].backgroundColor[index]}">&nbsp;&nbsp;</span> ${label}`;
         legend.appendChild(div);
     });
+
+    $(document).ready(function () {
+    // Fetch data from the purchase_requests table for bar chart 3
+    $.ajax({
+        url: 'javascript-fetch_purchase_requests_overdue.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            // Prepare data for the bar chart
+            var labels = Object.keys(data);
+            var statuses = getStatuses(data);
+            var datasets = prepareDatasets(data, statuses);
+
+            // Render Bar chart
+            renderBarChart(labels, datasets);
+        }
+    });
+});
+
+// Function to get all unique statuses
+function getStatuses(data) {
+    var statuses = [];
+    for (var increment in data) {
+        for (var status in data[increment]) {
+            if (!statuses.includes(status)) {
+                statuses.push(status);
+            }
+        }
+    }
+    return statuses;
+}
+
+// Function to prepare datasets
+function prepareDatasets(data, statuses) {
+    var datasets = [];
+    for (var i = 0; i < statuses.length; i++) {
+        var status = statuses[i];
+        var dataset = {
+            label: status,
+            data: [],
+            backgroundColor: getRandomColor()
+        };
+        for (var increment in data) {
+            var count = data[increment][status] || 0;
+            dataset.data.push(count);
+        }
+        datasets.push(dataset);
+    }
+    return datasets;
+}
+
+// Function to render the Bar chart 3
+function renderBarChart(labels, datasets) {
+    var ctx = document.getElementById('barChart3').getContext('2d');
+    var myBarChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: '3-Day Increments'
+                    }
+                }],
+                yAxes: [{
+                    stacked: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Number of Requests'
+                    },
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 1
+                    }
+                }]
+            }
+        }
+    });
+}
+
+// Function to generate random color
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+
+
 }
 
 
