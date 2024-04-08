@@ -902,10 +902,14 @@ if(isset($_POST['logout_btn'])){
     unset($_SESSION['auth_user']);
     unset($_SESSION['auth_role']);
 
+    if(isset($_SESSION['access_token'])){
+    
+    
     $accesstoken= $_SESSION['access_token'];
      
     //Reset OAuth access token
     $google_client->revokeToken($accesstoken);
+    }
 
     session_destroy();
 

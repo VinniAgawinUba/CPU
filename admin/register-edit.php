@@ -1,5 +1,6 @@
 <?php
 include('authentication.php');
+include('authentication_super_only.php');
 include('includes/header.php');
 ?>
 

@@ -1,6 +1,7 @@
 <?php
 include('config/dbcon.php');
 include('authentication.php');
+include('authentication_cpu_staff_only.php');
 include('includes/header.php');
 ?>
     <script src="js/jquery.min.js"></script>
