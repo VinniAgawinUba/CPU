@@ -440,7 +440,9 @@ function prepareDatasets(data, statuses) {
         var dataset = {
             label: status,
             data: [],
-            backgroundColor: getRandomColor()
+            backgroundColor: [
+                'rgba(40, 57, 113, 1)'
+            ],
         };
         for (var increment in data) {
             var count = data[increment][status] || 0;
@@ -485,15 +487,7 @@ function renderBarChart(labels, datasets) {
     });
 }
 
-// Function to generate random color
-function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
+
 
 
 
