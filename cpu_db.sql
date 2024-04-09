@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 09, 2024 at 08:46 AM
+-- Generation Time: Apr 09, 2024 at 09:02 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -196,7 +196,7 @@ CREATE TABLE `purchase_requests` (
   `signed_Requestor_by` varchar(191) DEFAULT NULL,
   `unit_dept_college` varchar(255) DEFAULT NULL,
   `iptel_email` varchar(255) DEFAULT NULL,
-  `purchase_types` varchar(255) DEFAULT NULL,
+  `above_50000` tinyint(1) DEFAULT NULL COMMENT '0=False\r\n1=True',
   `status` varchar(191) DEFAULT 'pending' COMMENT 'pending, approved, rejected, completed, partially-completed',
   `unit_head_approval` varchar(191) DEFAULT 'pending' COMMENT 'Recommending-Approval,\r\nPending,\r\nRejected',
   `unit_head` int(11) DEFAULT NULL COMMENT 'id of unit head user',
@@ -237,19 +237,19 @@ CREATE TABLE `purchase_requests` (
 -- Dumping data for table `purchase_requests`
 --
 
-INSERT INTO `purchase_requests` (`id`, `purchase_request_number`, `requestor_user_id`, `requestor_user_name`, `requestor_user_email`, `printed_name`, `signed_Requestor`, `signed_Requestor_by`, `unit_dept_college`, `iptel_email`, `purchase_types`, `status`, `unit_head_approval`, `unit_head`, `unit_head_approval_by`, `vice_president_remarks`, `vice_president_approved`, `signed_1`, `signed_1_by`, `vice_president_administration_remarks`, `vice_president_administration_approved`, `signed_2`, `signed_2_by`, `budget_controller_remarks`, `budget_controller_approved`, `budget_controller_code`, `signed_3`, `signed_3_by`, `university_treasurer_remarks`, `university_treasurer_approved`, `signed_4`, `signed_4_by`, `office_of_the_president_remarks`, `office_of_the_president_approved`, `signed_5`, `signed_5_by`, `requested_date`, `acknowledged_by_cpu`, `acknowledged_at`, `assigned_user_id`, `assigned_at_date`, `sign_status`, `rejection_reason`, `approval_remarks`, `completed_remarks`) VALUES
-(60, '22', '3', 'superuser', 'superuser@gmail.com', 'BOb the builder', '66055da419169.png', NULL, 'Department of Greendale', 'bob@gmail.com', '', 'partially-completed', 'pending', 7, ' ', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-03-15 20:08:04', 1, '2024-04-07 03:42:54', NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, NULL, NULL),
-(61, '321', '3', 'superuser', 'superuser@gmail.com', 'Batman', '66055ed4c78ef.png', NULL, 'Department of Homeland Security', 'vinniuba1@gmail.com', '', 'approved', 'pending', 7, 'Bruce Wayne', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-03-15 20:13:08', 1, '2024-03-28 13:16:34', NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, '', NULL),
+INSERT INTO `purchase_requests` (`id`, `purchase_request_number`, `requestor_user_id`, `requestor_user_name`, `requestor_user_email`, `printed_name`, `signed_Requestor`, `signed_Requestor_by`, `unit_dept_college`, `iptel_email`, `above_50000`, `status`, `unit_head_approval`, `unit_head`, `unit_head_approval_by`, `vice_president_remarks`, `vice_president_approved`, `signed_1`, `signed_1_by`, `vice_president_administration_remarks`, `vice_president_administration_approved`, `signed_2`, `signed_2_by`, `budget_controller_remarks`, `budget_controller_approved`, `budget_controller_code`, `signed_3`, `signed_3_by`, `university_treasurer_remarks`, `university_treasurer_approved`, `signed_4`, `signed_4_by`, `office_of_the_president_remarks`, `office_of_the_president_approved`, `signed_5`, `signed_5_by`, `requested_date`, `acknowledged_by_cpu`, `acknowledged_at`, `assigned_user_id`, `assigned_at_date`, `sign_status`, `rejection_reason`, `approval_remarks`, `completed_remarks`) VALUES
+(60, '22', '3', 'superuser', 'superuser@gmail.com', 'BOb the builder', '66055da419169.png', NULL, 'Department of Greendale', 'bob@gmail.com', 0, 'partially-completed', 'pending', 7, ' ', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-03-15 20:08:04', 1, '2024-04-07 03:42:54', NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, NULL, NULL),
+(61, '321', '3', 'superuser', 'superuser@gmail.com', 'Batman', '66055ed4c78ef.png', NULL, 'Department of Homeland Security', 'vinniuba1@gmail.com', 0, 'approved', 'pending', 7, 'Bruce Wayne', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-03-15 20:13:08', 1, '2024-03-28 13:16:34', NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, '', NULL),
 (62, '', '3', 'superuser', 'superuser@gmail.com', 'Jeff', '66058c917e8e4.png', NULL, 'Department of Greendale', 'jeff@gmail.com', NULL, 'pending', 'pending', 7, 'Mr.Dean', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2024-03-28 23:28:17', 0, NULL, NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, NULL, NULL),
 (66, '', '3', 'superuser', 'superuser@gmail.com', 'Jeff', ', ', NULL, 'Department of Greendale', 'vinniuba1@gmail.com', NULL, 'pending', 'pending', 7, 'Mr.Dean', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2024-03-29 03:20:15', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (67, '', '6', 'Vinni Uba', 'vinniuba2@gmail.com', 'Vinni Uba', '6605ca7715b3f.png', NULL, 'Department of Greendale', 'vinniuba2@gmail.com', NULL, 'rejected', 'pending', 7, 'Mr.Dean', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2024-03-29 03:52:23', 0, NULL, NULL, NULL, NULL, '', NULL, NULL),
-(68, '32134', '6', 'Vinni Uba', 'vinniuba2@gmail.com', 'Vinni Uba', '6605cba2aeca4.png', NULL, 'Department of Greendale', 'vinniuba2@gmail.com', '', 'approved', 'pending', 7, 'Bruce Wayne', 'HAHA', 'VP person', '6605cfb25b154.png', 'superuser@gmail.com', 'REMARKS', 'VPa Person', '6605d096e9e1c.png', 'superuser@gmail.com', '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-03-29 03:57:22', 1, '2024-03-28 14:03:56', NULL, NULL, 'Signed by Vice President ', NULL, '', NULL),
-(70, '12312321', '6', 'Vinni Uba', 'vinniuba2@gmail.com', 'Vinni Uba', '66065c25e0dc2.png', NULL, 'Department of Greendale', 'vinniuba2@gmail.com', '', 'approved', 'pending', 7, 'Mr.Dean', 'HAHA', 'VP person', '66065c6b5f28f.png', 'superuser@gmail.com', 'editor', 'editor', '66125f2f9fbc9.png', 'editor@gmail.com', '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-03-29 14:13:57', 1, '2024-03-28 23:15:03', 6, '2024-04-07 19:10:02', 'Signed by Vice President ', NULL, '', NULL),
-(71, '', '6', 'Vinni Uba', 'vinniuba2@gmail.com', 'Requestor name', '660cafe6540e1.png', NULL, 'Department of COmpstud', '0968767', '', 'pending', 'pending', 7, 'Unit head', 'GOod', 'asdasd', '660cb32ec702b.png', 'superuser@gmail.com', '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-04-03 09:24:54', 0, NULL, 1, NULL, 'Signed by Vice President ', NULL, NULL, NULL),
-(76, '', '3', 'superuser', 'superuser@gmail.com', 'Jeff', '66129ad893e48.png', 'unithead@gmail.com', 'Department of Greendale', 'superuser@gmail.com', '', 'pending', 'pending', 7, 'E  ', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-04-04 13:00:16', 0, NULL, NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, NULL, NULL),
-(77, '', '3', 'superuser', 'superuser@gmail.com', 'BOb the builder', '661287c8e8668.png', NULL, 'Department of Greendale', 'superuser@gmail.com', '', 'pending', 'recommending-approval', 7, 'UNIT HEAD GUY   ', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-04-07 16:07:54', 0, NULL, NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, NULL, NULL),
+(68, '32134', '6', 'Vinni Uba', 'vinniuba2@gmail.com', 'Vinni Uba', '6605cba2aeca4.png', NULL, 'Department of Greendale', 'vinniuba2@gmail.com', 0, 'approved', 'pending', 7, 'Bruce Wayne', 'HAHA', 'VP person', '6605cfb25b154.png', 'superuser@gmail.com', 'REMARKS', 'VPa Person', '6605d096e9e1c.png', 'superuser@gmail.com', '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-03-29 03:57:22', 1, '2024-03-28 14:03:56', NULL, NULL, 'Signed by Vice President ', NULL, '', NULL),
+(70, '12312321', '6', 'Vinni Uba', 'vinniuba2@gmail.com', 'Vinni Uba', '66065c25e0dc2.png', NULL, 'Department of Greendale', 'vinniuba2@gmail.com', 0, 'approved', 'pending', 7, 'Mr.Dean', 'HAHA', 'VP person', '66065c6b5f28f.png', 'superuser@gmail.com', 'editor', 'editor', '66125f2f9fbc9.png', 'editor@gmail.com', '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-03-29 14:13:57', 1, '2024-03-28 23:15:03', 6, '2024-04-07 19:10:02', 'Signed by Vice President ', NULL, '', NULL),
+(71, '', '6', 'Vinni Uba', 'vinniuba2@gmail.com', 'Requestor name', '660cafe6540e1.png', NULL, 'Department of COmpstud', '0968767', 0, 'pending', 'pending', 7, 'Unit head', 'GOod', 'asdasd', '660cb32ec702b.png', 'superuser@gmail.com', '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-04-03 09:24:54', 0, NULL, 1, NULL, 'Signed by Vice President ', NULL, NULL, NULL),
+(76, '', '3', 'superuser', 'superuser@gmail.com', 'Jeff', '66129ad893e48.png', 'unithead@gmail.com', 'Department of Greendale', 'superuser@gmail.com', 0, 'pending', 'pending', 7, 'E  ', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-04-04 13:00:16', 0, NULL, NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, NULL, NULL),
+(77, '', '3', 'superuser', 'superuser@gmail.com', 'BOb the builder', '661287c8e8668.png', NULL, 'Department of Greendale', 'superuser@gmail.com', 0, 'pending', 'recommending-approval', 7, 'UNIT HEAD GUY   ', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-04-07 16:07:54', 0, NULL, NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, NULL, NULL),
 (78, '', '3', 'superuser', 'superuser@gmail.com', 'BOb the builder', NULL, NULL, 'Department of Greendale', 'superuser@gmail.com', NULL, 'pending', 'recommending-approval', 7, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2024-04-07 16:12:03', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(79, '', '3', 'superuser', 'superuser@gmail.com', 'Jeff', '', NULL, 'Department of Greendale', 'superuser@gmail.com', '', 'completed', '', 7, ' UNIT HEAD NAME PLEASE UWU   ', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-04-07 18:52:34', 1, '2024-04-07 06:02:27', NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, NULL, NULL);
+(79, '', '3', 'superuser', 'superuser@gmail.com', 'Jeff', '', NULL, 'Department of Greendale', 'superuser@gmail.com', 0, 'completed', '', 7, ' UNIT HEAD NAME PLEASE UWU     ', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-04-07 18:52:34', 1, '2024-04-07 06:02:27', NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -304,7 +304,9 @@ INSERT INTO `purchase_requests_history` (`id`, `purchase_request_id`, `change_ma
 (53, 77, 'Request Details Updated', 'unithead', '2024-04-07 19:47:39'),
 (54, 77, 'Request Details Updated', 'unithead', '2024-04-07 19:48:02'),
 (55, 79, 'Request Details Updated', 'superuser', '2024-04-07 20:02:30'),
-(56, 76, 'Request Details Updated', 'unithead', '2024-04-07 21:08:40');
+(56, 76, 'Request Details Updated', 'unithead', '2024-04-07 21:08:40'),
+(57, 79, 'Request Details Updated', 'departmenteditor', '2024-04-09 15:01:26'),
+(58, 79, 'Request Details Updated', 'departmenteditor', '2024-04-09 15:01:35');
 
 -- --------------------------------------------------------
 
@@ -618,7 +620,7 @@ ALTER TABLE `purchase_requests_attachments`
 -- AUTO_INCREMENT for table `purchase_requests_history`
 --
 ALTER TABLE `purchase_requests_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT for table `requests`

@@ -93,6 +93,14 @@ if(mysqli_num_rows($request_query_run) > 0)
     </div>
     <?php } ?>
 
+    <?php if($department_editor) {?>
+    <!-- Checkbox To Change status to acknowledged-by-cpu (ONLY ADMIN AND SUPER USER) -->
+    <div class = "col-md-12 mb-3 bg-white">
+        <label for="">Mark as Above P50,000</label>
+        <input type = "checkbox" name = "above_50000" <?= $request_row['above_50000'] =='1' ? 'checked': '' ; ?> width = "70px" height = "70px">
+    </div>
+    <?php } ?>
+
     <?php if($unit_head) {?>
     <!-- Dropdown To Change unit_head_approval to either pending, recommending-approval, rejected (ONLY UNIT HEAD) -->
     <div class = "col-md-12 mb-3 bg-white">

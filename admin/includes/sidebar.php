@@ -23,7 +23,6 @@
                             </a>
                             <div class="collapse" id="collapsePurchaseRequest" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="purchase_request-add.php" >Add Purchase Request</a>
                                     <a class="nav-link" href="purchase_request-view.php">View Purchase Request</a>
                                 </nav>
                             </div>
