@@ -84,7 +84,7 @@ if (mysqli_num_rows($result) > 0) {
                                 <th>Requestor Name</th>
                                 <th>Unit/Dept/College</th>
                                 <th>Iptel#/Email</th>
-                                <th>Purchase Type</th>
+                                <th>Above P50,000?</th>
                                 <th>Unit Head Approval By</th>
                                 <th>Requested Date</th>
                                 <th>Status</th>
@@ -146,12 +146,18 @@ if (mysqli_num_rows($result) > 0) {
                                             </td>
                                             <td style="color:<?= $Changetext_color ?>">
                                             <?php 
-                                            echo $row['purchase_types']
+                                            if ($row['above_50000'] == 0) {
+                                                echo "Below P50,000";
+                                            } elseif ($row['above_50000'] == 1) {
+                                                echo "Above P50,000";
+                                            }
                                             ?>
                                             </td>
                                         </td>
-                                        <td style="color:<?= $Changetext_color ?>"><?= $row['unit_head_approval_by']; ?></td>
-                                        <td style="color:<?= $Changetext_color ?>"><?= $row['requested_date']; ?></td>
+                                        <td style="color:<?= $Changetext_color ?>">
+                                        <?= !empty($row['unit_head_approval_by']) ? $row['unit_head_approval_by'] : 'Pending Unit Head Approval'; ?>
+                                        </td>
+                                        <td style="color:<?= $Changetext_color ?>"><?= date('F j Y h:i A', strtotime($row['requested_date'])); ?></td>
                                         <td style="color:<?= $Changetext_color ?>"><?= $row['status']; ?></td>
                                         
                                         

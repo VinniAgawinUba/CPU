@@ -78,7 +78,7 @@
                             
                         </div>
                     </div>
-                    <div class="sb-sidenav-footer text-white mb-3" style="background-color:#A19158;">
+                    <div class="sb-sidenav-footer text-white" style="background-color:#A19158;">
                         <?php if(isset($_SESSION['auth_user'])) : ?>
                         <div class="small">Logged in as:  <a class="small" style="color:white;letter-spacing:3px" aria-expanded="false">
                             <?= $_SESSION['auth_user']['user_name']; ?>
