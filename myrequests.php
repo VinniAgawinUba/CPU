@@ -92,19 +92,19 @@ $query_run = mysqli_query($con, $query);
                                     $Changetext_color = 'black';
                                     if ($difference >= 30 && ($row['status'] != 'approved' && ($row['status'] != 'completed'))) {
                                         $row_class = 'red'; // Older than or equal to 30 days, set background to red
-                                        $Changetext_color = 'red'; // Set text color to white
+                                        $Changetext_color = 'black'; // Set text color to white
                                     } 
                                     elseif ($difference >= 15 && ($row['status'] != 'approved' && ($row['status'] != 'completed'))) {
                                         $row_class = 'yellow'; // Older than or equal to 15 days but less than 30, set background to yellow
-                                        $Changetext_color = 'yellow'; // Set text color to dark
+                                        $Changetext_color = 'black'; // Set text color to dark
                                     } 
                                     elseif ($row['status'] == 'rejected'){
                                         $row_class = 'red'; // Status is Not Approved, set background to blue
-                                        $Changetext_color = 'red'; // Set text color to white
+                                        $Changetext_color = 'black'; // Set text color to white
                                     }
                                     elseif ($row['status'] == 'approved' || $row['status'] == 'completed') {
                                         $row_class = 'green'; // Status is Approved, set background to green
-                                        $Changetext_color = 'green'; // Set text color to white
+                                        $Changetext_color = 'black'; // Set text color to white
                                     }
                                      
                                     ?>
