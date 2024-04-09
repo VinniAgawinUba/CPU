@@ -1,8 +1,8 @@
 </main>
-                <footer class="py-4 bg-light mt-auto">
+                <footer class="py-4 text-white"style="background-color:#A19158; border:0.5px solid; border-color:black">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright © <?php echo date('Y'); ?> Xavier University - Ateneo de Cagayan Corrales Avenue, Cagayan de Oro City, Philippines.</p></div>
+                            <div class="text-white">Copyright © <?php echo date('Y'); ?> Xavier University - Ateneo de Cagayan Corrales Avenue, Cagayan de Oro City, Philippines.</p></div>
                             <div>
                                 <a href="#">Privacy Policy</a>
                                 &middot;

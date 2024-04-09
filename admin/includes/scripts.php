@@ -1,12 +1,16 @@
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="js/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script src="js/jquery.dataTables.js"></script> <!-- Move this line up -->
-<link rel="stylesheet" href="css/jquery.dataTables.css" /> <!-- Move this line up -->
+<script src="../admin/js/jquery.min.js"></script>
+<script src="../admin/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="../admin/js/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="../admin/js/jquery.dataTables.js"></script> <!-- Move this line up -->
+<link rel="stylesheet" href="../admin/css/jquery.dataTables.css" /> <!-- Move this line up -->
+<style>
+    body {
+    font-family: "Your Font", sans-serif; /* Replace "Your Font" with the font you want to use */
+}
+</style>
 
 
-<script src="js/scripts.js"></script>
-<script src="js/datatables-simple-demo.js"></script>
+<script src="../admin/js/scripts.js"></script>
 
         <script>
             $(document).ready( function () {
@@ -68,7 +72,7 @@
         </script>
 
 <!-- Summernote JS - CDN Link -->
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+<script src="js/summernote-lite.min.js"></script>
 <script>
     $(document).ready(function() {
         //$("#summernote").summernote();
@@ -82,10 +86,10 @@
 </script>
 
 <!-- CSS For Select2 -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<link href="../admin/css/select2.min.css" rel="stylesheet" />
 
 <!-- JavaScript for Select2 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="../admin/js/select2.min.js"></script>
 <script>
     // Initialize Select2 for dropdowns
     $(document).ready(function() {

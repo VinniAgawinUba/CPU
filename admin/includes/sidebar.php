@@ -1,7 +1,7 @@
 
 <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="sb-sidenav-menu">
+                <nav class="sb-sidenav accordion sb-sidenav" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu text-white" style="background-color: #233263;">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Core</div>
                             <a class="nav-link" href="index.php">
@@ -23,7 +23,7 @@
                             </a>
                             <div class="collapse" id="collapsePurchaseRequest" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="purchase_request-add.php">Add Purchase Request</a>
+                                    <a class="nav-link" href="purchase_request-add.php" >Add Purchase Request</a>
                                     <a class="nav-link" href="purchase_request-view.php">View Purchase Request</a>
                                 </nav>
                             </div>
@@ -79,7 +79,7 @@
                             
                         </div>
                     </div>
-                    <div class="sb-sidenav-footer">
+                    <div class="sb-sidenav-footer text-white mb-3" style="background-color:#A19158;">
                         <?php if(isset($_SESSION['auth_user'])) : ?>
                         <div class="small">Logged in as:  <a class="small" style="color:white;letter-spacing:3px" aria-expanded="false">
                             <?= $_SESSION['auth_user']['user_name']; ?>

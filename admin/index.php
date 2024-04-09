@@ -3,25 +3,78 @@ include('config/dbcon.php');
 include('authentication.php');
 include('authentication_cpu_staff_only.php');
 include('includes/header.php');
+include('includes/scripts.php');
 ?>
-    <script src="js/jquery.min.js"></script>
+   <!--Tailwind Test-->
+   <!-- <link rel="stylesheet" href="../../cpu/tailwind.css"> -->
+
+   <!-- Important javascripts for Dashboard -->
     <script src="js/moment.min.js"></script>
     <script src="js/daterangepicker.min.js"></script>
     <script src="js/chart.js"></script>
     <script src="js/dataTables.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/chartjs-plugin-datalabels.js"></script>
+
+    <!-- CSS for XU LOGO AND INCASE TAILWIND IS DOWN -->
+    <style>
+    .header {
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    align-items: left; /* Center items horizontally */
+    }
+
+    .logo-container {
+        margin-bottom: 30px; /* Adjust margin as needed */
+        border: 5px solid #283971; /* Adjust border color as needed */
+    }
+
+    .logo {
+        height: 110px;
+        width: 200px;
+    }
+
+    /* Optional: Style the header text */
+    .header-text {
+        text-align: left;
+        font-size: 30px;
+        margin-top: -40px;
+    }
+
+    /*Based on Tailwind Custom Classes*/
+    .bg-xu-darkblue {
+    --tw-bg-opacity: 1;
+    background-color: rgb(40 57 113 / var(--tw-bg-opacity));
+    }
+
+    .bg-xu-gold {
+        --tw-bg-opacity: 1;
+        background-color: rgb(161 145 88 / var(--tw-bg-opacity));
+    }
+
+    </style>
 
 
 
 <div class="container-fluid px-4">
-            <h1 class="mt-4">CPU Admin Panel</h1>
-            <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item active">Dashboard</li>
-            </ol>
+        <!-- XU LOGO -->
+        <div class="header">
+            <div>
+                <img src="../../cpu/assets/images/XULOGO.png" alt="XU-LOGO" class="logo">
+            </div>
+            <div class="header-text">
+        <!-- Page Header -->
+                <h1 class="mt-4">CPU Admin Panel</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- End of Page Header -->
+
             <div class="row">
                 <div class="col-xl-3 col-md-6">
-                    <div class="card bg-primary text-white mb-4">
+                    <div class="card bg-xu-darkblue text-white mb-4">
                         <div class="card-body">Purchase Request</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="purchase_request-view.php">View Details</a>
@@ -30,7 +83,7 @@ include('includes/header.php');
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6">
-                    <div class="card bg-warning text-white mb-4">
+                    <div class="card bg-xu-darkblue text-white mb-4">
                         <div class="card-body">Report Generation Charts</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="report-total.php">Total # of Requests</a>
@@ -39,7 +92,7 @@ include('includes/header.php');
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6">
-                    <div class="card bg-success text-white mb-4">
+                    <div class="card bg-xu-darkblue text-white mb-4">
                         <div class="card-body">Report Generation Charts</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="report-status.php">Requests statuses</a>
@@ -48,7 +101,7 @@ include('includes/header.php');
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6">
-                    <div class="card bg-danger text-white mb-4">
+                    <div class="card bg-xu-darkblue text-white mb-4">
                         <div class="card-body">Report Generation Charts</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="report-items.php">Items Chart</a>
@@ -64,7 +117,7 @@ include('includes/header.php');
                 <div class="col-md-6">
                             <div class="col-xl-12">
                                 <div class="card mb-4">
-                                    <div class="card-header">
+                                    <div class="card-header bg-xu-gold text-white">
                                         <i class="fas fa-chart-area me-1"></i>
                                         Requests by Status
                                     </div>
@@ -89,7 +142,7 @@ include('includes/header.php');
                 <div class="col-md-6">
                             <div class="col-xl-12">
                                 <div class="card mb-4">
-                                    <div class="card-header">
+                                    <div class="card-header bg-xu-gold text-white">
                                         <i class="fas fa-chart-area me-1"></i>
                                         Requests by Acknowledgement
                                     </div>
@@ -115,7 +168,7 @@ include('includes/header.php');
                 <div class="col-md-6">
                             <div class="col-xl-12">
                                 <div class="card mb-4">
-                                    <div class="card-header">
+                                    <div class="card-header bg-xu-gold text-white">
                                         <i class="fas fa-chart-area me-1"></i>
                                         Stale/OverDue Requests
                                     </div>
@@ -432,17 +485,21 @@ function getStatuses(data) {
     return statuses;
 }
 
-// Function to prepare datasets
+// Function to prepare datasets for barChart3
 function prepareDatasets(data, statuses) {
+    var statusColors = {
+    "pending": "#A4A4A4",
+    "partially-completed": "#a53a73",
+    "approved": "#3a57a5",
+    // Add more statuses and their colors as needed
+};
     var datasets = [];
     for (var i = 0; i < statuses.length; i++) {
         var status = statuses[i];
         var dataset = {
             label: status,
             data: [],
-            backgroundColor: [
-                'rgba(40, 57, 113, 1)'
-            ],
+            backgroundColor: statusColors[status]
         };
         for (var increment in data) {
             var count = data[increment][status] || 0;
@@ -486,7 +543,15 @@ function renderBarChart(labels, datasets) {
         }
     });
 }
-
+// Function to generate random color
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
 
 
 
@@ -499,5 +564,4 @@ function renderBarChart(labels, datasets) {
 
 <?php
 include('includes/footer.php');
-include('includes/scripts.php');
 ?>
