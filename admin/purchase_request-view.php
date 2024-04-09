@@ -258,7 +258,7 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                         </td>
                                         
                                         <td class="<?=$status_color?>" style="color:<?= $status_textcolor ?>"><?= $row['status']; ?></td>
-                                        <td style="color:<?= $Changetext_color ?>"><?= $row['requested_date']; ?></td>
+                                        <td style="color:<?= $Changetext_color ?>"><?= date('F j Y h:i A', strtotime($row['requested_date'])); ?></td>
                                         
                                         
 
