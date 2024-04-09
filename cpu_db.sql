@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 07, 2024 at 03:09 PM
+-- Generation Time: Apr 09, 2024 at 08:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -120,41 +120,39 @@ CREATE TABLE `items` (
   `item_number` int(11) DEFAULT NULL,
   `purchase_request_id` int(11) NOT NULL,
   `item_qty` int(11) NOT NULL,
-  `item_type` varchar(255) NOT NULL,
   `item_description` varchar(191) DEFAULT NULL,
   `item_justification` text DEFAULT NULL,
-  `item_reason` text DEFAULT NULL,
   `item_date_requested` datetime DEFAULT current_timestamp(),
-  `item_status` varchar(191) DEFAULT 'pending' COMMENT 'Pending, Approved, Rejected, Completed'
+  `item_status` varchar(191) DEFAULT 'pending' COMMENT 'Pending\r\nApproved\r\nFor Pricing\r\nFor Pricing Officer\r\nIssued Pricing Officer\r\nFor Delivery by Supplier\r\nFor Pickup at Supplier\r\nFor Tagging\r\nFor Delivery to Requesting Unit\r\nCompleted\r\nRejected'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `items`
 --
 
-INSERT INTO `items` (`id`, `item_number`, `purchase_request_id`, `item_qty`, `item_type`, `item_description`, `item_justification`, `item_reason`, `item_date_requested`, `item_status`) VALUES
-(121, 1, 59, 1, '', 'Sonic Game', ' new', NULL, '2024-03-28 20:05:36', 'approved'),
-(122, 2, 59, 1, '', 'Sonic 2 Game', ' new', NULL, '2024-03-28 20:05:36', 'pending'),
-(123, 1, 60, 2, '', 'Soap', 'new ', NULL, '2024-03-28 20:08:04', 'completed'),
-(124, 2, 60, 2, '', 'Shampoo', 'new ', NULL, '2024-03-28 20:08:04', 'pending'),
-(125, 1, 61, 1, '', 'Coca-Cola', 'new ', NULL, '2024-03-28 20:13:08', 'pending'),
-(126, 1, 62, 1, '', 'soap', ' new', NULL, '2024-03-28 23:28:17', 'pending'),
-(127, 2, 62, 1, '', 'shampoo', ' new', NULL, '2024-03-28 23:28:17', 'pending'),
-(131, 1, 66, 2, '', 'Birds', 'New ', NULL, '2024-03-29 03:20:15', 'pending'),
-(134, 1, 68, 10, '', 'Beer', ' New', NULL, '2024-03-29 03:57:22', 'for_pricing'),
-(135, 2, 68, 1, '', 'Coke', ' New', NULL, '2024-03-29 03:57:22', 'pending'),
-(136, 1, 69, 1, '', 'Soap', 'new ', NULL, '2024-03-29 14:09:32', 'pending'),
-(138, 1, 70, 1, '', 'Soap', ' New', NULL, '2024-03-29 14:13:57', 'pending'),
-(139, 2, 70, 2, '', 'Shampoo', ' New', NULL, '2024-03-29 14:13:57', 'pending'),
-(140, 1, 71, 1, '', 'Brand new layer 3 switch', ' new', NULL, '2024-04-03 09:24:54', 'pending'),
-(141, 1, 72, 1, '', 'FILE ATTATCHMENTS', ' new', NULL, '2024-04-04 12:53:47', 'pending'),
-(142, 1, 73, 1, '', 'Attatchment', 'new', NULL, '2024-04-04 12:54:50', 'pending'),
-(143, 1, 74, 1, '', 'attatchment', ' new', NULL, '2024-04-04 12:56:11', 'pending'),
-(144, 1, 75, 1, '', 'Attatch', ' new', NULL, '2024-04-04 12:58:36', 'pending'),
-(145, 1, 76, 1, '', 'Attach', ' new', '', '2024-04-04 13:00:16', 'pending'),
-(146, 1, 77, 1, '', 'Soap', ' new', '', '2024-04-07 16:07:54', 'pending'),
-(147, 1, 78, 1, '', 'Soap', ' new', NULL, '2024-04-07 16:12:03', 'pending'),
-(148, 1, 79, 1, '', 'FOR UNIT HEAD', 'new', '', '2024-04-07 18:52:34', 'completed');
+INSERT INTO `items` (`id`, `item_number`, `purchase_request_id`, `item_qty`, `item_description`, `item_justification`, `item_date_requested`, `item_status`) VALUES
+(121, 1, 59, 1, 'Sonic Game', ' new', '2024-03-28 20:05:36', 'approved'),
+(122, 2, 59, 1, 'Sonic 2 Game', ' new', '2024-03-28 20:05:36', 'pending'),
+(123, 1, 60, 2, 'Soap', 'new ', '2024-03-28 20:08:04', 'completed'),
+(124, 2, 60, 2, 'Shampoo', 'new ', '2024-03-28 20:08:04', 'pending'),
+(125, 1, 61, 1, 'Coca-Cola', 'new ', '2024-03-28 20:13:08', 'pending'),
+(126, 1, 62, 1, 'soap', ' new', '2024-03-28 23:28:17', 'pending'),
+(127, 2, 62, 1, 'shampoo', ' new', '2024-03-28 23:28:17', 'pending'),
+(131, 1, 66, 2, 'Birds', 'New ', '2024-03-29 03:20:15', 'pending'),
+(134, 1, 68, 10, 'Beer', ' New', '2024-03-29 03:57:22', 'for_pricing'),
+(135, 2, 68, 1, 'Coke', ' New', '2024-03-29 03:57:22', 'pending'),
+(136, 1, 69, 1, 'Soap', 'new ', '2024-03-29 14:09:32', 'pending'),
+(138, 1, 70, 1, 'Soap', ' New', '2024-03-29 14:13:57', 'pending'),
+(139, 2, 70, 2, 'Shampoo', ' New', '2024-03-29 14:13:57', 'pending'),
+(140, 1, 71, 1, 'Brand new layer 3 switch', ' new', '2024-04-03 09:24:54', 'pending'),
+(141, 1, 72, 1, 'FILE ATTATCHMENTS', ' new', '2024-04-04 12:53:47', 'pending'),
+(142, 1, 73, 1, 'Attatchment', 'new', '2024-04-04 12:54:50', 'pending'),
+(143, 1, 74, 1, 'attatchment', ' new', '2024-04-04 12:56:11', 'pending'),
+(144, 1, 75, 1, 'Attatch', ' new', '2024-04-04 12:58:36', 'pending'),
+(145, 1, 76, 1, 'Attach', ' new', '2024-04-04 13:00:16', 'pending'),
+(146, 1, 77, 1, 'Soap', ' new', '2024-04-07 16:07:54', 'pending'),
+(147, 1, 78, 1, 'Soap', ' new', '2024-04-07 16:12:03', 'pending'),
+(148, 1, 79, 1, 'FOR UNIT HEAD', 'new', '2024-04-07 18:52:34', 'completed');
 
 -- --------------------------------------------------------
 
@@ -240,8 +238,8 @@ CREATE TABLE `purchase_requests` (
 --
 
 INSERT INTO `purchase_requests` (`id`, `purchase_request_number`, `requestor_user_id`, `requestor_user_name`, `requestor_user_email`, `printed_name`, `signed_Requestor`, `signed_Requestor_by`, `unit_dept_college`, `iptel_email`, `purchase_types`, `status`, `unit_head_approval`, `unit_head`, `unit_head_approval_by`, `vice_president_remarks`, `vice_president_approved`, `signed_1`, `signed_1_by`, `vice_president_administration_remarks`, `vice_president_administration_approved`, `signed_2`, `signed_2_by`, `budget_controller_remarks`, `budget_controller_approved`, `budget_controller_code`, `signed_3`, `signed_3_by`, `university_treasurer_remarks`, `university_treasurer_approved`, `signed_4`, `signed_4_by`, `office_of_the_president_remarks`, `office_of_the_president_approved`, `signed_5`, `signed_5_by`, `requested_date`, `acknowledged_by_cpu`, `acknowledged_at`, `assigned_user_id`, `assigned_at_date`, `sign_status`, `rejection_reason`, `approval_remarks`, `completed_remarks`) VALUES
-(60, '22', '3', 'superuser', 'superuser@gmail.com', 'BOb the builder', '66055da419169.png', NULL, 'Department of Greendale', 'bob@gmail.com', '', 'partially-completed', 'pending', 7, ' ', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-03-28 20:08:04', 1, '2024-04-07 03:42:54', NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, NULL, NULL),
-(61, '321', '3', 'superuser', 'superuser@gmail.com', 'Batman', '66055ed4c78ef.png', NULL, 'Department of Homeland Security', 'vinniuba1@gmail.com', '', 'approved', 'pending', 7, 'Bruce Wayne', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-03-28 20:13:08', 1, '2024-03-28 13:16:34', NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, '', NULL),
+(60, '22', '3', 'superuser', 'superuser@gmail.com', 'BOb the builder', '66055da419169.png', NULL, 'Department of Greendale', 'bob@gmail.com', '', 'partially-completed', 'pending', 7, ' ', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-03-15 20:08:04', 1, '2024-04-07 03:42:54', NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, NULL, NULL),
+(61, '321', '3', 'superuser', 'superuser@gmail.com', 'Batman', '66055ed4c78ef.png', NULL, 'Department of Homeland Security', 'vinniuba1@gmail.com', '', 'approved', 'pending', 7, 'Bruce Wayne', '', '', '', NULL, '', '', '', NULL, '', '', '', '', NULL, '', '', '', '', '', '', '', NULL, '2024-03-15 20:13:08', 1, '2024-03-28 13:16:34', NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, '', NULL),
 (62, '', '3', 'superuser', 'superuser@gmail.com', 'Jeff', '66058c917e8e4.png', NULL, 'Department of Greendale', 'jeff@gmail.com', NULL, 'pending', 'pending', 7, 'Mr.Dean', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2024-03-28 23:28:17', 0, NULL, NULL, NULL, 'WARNING: Sequence of signatures not followed!', NULL, NULL, NULL),
 (66, '', '3', 'superuser', 'superuser@gmail.com', 'Jeff', ', ', NULL, 'Department of Greendale', 'vinniuba1@gmail.com', NULL, 'pending', 'pending', 7, 'Mr.Dean', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2024-03-29 03:20:15', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (67, '', '6', 'Vinni Uba', 'vinniuba2@gmail.com', 'Vinni Uba', '6605ca7715b3f.png', NULL, 'Department of Greendale', 'vinniuba2@gmail.com', NULL, 'rejected', 'pending', 7, 'Mr.Dean', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2024-03-29 03:52:23', 0, NULL, NULL, NULL, NULL, '', NULL, NULL),
@@ -483,7 +481,8 @@ INSERT INTO `users` (`id`, `fname`, `lname`, `email`, `password`, `role_as`, `un
 (3, 'super', 'user', 'superuser@gmail.com', '1234', 2, '0', '2024-02-26 10:46:40'),
 (4, 'department', 'editor', 'editor@gmail.com', '1234', 3, '0', '2024-02-26 14:15:23'),
 (6, 'Vinni', 'Uba', 'vinniuba2@gmail.com', NULL, 1, '0', '2024-03-05 13:58:44'),
-(7, 'unit', 'head', 'unithead@gmail.com', '1234', 4, '0', '2024-04-07 08:30:08');
+(7, 'unit', 'head', 'unithead@gmail.com', '1234', 4, '0', '2024-04-07 08:30:08'),
+(8, 'VINNI  AGAWIN', 'UBA', '20180015014@my.xu.edu.ph', NULL, 0, NULL, '2024-04-07 13:55:53');
 
 --
 -- Indexes for dumped tables
@@ -649,7 +648,7 @@ ALTER TABLE `signatures`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
