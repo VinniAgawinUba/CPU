@@ -391,7 +391,7 @@ if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
     } else {
         // Update Items in the database
         for ($i = 0; $i < count($item_qty); $i++) {
-            $sql_item = "UPDATE items SET item_qty = '{$item_qty[$i]}', item_type = '{$item_types[$i]}', item_justification = '{$item_justifications[$i]}', item_reason = '{$item_reasons[$i]}', item_status = '{$item_status[$i]}' WHERE id = '{$current_items[$i]['id']}'";
+            $sql_item = "UPDATE items SET item_qty = '{$item_qty[$i]}', item_justification = '{$item_justifications[$i]}', item_status = '{$item_status[$i]}' WHERE id = '{$current_items[$i]['id']}'";
             
             // Execute Item query
             if ($con->query($sql_item) !== TRUE) {

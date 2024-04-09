@@ -109,6 +109,15 @@ include('includes/scripts.php');
                         </div>
                     </div>
                 </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-xu-gold text-white mb-4">
+                        <div class="card-body">Delivery Dashboard</div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <a class="small text-white stretched-link" href="delivery-dashboard.php">View Deliveries</a>
+                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!--Charts Row -->
@@ -165,7 +174,7 @@ include('includes/scripts.php');
                 </div>
 
                 <!-- Chart 3 -->
-                <div class="col-md-6">
+                <div class="col-md-12">
                             <div class="col-xl-12">
                                 <div class="card mb-4">
                                     <div class="card-header bg-xu-gold text-white">
@@ -175,7 +184,7 @@ include('includes/scripts.php');
 
                                     <div class="card-body">
                                         <!-- Chart will be rendered here -->
-                                        <div class="chart-container3" style=" height:40vh; width:100vw">
+                                        <div class="chart-container3" style=" height:80vh; width:100vw">
                                         <canvas id="barChart3"></canvas>
                                         </div>
 
