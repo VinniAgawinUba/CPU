@@ -204,24 +204,12 @@ if ($result) {
     // Draw Chart: Requests by Status
 var ctx = document.getElementById('itemsByStatusChart').getContext('2d');
 var itemsByStatusChart = new Chart(ctx, {
-    type: 'pie',
+    type: 'bar',
     data: {
         labels: statusLabels,
         datasets: [{
             data: statusData,
-            backgroundColor: [
-                '#ffcc00',
-                '#00cc00',
-                '#3399ff',
-                '#ff6666',
-                '#9966ff',
-                '#ff9900',
-                '#33cccc',
-                '#ff99ff',
-                '#6699ff',
-                '#ff6699',
-                '#cccc00'
-            ]
+            
         }]
     },
     plugins: [ChartDataLabels],

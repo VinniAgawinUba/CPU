@@ -1,7 +1,7 @@
 <style>
     .navbarcolor{
         background-color: #283971;
-        font-family: 'Poppins', sans-serif;
+        font-family : Georgia, 'Times New Roman', Times, serif;
     
     }
 </style>

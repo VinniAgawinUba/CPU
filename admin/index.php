@@ -44,18 +44,20 @@ include('includes/scripts.php');
     .bg-xu-darkblue {
     --tw-bg-opacity: 1;
     background-color: rgb(40 57 113 / var(--tw-bg-opacity));
+    font-family : Georgia, 'Times New Roman', Times, serif;
     }
 
     .bg-xu-gold {
         --tw-bg-opacity: 1;
-        background-color: rgb(161 145 88 / var(--tw-bg-opacity));
+        background-color: #705A18;
+        font-family : Georgia, 'Times New Roman', Times, serif;
     }
 
     </style>
 
 
 
-<div class="container-fluid px-4">
+<div class="container-fluid px-4 mx-3">
         <!-- XU LOGO -->
         <div class="header">
             <div>
@@ -270,27 +272,26 @@ include('includes/scripts.php');
                 datasets: [{
                     data: counts,
                     backgroundColor: [
-                        'rgba(90, 90, 90, 1)', // pending Grey
-                        'rgba(54, 162, 235, 1)', // approved Blue
-                        'rgba(251, 255, 0, 1)',//partially-completed Yellow
-                        'rgba(255, 0, 0, 1)',//rejected Red
-                        'rgba(11, 230, 70, 1)',//completed Green
-                        // Add more colors as needed
+                    //Order partially-completed, approved, pending, rejected, cancelled
+                        '#6E6D70', //Grey
+                        '#156C2E', // Green
+                        '#705A18', //Yellow
+                        '#711313', // Red
+                        '#283971', // Blue
                     ],
                     borderColor: [
-                        'rgba(90, 90, 90, 1)', // pending Grey
-                        'rgba(54, 162, 235, 1)', // approved Blue
-                        'rgba(251, 255, 0, 1)',//partially-completed Yellow
-                        'rgba(255, 0, 0, 1)',//rejected Red
-                        'rgba(11, 230, 70, 1)',//completed Green
-                        // Add more colors as needed
+                        '#6E6D70', //Grey
+                        '#156C2E', // Green
+                        '#705A18', //Yellow
+                        '#711313', // Red
+                        '#283971', // Blue
                     ],
 
                     textbackgroundcolor:[
                         //Black
                         'rgba(255, 255, 255, 1)',
                         'rgba(255, 255, 255, 1)',
-                        'rgba(0, 0, 0, 0.5)',
+                        'rgba(255, 255, 255, 1)',
                         'rgba(255, 255, 255, 1)',
                         'rgba(255, 255, 255, 1)',
                         
@@ -318,7 +319,7 @@ include('includes/scripts.php');
                 responsive: true,
                 plugins: {
                     legend: {
-                        display: false, // Hide the default legend
+                        display: true, // Hide the default legend
                     },
                     datalabels: {
                     color: function(context) {
@@ -330,6 +331,10 @@ include('includes/scripts.php');
                     },
                     //borderradius
                     borderRadius: 10,
+                    font: {
+                        weight: 'bold',
+                        size: 10
+                    },
                     formatter: (value, ctx) => {
                         let label = ctx.chart.data.labels[ctx.dataIndex];
                         let dataset = ctx.chart.data.datasets[ctx.datasetIndex];
@@ -431,7 +436,7 @@ function renderPieChart2(labels, counts) {
             responsive: true,
             plugins: {
                 legend: {
-                    display: false, // Hide the default legend
+                    display: true, // Hide the default legend
                 },
                 datalabels: {
                     color: function(context) {
@@ -443,6 +448,10 @@ function renderPieChart2(labels, counts) {
                     },
                     //borderradius
                     borderRadius: 10,
+                    font: {
+                        weight: 'bold',
+                        size: 10
+                    },
                     formatter: (value, ctx) => {
                         let label = ctx.chart.data.labels[ctx.dataIndex];
                         let dataset = ctx.chart.data.datasets[ctx.datasetIndex];
@@ -497,9 +506,9 @@ function getStatuses(data) {
 // Function to prepare datasets for barChart3
 function prepareDatasets(data, statuses) {
     var statusColors = {
-    "pending": "#A4A4A4",
-    "partially-completed": "#a53a73",
-    "approved": "#3a57a5",
+    "pending": "#705A18",
+    "partially-completed": "#6E6D70",
+    "approved": "#156C2E    ",
     // Add more statuses and their colors as needed
 };
     var datasets = [];

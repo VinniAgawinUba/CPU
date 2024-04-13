@@ -4,7 +4,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.1/viewer.min.js"></script>
 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
                                         
-<footer class="bg-dark text-white py-5">
+<footer class="bg-dark text-white py-5" style="">
     <div class="container mx-auto px-4">
         <div class="flex flex-wrap justify-between items-start">
             <div class="w-full md:w-1/2 lg:w-2/5 m-4">

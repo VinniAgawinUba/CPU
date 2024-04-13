@@ -14,7 +14,7 @@
         
     </head>
 
-    <body class="sb-nav-fixed">
+    <body class="sb-nav-fixed" style="font-family : Georgia, 'Times New Roman', Times, serif;">
         <?php include('includes/navbar-top.php'); ?>
         
         <div id="layoutSidenav">
