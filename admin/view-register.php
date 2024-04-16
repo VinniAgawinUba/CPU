@@ -68,6 +68,10 @@ include('includes/header.php');
                                                 {
                                                     echo "Department Editor";
                                                 }
+                                                else if($row['role_as'] == '4')
+                                                {
+                                                    echo "Unit Head";
+                                                }
                                                 else
                                                 {
                                                     echo "Unknown Role";

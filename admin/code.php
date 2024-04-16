@@ -824,10 +824,9 @@ if(isset($_POST['update_user']))
     $email = $_POST['email'];
     $password = $_POST['password'];
     $role_as = $_POST['role_as'];
-    $status = $_POST['status'] == true ? '1' : '0';
 
     //Update the user
-    $query = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', password = '$password', role_as = '$role_as', status = '$status' WHERE id = '$user_id'";
+    $query = "UPDATE users SET fname = '$fname', lname = '$lname', email = '$email', password = '$password', role_as = '$role_as' WHERE id = '$user_id'";
     $query_run = mysqli_query($con, $query);
 
     if($query_run)

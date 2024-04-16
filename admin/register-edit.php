@@ -61,15 +61,16 @@ include('includes/header.php');
                                     <label for="">Role As</label>
                                     <select name="role_as" required class="form-control">
                                         <option value="">--Select Role--</option>
-                                        <option value="1"<?= $user['role_as'] =='1' ? 'selected': '' ; ?>>Admin</option>
                                         <option value="0"<?= $user['role_as'] =='0' ? 'selected': '' ; ?>>User</option>
+                                        <option value="1"<?= $user['role_as'] =='1' ? 'selected': '' ; ?>>Admin</option>
+                                        <option value="2"<?= $user['role_as'] =='2' ? 'selected': '' ; ?>>Super Admin</option>
+                                        <option value="3"<?= $user['role_as'] =='3' ? 'selected': '' ; ?>>Department Editor</option>
+                                        <option value="4"<?= $user['role_as'] =='4' ? 'selected': '' ; ?>>Unit Head</option>
+
                                     </select>
 
                                 </div>
-                                <div class = "col-md-12 mb-3">
-                                    <label for="">Status</label>
-                                    <input type = "checkbox" name = "status" <?= $user['status'] =='1' ? 'checked': '' ; ?> width = "70px" height = "70px">
-                                </div>
+        
                                 <div class="col-md-12 mb-3">
                                     <button type="submit" name = "update_user" class="btn btn-primary">Update User</button>
                                 
