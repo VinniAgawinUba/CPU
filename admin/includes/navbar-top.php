@@ -1,7 +1,7 @@
 <style>
     .navbarcolor{
         background-color: #283971;
-        font-family : Georgia, 'Times New Roman', Times, serif;
+        font-family : Arial, Helvetica, sans-serif
     
     }
 </style>

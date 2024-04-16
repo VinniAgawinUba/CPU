@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="../admin/css/jquery.dataTables.css" /> <!-- Move this line up -->
 <style>
     body {
-    font-family: "Your Font", sans-serif; /* Replace "Your Font" with the font you want to use */
+    font-family: Arial, Helvetica, sans-serif
 }
 </style>
 

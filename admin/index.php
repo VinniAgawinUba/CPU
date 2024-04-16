@@ -44,13 +44,13 @@ include('includes/scripts.php');
     .bg-xu-darkblue {
     --tw-bg-opacity: 1;
     background-color: rgb(40 57 113 / var(--tw-bg-opacity));
-    font-family : Georgia, 'Times New Roman', Times, serif;
+    font-family : Arial, Helvetica, sans-serif
     }
 
     .bg-xu-gold {
         --tw-bg-opacity: 1;
         background-color: #705A18;
-        font-family : Georgia, 'Times New Roman', Times, serif;
+        font-family : Arial, Helvetica, sans-serif
     }
 
     </style>
