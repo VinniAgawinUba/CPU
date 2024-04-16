@@ -56,7 +56,7 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                 <div class="card">
                     <div class="card-header">
                         <h4>View Purchase Requests
-                        <a href="purchase_request-add.php" class="btn btn-primary float-end">Add Purchase Request</a>
+                        
                         </h4>
                         <div class="btn-group float-end" role="group" aria-label="Basic example">
                     </div>
