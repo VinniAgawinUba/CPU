@@ -20,7 +20,7 @@
       <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
 
         <li class="nav-item text-center customfont">
-          <a class="nav-link customfont text-nowrap" href="#">About Us</a>
+          <a class="nav-link customfont text-nowrap" href="about_us.php">About Us</a>
         </li>
         
 
