@@ -63,9 +63,10 @@ include('authentication.php');
         <tr>
             <th class="px-2 py-2" style="width:60px">ITEM#</th>
             <th class="px-2 py-2" style="width:60px">QTY/UNIT</th>
-            <th class="px-2 py-2" style="width:550px">DESCRIPTION</th>
-            <th class="px-2 py-2" style="width:550px">JUSTIFICATION</th>
+            <th class="px-2 py-2" style="width:500px">DESCRIPTION</th>
+            <th class="px-2 py-2" style="width:500px">JUSTIFICATION</th>
             <th class="px-2 py-2" style="width:80px">REMOVE</th> <!-- Empty header for remove button -->
+            <th class="px-2 py-2" style="width:80px">ATTATCHMENT</th> <!-- header for Attatchment button -->
         </tr>
     </thead>
     <tbody id="itemRows">
@@ -121,12 +122,7 @@ include('authentication.php');
                 </td>
             </tr>
 
-            <tr class="text-white bold">
-                <td>Request File Attatchments:</td>
-                <td class="px-1">
-                <input type="file" name="request_documents[]" multiple class="form-control">
-                </td>
-            </tr>
+           
             
         </tbody>
     </table>
@@ -162,15 +158,19 @@ include('authentication.php');
                 </td>
                 <td class="px-2 py-2">
                     <!-- DESCRIPTION -->
-                    <textarea name="item_description[]" class="form-control" style="width:550px" required maxlength="500"></textarea>
+                    <textarea name="item_description[]" class="form-control" style="width:500px" required maxlength="500"></textarea>
                 </td>
                 <td class="px-2 py-2">
                     <!-- JUSTIFICATION -->
-                    <textarea type="text" name="item_justification[]" class="form-control" style="width:550px" required maxlength="500"> </textarea>
+                    <textarea type="text" name="item_justification[]" class="form-control" style="width:500px" required maxlength="500"> </textarea>
                 </td>
                 <td class="px-2 py-2">
                     <!-- Remove Button -->
                     <button type="button" class="btn btn-danger btn-remove-item bg-red-600" style="width:80px">Remove</button>
+                </td>
+                <td class="px-2 py-2">
+                    <!-- Attatchment Button -->
+                    <input type="file" name="request_documents[]" multiple class="form-control">
                 </td>
             `;
             itemRows.appendChild(itemRow);
