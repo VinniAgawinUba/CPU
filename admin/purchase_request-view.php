@@ -164,7 +164,7 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                             </a>
                                         
                                         </td>
-                                        
+
                                         <td><?= date('F j Y h:i A', strtotime($row['requested_date'])); ?></td>
                                         
                                         <td >
@@ -183,9 +183,11 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                             </td>
                                             <td>
                                                 <?php 
-                                                echo $row['iptel_email']
+                                                    $recipient_email = $row['iptel_email']; // Assuming $row['iptel_email'] contains the recipient email address
+                                                    echo '<a href="#" onclick="window.open(\'https://mail.google.com/mail/?view=cm&to=' . $recipient_email . '\', \'_blank\'); return false;">'.$recipient_email.'</a>';
                                                 ?>
                                             </td>
+
                                             <td><?= $row['unit_head_approval']; ?></td>
                                             <td>
                                             <?php 
