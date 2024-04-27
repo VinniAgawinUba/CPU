@@ -82,59 +82,35 @@ $query_run = mysqli_query($con, $query);
                             $request_run = mysqli_query($con, $request);
                             if (mysqli_num_rows($request_run) > 0) {
                                 foreach ($request_run as $row) {
-                                     // Check if requested_date is older than 30 days from the current day
-                                    $received_date = strtotime($row['requested_date']);
-                                    $current_date = strtotime(date('Y-m-d'));
-                                    $difference = ($current_date - $received_date) / (60 * 60 * 24); // Difference in days
-
-                                    // Add a CSS class based on the condition
-                                    $row_class = '';
-                                    $Changetext_color = 'black';
-                                    if ($difference >= 30 && ($row['status'] != 'approved' && ($row['status'] != 'completed'))) {
-                                        $row_class = 'red'; // Older than or equal to 30 days, set background to red
-                                        $Changetext_color = 'black'; // Set text color to white
-                                    } 
-                                    elseif ($difference >= 15 && ($row['status'] != 'approved' && ($row['status'] != 'completed'))) {
-                                        $row_class = 'yellow'; // Older than or equal to 15 days but less than 30, set background to yellow
-                                        $Changetext_color = 'black'; // Set text color to dark
-                                    } 
-                                    elseif ($row['status'] == 'rejected'){
-                                        $row_class = 'red'; // Status is Not Approved, set background to blue
-                                        $Changetext_color = 'black'; // Set text color to white
-                                    }
-                                    elseif ($row['status'] == 'approved' || $row['status'] == 'completed') {
-                                        $row_class = 'green'; // Status is Approved, set background to green
-                                        $Changetext_color = 'black'; // Set text color to white
-                                    }
-                                     
+                                    
                                     ?>
-                                    <tr class="<?= $row_class ?>" style="color:bg-primary;">
+                                    <tr>
                                         <td style="background-color:<?= $row_class ?>;">
                                                 <?= $row['id']; ?> 
                                         
                                         </td>
                                         
-                                        <td style="color:<?= $Changetext_color ?>">
+                                        <td>
                                             
                                                 <?php 
                                                 echo $row['purchase_request_number']
                                                 ?>
                                         </td>
-                                        <td style="color:<?= $Changetext_color ?>"><?= $row['printed_name']; ?></td>
-                                        <td style="color:<?= $Changetext_color ?>"><?= $row['unit_head_approval']; ?></td>
-                                        <td style="color:<?= $Changetext_color ?>">
+                                        <td><?= $row['printed_name']; ?></td>
+                                        <td><?= $row['unit_head_approval']; ?></td>
+                                        <td>
                                                 <?php 
                                                 echo $row['unit_dept_college']
                                                 
                                                 ?>
                                             
                                         </td>
-                                            <td style="color:<?= $Changetext_color ?>">
+                                            <td>
                                                 <?php 
                                                 echo $row['iptel_email']
                                                 ?>
                                             </td>
-                                            <td style="color:<?= $Changetext_color ?>">
+                                            <td>
                                             <?php 
                                             echo 
                                             //If acknowledged_by_cpu = 1, echo "CPU Acknowledged", else echo "Not Acknowledged"
@@ -142,8 +118,8 @@ $query_run = mysqli_query($con, $query);
                                             ?>
                                             </td>
                                         
-                                        <td style="color:<?= $Changetext_color ?>"><?= $row['status']; ?></td>
-                                        <td style="color:<?= $Changetext_color ?>"><?= date('F j Y h:i A', strtotime($row['requested_date'])); ?></td>
+                                        <td><?= $row['status']; ?></td>
+                                        <td><?= date('F j Y h:i A', strtotime($row['requested_date'])); ?></td>
                                         <td>
                                         <a href="my_purchase_request_details.php?request_id=<?= $row['id']; ?>" class="btn btn-info">Details</a>
                                         </td>

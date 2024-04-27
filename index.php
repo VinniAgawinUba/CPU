@@ -31,34 +31,10 @@ $query_run = mysqli_query($con, $query);
             {
     
 
-                // Check if request_received_date is older than 30 days from the current day
-                $received_date = strtotime($item['requested_date']);
-                $current_date = strtotime(date('Y-m-d'));
-                $difference = ($current_date - $received_date) / (60 * 60 * 24); // Difference in days
-
-                 // Add a CSS class based on the condition
-                 $card_class = '';
-                 $text_color = 'black';
-                 if ($difference >= 30 && ($item['status'] != 'approved' && ($item['status'] != 'completed'))) {
-                    $card_class = 'bg-red-500'; // Older than or equal to 30 days, set background to red
-                    $text_color = 'text-white';
-                 } 
-                 elseif ($difference >= 15 && ($item['status'] != 'approved' && ($item['status'] != 'completed'))) {
-                    $card_class = 'bg-yellow-500'; // Older than or equal to 15 days but less than 30, set background to yellow
-                    $text_color = 'text-white';
-                 } 
-                 elseif ($item['status'] == 'rejected'){
-                    $card_class = 'bg-red-500'; // Older than or equal to 30 days, set background to red
-                    $text_color = 'text-white';
-                 }
-                 elseif ($item['status'] == 'approved' || $item['status'] == 'completed') {
-                    $card_class = 'bg-green-500'; // Status is (Approved), set background to green
-                    $text_color = 'text-white';
-                 }
-
+               
                 ?>
                 <div class="max-w-sm rounded overflow-hidden shadow-lg hover:scale-105 hover:outline-dotted hover:text-blue-600 <?= $card_class?>">
-                    <div class="px-6 py-4 <?=$text_color?>">
+                    <div class="px-6 py-4">
                         <div class="font-bold text-xl mb-2">ID: <?= $item['id']; ?></div>
                         <p class="text-current text-base mb-2">Unit/Dept: <?= $item['unit_dept_college'];; ?></p>
                         <p class="text-current text-base mb-2">iptel#/email: <?= $item['iptel_email']; ?></p>
