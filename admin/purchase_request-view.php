@@ -129,7 +129,7 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                             //If Super User, show all purchase requests
                             if($super_user)
                             {
-                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE status != 'completed' AND status != 'rejected' AND unit_head_approval = 'recommending-approval' ORDER BY id DESC";
+                                $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE status != 'completed' AND status != 'rejected' AND unit_head_approval = 'approved' ORDER BY id DESC";
                                 //$request = "SELECT * FROM purchase_requests ORDER BY id DESC";
                             }
                             //If Admin, show only purchase requests assigned to the logged in user
