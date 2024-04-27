@@ -133,7 +133,7 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                 //If Department Editor, show only purchase requests  that are not completed, partially-completed, or rejected or approved
                                 if ($department_editor) {
                                     // Retrieve the updated query from the URL, if not available use default query
-                                    $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE '$current_user_email' NOT IN (COALESCE(signed_1_by, ''), COALESCE(signed_2_by, ''), COALESCE(signed_3_by, ''), COALESCE(signed_4_by, ''), COALESCE(signed_5_by, '')) AND acknowledged_by_cpu = 1 ORDER BY id DESC";
+                                    $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE '$current_user_email' NOT IN (COALESCE(signed_1_by, ''), COALESCE(signed_2_by, ''), COALESCE(signed_3_by, ''), COALESCE(signed_4_by, ''), COALESCE(signed_5_by, '')) AND unit_head_approval = 'approved' ORDER BY id DESC";
                                 }
                                 //If Unit Head, show only purchase requests where unit_head_approval = pending
                                 if ($unit_head) {
