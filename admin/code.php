@@ -235,130 +235,8 @@ if ($acknowledged_by_cpu == '1') {
     }
 }
 
-
-// Execute Purchase Request query
-if ($con->query($sql_purchase_request) === TRUE) {
-
-  // Get the Request ID
+//Get the purchase_request_id
 $purchase_request_id = $id;
-
-// Save each signature to the server and database
-foreach ($signatures as $signature_field) {
-    // Check if the signature field is set
-    if (isset($_POST[$signature_field]) && !empty($_POST[$signature_field])) {
-        // Process each signature
-        $image_parts = explode(";base64,", $_POST[$signature_field]);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type = $image_type_aux[1];
-        $image_base64 = base64_decode($image_parts[1]);
-        $filename = uniqid() . ".$image_type";
-        $file = $folderPath . $filename;
-
-        // Save the signature to the server
-        if (file_put_contents($file, $image_base64) !== false) {
-            // Signature saved successfully
-
-            // Update filename and request ID into the signatures table
-            $request_id = $purchase_request_id;
-            $sql_insert_signature = "INSERT INTO signatures (request_id, filename) VALUES ('$request_id', '$filename')";
-            if ($con->query($sql_insert_signature)) {
-                // Signature filename and request ID inserted into database
-
-                // Check if the signature field in purchase_requests table is empty
-                $sql_check_empty = "SELECT $signature_field FROM purchase_requests WHERE id = $purchase_request_id";
-                $result_check_empty = $con->query($sql_check_empty);
-                if ($result_check_empty && $result_check_empty->num_rows > 0) {
-                    $row = $result_check_empty->fetch_assoc();
-                    if ($row[$signature_field] && $row[$signature_field] != '') {
-                        // Update the purchase request with the signature filename
-                        $sql_update_purchase_request = "UPDATE purchase_requests SET $signature_field = '$filename' WHERE id = $purchase_request_id";
-                        if ($con->query($sql_update_purchase_request)) {
-                            // Signature filename updated successfully
-
-                            // Insert into _by column In the purchase_requests table
-                            $sql_insert_signed_by = "UPDATE purchase_requests SET {$signature_field}_by = '$updater_user_email' WHERE id = $purchase_request_id";
-                            if ($con->query($sql_insert_signed_by)) {
-                                // Signed by updated successfully
-                            } else {
-                                $_SESSION['message'] = "Error updating signed by in purchase_requests: " . $con->error;
-                                header('Location: purchase_request-view.php');
-                            }
-                            
-                        } else {
-                            $_SESSION['message'] = "Error updating purchase request with signature filename: " . $con->error;
-                            header('Location: purchase_request-view.php');
-                        }
-                    } else {
-                        // Signature field is not empty, do nothing
-                    }
-                } else {
-                    $_SESSION['message'] = "Error checking if signature field is empty: " . $con->error;
-                    header('Location: purchase_request-view.php');
-                }
-            } else {
-                $_SESSION['message'] = "Error inserting signature filename and request ID into database: " . $con->error;
-                header('Location: purchase_request-view.php');
-            }
-        } else {
-            // Error saving signature
-            $_SESSION['message'] = "Warning Some Signature fields are still empty";
-            header('Location: purchase_request-view.php');
-        }
-    } else {
-        // Signature field is empty
-    }
-}
-
-
-
-// Select signature fields from the purchase_requests table (TO UPDATE sign_status)
-$sql_select_sigs = "SELECT * FROM purchase_requests WHERE id = $purchase_request_id";
-$result_select_sigs = $con->query($sql_select_sigs);
-
-if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
-    $row = $result_select_sigs->fetch_assoc();
-    
-    // Check if any of the signature fields are not '' and update sign_status accordingly
-    $sign_status = '0';
-    //If signed 1 is not empty then it will be signed by the Vice President
-    if ($row['signed_1'] && $row['signed_1'] != '') {
-        $sign_status = 'Signed by Vice President ';
-    }
-    //If signed 1 and signed 2 is not empty then it will be signed by the Vice President for Administration
-    elseif ($row['signed_2'] && $row['signed_2'] != ''){
-        $sign_status = 'Signed by Vice President Administration';
-    }
-    //If signed 1, signed 2 and signed 3 is not empty then it will be signed by the Budget Controller
-    elseif ($row['signed_1'] && $row['signed_1'] != '' && $row['signed_2'] && $row['signed_2'] != '' && $row['signed_3'] && $row['signed_3'] != '') {
-        $sign_status = 'Signed by budget controller';
-    }
-    //If signed 1, signed 2, signed 3 and signed 4 is not empty then it will be signed by the University Treasurer
-   elseif ($row['signed_1'] && $row['signed_1'] != '' && $row['signed_2'] && $row['signed_2'] != '' && $row['signed_3'] && $row['signed_3'] != '' && $row['signed_4'] && $row['signed_4'] != '') {
-        $sign_status = 'Signed by university treasurer';
-    }
-    //If signed 1, signed 2, signed 3, signed 4 and signed 5 is not empty then it will be signed by the Office of the President
-    elseif ($row['signed_1'] && $row['signed_1'] != '' && $row['signed_2'] && $row['signed_2'] != '' && $row['signed_3'] && $row['signed_3'] != '' && $row['signed_4'] && $row['signed_4'] != '' && $row['signed_5'] && $row['signed_5'] != '') {
-        $sign_status = 'Signed by president';
-    }
-    else {
-        $sign_status = 'WARNING: Sequence of signatures not followed!';
-    }
-
-    // Update the sign_status in the purchase_requests table
-    $sql_update_sign_status = "UPDATE purchase_requests SET sign_status = '$sign_status' WHERE id = $purchase_request_id";
-    if ($con->query($sql_update_sign_status)) {
-        // sign_status updated successfully
-    } else {
-        $_SESSION['message'] = "Error updating sign_status in purchase_requests: " . $con->error;
-        header('Location: purchase_request-view.php');
-        exit; // Terminate script execution
-    }
-} else {
-    $_SESSION['message'] = "Error selecting signature fields from purchase_requests: " . $con->error;
-    header('Location: purchase_request-view.php');
-    exit; // Terminate script execution
-}
-
 
 
 
@@ -410,7 +288,7 @@ if ($result_select_sigs && $result_select_sigs->num_rows > 0) {
   $_SESSION['message'] = "Error: " . $sql_purchase_request . "<br>" . $con->error;
     echo "Error: " . $sql_purchase_request . "<br>" . $con->error;
 }     
-}
+
 
 //Delete Purchase Request
 if(isset($_POST['purchase_request_delete_btn'])) {
