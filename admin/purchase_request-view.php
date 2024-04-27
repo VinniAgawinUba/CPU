@@ -106,6 +106,7 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Requested Date</th>
                                 <th>Purchase Request Number</th>
                                 <th>Requestor Name</th>
                                 <th>Unit/Dept/College</th>
@@ -113,7 +114,6 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                 <th>Unit Head Approval</th>
                                 <th>Acknowledged by CPU</th>
                                 <th>Status</th>
-                                <th>Requested Date</th>
                                 <th>Details</th>
                                 <?php if ($super_user) { ?><th>Assigned To</th><?php } ?>
                                 
@@ -165,6 +165,8 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                         
                                         </td>
                                         
+                                        <td><?= date('F j Y h:i A', strtotime($row['requested_date'])); ?></td>
+                                        
                                         <td >
                                             
                                                 <?php 
@@ -195,7 +197,6 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                         </td>
                                         
                                         <td><?= $row['status']; ?></td>
-                                        <td><?= date('F j Y h:i A', strtotime($row['requested_date'])); ?></td>
                                         
                                         
 

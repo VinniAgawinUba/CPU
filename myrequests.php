@@ -63,6 +63,7 @@ $query_run = mysqli_query($con, $query);
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Requested Date</th>
                                 <th>Purchase Request Number</th>
                                 <th>Requestor Name</th>
                                 <th>Unit/Dept/College</th>
@@ -70,7 +71,6 @@ $query_run = mysqli_query($con, $query);
                                 <th>Unit Head Approval</th>
                                 <th>Acknowledged by CPU</th>
                                 <th>Status</th>
-                                <th>Requested Date</th>
                                 <th>Details</th>
                                 
                             </tr>
@@ -86,9 +86,11 @@ $query_run = mysqli_query($con, $query);
                                     ?>
                                     <tr>
                                         <td style="background-color:<?= $row_class ?>;">
-                                                <?= $row['id']; ?> 
-                                        
+                                            <?= $row['id']; ?> 
+                                            
                                         </td>
+                                        
+                                        <td><?= date('F j Y h:i A', strtotime($row['requested_date'])); ?></td>
                                         
                                         <td>
                                             
@@ -119,7 +121,6 @@ $query_run = mysqli_query($con, $query);
                                             </td>
                                         
                                         <td><?= $row['status']; ?></td>
-                                        <td><?= date('F j Y h:i A', strtotime($row['requested_date'])); ?></td>
                                         <td>
                                         <a href="my_purchase_request_details.php?request_id=<?= $row['id']; ?>" class="btn btn-info">Details</a>
                                         </td>
