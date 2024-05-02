@@ -1,13 +1,16 @@
 <?php
-$host = "localhost:3306";
-$username = "root";
-$password = "";
-$database = "cpu_db";
+$host = "mysql"; // Docker Compose service name
+$port = 3306; // MySQL port
+$username = "root"; // MySQL root username
+$password = "password"; // MySQL root password
+$database = "cpu_db"; // MySQL database name
 
-$con = mysqli_connect($host, $username, $password, $database);
+// Create connection
+$con = new mysqli($host, $username, $password, $database, $port);
 
-if(!$con){
-    header("Location: ../errors/dberror.php");
-    die();
+// Check connection
+if ($con->connect_error) {
+    die("Connection failed: " . $con->connect_error);
 }
+echo "Connected successfully";
 ?>
