@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 //Header
 include('includes/header.php');
@@ -100,6 +101,7 @@ $query_run = mysqli_query($con, $query);
         }
         echo "<a href='{$pagination_url}{$total_pages}' class='m-2 px-4 py-2 bg-xu-blue text-blue-50 rounded-full hover:bg-blue-400'>$total_pages</a>";
     }
+    ob_end_flush();
     ?>
 </div>
 

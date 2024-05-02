@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 //Header
 include('includes/header.php');
@@ -9,7 +10,7 @@ include('authentication.php');
 
 
 
-
+ob_end_flush();
 ?>
 
  

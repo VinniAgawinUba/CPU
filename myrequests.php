@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 //Header
 include('includes/header.php');
@@ -34,7 +35,7 @@ elseif($_SESSION['auth_role']==3)
 // Query to fetch requests with pagination
 $query = "SELECT * FROM purchase_requests ORDER BY id DESC";
 $query_run = mysqli_query($con, $query);
-
+ob_end_flush();
 ?>
 <link rel="stylesheet" href="assets/css/dataTables.dataTables.min.css" />
 <script src="assets/js/jquery.min.js"></script>
