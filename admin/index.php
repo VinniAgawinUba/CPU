@@ -1,8 +1,10 @@
 <?php
+ob_start();
 include('config/dbcon.php');
 include('authentication.php');
 include('authentication_cpu_staff_only.php');
 include('includes/header.php');
+include('message.php');
 include('includes/scripts.php');
 ?>
    <!--Tailwind Test-->
@@ -56,12 +58,11 @@ include('includes/scripts.php');
     </style>
 
 
-
 <div class="container-fluid px-4 mx-3">
         <!-- XU LOGO -->
         <div class="header">
             <div>
-                <img src="../../cpu/assets/images/XULOGO.png" alt="XU-LOGO" class="logo">
+                <img src="assets/img/XULOGO.png" alt="XU-LOGO" class="logo"> 
             </div>
             <div class="header-text">
         <!-- Page Header -->

@@ -1,4 +1,5 @@
 <?php
+ob_start();
 include('config/dbcon.php');
 session_start();
 if(isset($_POST['logout_btn'])){
@@ -9,10 +10,11 @@ if(isset($_POST['logout_btn'])){
     
     include('config.php');
 
-    $accesstoken= $_SESSION['access_token'];
-     
-    //Reset OAuth access token
-    $google_client->revokeToken($accesstoken);
+    //If signed in with google
+    if(isset($_SESSION['access_token'])){
+        unset($_SESSION['access_token']);
+        $gClient->revokeToken();
+    }
     
     //Destroy entire session data.
     session_destroy();
@@ -31,7 +33,6 @@ if(isset($_POST['request_add_btn_front'])){
     $printed_name = $_POST['printed_name'];
     $unit_dept_college = $_POST['unit_dept_college'];
     $iptel_email = $_POST['iptel_email'];
-    $requestor_signature = $_POST['signed_Requestor'];
     $unit_head = $_POST['unit_head'];
 
     //Requestor User Information
@@ -42,7 +43,6 @@ if(isset($_POST['request_add_btn_front'])){
      // Signatures
      $signatures = array(
       // Add more signature fields as needed, e.g.,signed_1, signed_2, etc.
-      "signed_Requestor", // Requestor's signature
       "signed_1", // Vice President's signature
       "signed_2", // Vice President for Administration's signature
       "signed_3", // Budget Controller's signature
@@ -74,51 +74,7 @@ if(isset($_POST['request_add_btn_front'])){
     if ($con->query($sql_purchase_request) === TRUE) {
         // Get the ID of the last inserted purchase request
         $purchase_request_id = $con->insert_id;
-        
-  // Save each signature to the server and database
-  foreach ($signatures as $signature_field) {
-    // Check if the signature field is set, Also Query IF it already exists then it will be updated
-    if (isset($_POST[$signature_field])) {
-        // Process each signature
-        $image_parts = explode(";base64,", $_POST[$signature_field]);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type = $image_type_aux[1];
-        $image_base64 = base64_decode($image_parts[1]);
-        $filename = uniqid() . ".$image_type";
-        $file = $folderPath . $filename;
   
-        // Save the signature to the server
-        if (file_put_contents($file, $image_base64) !== false) {
-            // Signature saved successfully
-           
-  
-            // Update filename and request ID into the signatures table
-            $request_id = $purchase_request_id;
-            $sql = "INSERT INTO signatures (request_id, filename) VALUES ('$request_id', '$filename')";
-            if ($con->query($sql)) {
-                // Signature filename and request ID inserted into database
-  
-                //Update the purchase request with the signature filename
-                $sql_update = "UPDATE purchase_requests SET $signature_field = '$filename' WHERE id = $purchase_request_id";
-                if ($con->query($sql_update)) {
-                    // Signature filename updated successfully
-                } else {
-                    $_SESSION['message'] = "Error updating purchase request with signature filename: " . $con->error;
-                    header('Location: form.php');
-                }
-            } else {
-               $_SESSION['message'] = "Error inserting signature filename and request ID into database: " . $con->error;
-                header('Location: form.php');
-            }
-        } else {
-            // Error saving signature
-            $_SESSION['message'] = "Warning Some Signature fields are still empty";
-            header('Location: form.php');
-  
-        }
-          
-    }
-  }
   
         // Insert Items into the database
     for ($i = 0; $i < count($item_qty); $i++) {
@@ -166,7 +122,6 @@ if(isset($_POST['request_add_btn_front'])){
             } else {
                 $_SESSION['message'] = "Error uploading file: " . $_FILES['request_documents']['name'][$i];
                 header('Location: form.php');
-                exit(0);
             }
         }
     } else {
@@ -185,4 +140,5 @@ if(isset($_POST['request_add_btn_front'])){
 
    
   }
+  ob_end_flush();
 ?>
