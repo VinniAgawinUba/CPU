@@ -1,6 +1,6 @@
 services:
   web:
-    image: xucpu-docker
+    image: invinnicible/xucpu-docker
     ports:
       - "8080:80"
     volumes:
@@ -20,9 +20,9 @@ services:
     ports:
     - '3306:3306'
     volumes:
-      - nigga-mysql:/var/lib/mysql
+      - cpu-mysql:/var/lib/mysql
     networks:
-      - nigga
+      - cpu
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -32,10 +32,10 @@ services:
       PMA_HOST: mysql
       PMA_PORT: 3306
     networks:
-      - nigga
+      - cpu
 
 networks:
-  nigga:
+  cpu:
 
 volumes:
-  nigga-mysql:
+  cpu-mysql:
