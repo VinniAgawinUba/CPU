@@ -8,7 +8,7 @@ services:
     depends_on:
       - mysql
     networks:
-      - cpus
+      - cpu
 
   mysql:
     image: mysql:8.0
