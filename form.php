@@ -13,23 +13,31 @@ include('authentication.php');
 ob_end_flush();
 ?>
 
- 
 
-  <!--Include the jQuery and jQuery UI libraries so that Signatures work-->
-  <script type="text/javascript" src="assets/js/jquery.min.js"></script> 
-  <link type="text/css" href="assets/css/jquery-ui.css" rel="stylesheet"> 
-  <script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
-  <!-- Bootstrap JavaScript -->
-  <script src="assets/js/bootstrap5.bundle.min.js"></script>
 
-  <script type="text/javascript" src="assets/js/jquery.signature.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="assets/css/jquery.signature.css"></link>
+<!--Include the jQuery and jQuery UI libraries so that Signatures work-->
+<script type="text/javascript" src="assets/js/jquery.min.js"></script>
+<link type="text/css" href="assets/css/jquery-ui.css" rel="stylesheet">
+<script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
+<!-- Bootstrap JavaScript -->
+<script src="assets/js/bootstrap5.bundle.min.js"></script>
 
-  <!--Signature Styles-->
-  <style>
-    .kbw-signature { width: 800px; height: 200px; }
-    #sig canvas { width: 100% !important; height: auto; }
-  </style>
+<script type="text/javascript" src="assets/js/jquery.signature.min.js"></script>
+<link rel="stylesheet" type="text/css" href="assets/css/jquery.signature.css">
+</link>
+
+<!--Signature Styles-->
+<style>
+    .kbw-signature {
+        width: 800px;
+        height: 200px;
+    }
+
+    #sig canvas {
+        width: 100% !important;
+        height: auto;
+    }
+</style>
 
 
 <!--Horizontal Rule Line-->
@@ -39,113 +47,124 @@ ob_end_flush();
     <?php include('message.php'); ?>
     <h1 class="text-3xl font-bold mt-8 mb-4 justify-centeritems-center text-white">XAVIER UNIVERSITY CENTRAL PURCHASING UNIT</h1>
     <form action="allcode.php" method="post" enctype="multipart/form-data">
-    <!-- Hidden user_name, user_id, user_email -->
-    <input type="hidden" name="user_name" value="<?php echo $_SESSION['auth_user']['user_name']; ?>">
-    <input type="hidden" name="user_id" value="<?php echo $_SESSION['auth_user']['user_id']; ?>">
-    <input type="hidden" name="user_email" value="<?php echo $_SESSION['auth_user']['user_email']; ?>">
-
-    
-
-      <fieldset class="mb-4 bg-blue-900 bg-opacity-50 shadow-md rounded p-4">
-        <legend class="font-bold text-white">Purchase Request</legend>
-        
-        
-        
-      </fieldset>
-
-      <!-- ITEMS -->
-      <fieldset class="mb-4 bg-blue-900 bg-opacity-50 text-white shadow-md rounded p-4">
-        <legend class="font-bold text-inherit">Items</legend>
-        <p class="mb-2 text-inherit">Please include complete specifications/details or attach additional information on items.</p>
-        <p class="mb-2 text-inherit">CPU may refuse to receive request without complete specifications or details.</p>
-        
-        <table class="table-fixed border">
-    <thead>
-        <tr>
-            <th class="px-2 py-2" style="width:60px">ITEM#</th>
-            <th class="px-2 py-2" style="width:60px">QTY/UNIT</th>
-            <th class="px-2 py-2" style="width:500px">DESCRIPTION</th>
-            <th class="px-2 py-2" style="width:500px">JUSTIFICATION</th>
-            <th class="px-2 py-2" style="width:80px">REMOVE</th> <!-- Empty header for remove button -->
-            <th class="px-2 py-2" style="width:80px">ATTATCHMENT</th> <!-- header for Attatchment button -->
-        </tr>
-    </thead>
-    <tbody id="itemRows">
-        <!-- Dynamically generated rows will be added here -->
-    </tbody>
-</table>
-
-
-        <button type="button" class="btn btn-primary btn-add-item bg-blue-600">Add Item</button>
-      </fieldset>
-
-
-      <!-- Requestor Information -->
-<fieldset class="mb-4 bg-blue-900 bg-opacity-50 shadow-md rounded p-4">
-    <legend class="font-bold text-white">Requestor Information</legend>
-    <table class="table-auto">
-        <tbody>
-            <tr>
-                <td class="text-white">Unit/Dept:</td>
-                <td class="p-1">
-                    <input type="text" id="unit_dept_college" name="unit_dept_college" class="form-control" required placeholder="Unit/Dept">
-                </td>
-            </tr>
-            <tr>
-                <td class="text-white">Requested by:</td>
-                <td class="p-1">
-                    <input type="text" id="printed_name" name="printed_name" class="form-control" required placeholder="Requestor Name">
-                </td>
-            </tr>
-
-            <tr>
-                <td class="text-white">Unit Head:</td>
-                <td class="p-1">
-                    <select id="unit_head" name="unit_head" class="form-control" required>
-                        <option value="">--Select Unit Head--</option>
-                        <?php
-                            $sql = "SELECT * FROM users WHERE role_as = '4'";
-                            $result = mysqli_query($con, $sql);
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                echo '<option value="'.$row['id'].'">'.$row['fname'].' '.$row['lname'].'</option>';
-                            }
-                        ?>
-                        
-                    </select>
-                </td>
-            </tr>
-            
-            
-            <tr class="text-white bold">
-                <td>IPTel#/E-mail Address:</td>
-                <td class="px-1">
-                    <input type="text" readonly id="iptel_email" name="iptel_email" class="form-control" required value="<?php echo $_SESSION['auth_user']['user_email']; ?>">
-                </td>
-            </tr>
-
-           
-            
-        </tbody>
-    </table>
-</fieldset>
+        <!-- Hidden user_name, user_id, user_email -->
+        <input type="hidden" name="user_name" value="<?php echo $_SESSION['auth_user']['user_name']; ?>">
+        <input type="hidden" name="user_id" value="<?php echo $_SESSION['auth_user']['user_id']; ?>">
+        <input type="hidden" name="user_email" value="<?php echo $_SESSION['auth_user']['user_email']; ?>">
 
 
 
+        <fieldset class="mb-4 bg-blue-900 bg-opacity-50 shadow-md rounded p-4">
+            <legend class="font-bold text-white">Purchase Request</legend>
 
 
-      <button type="submit" name="request_add_btn_front" class="btn btn-primary bg-blue-600">Submit Request</button>
+
+        </fieldset>
+
+        <!-- ITEMS -->
+        <fieldset class="mb-4 bg-blue-900 bg-opacity-50 text-white shadow-md rounded p-4">
+            <legend class="font-bold text-inherit">Items</legend>
+            <p class="mb-2 text-inherit">Please include complete specifications/details or attach additional information on items.</p>
+            <p class="mb-2 text-inherit">CPU may refuse to receive request without complete specifications or details.</p>
+
+            <table class="table-fixed border">
+                <thead>
+                    <tr>
+                        <th class="px-2 py-2" style="width:60px">ITEM#</th>
+                        <th class="px-2 py-2" style="width:60px">QTY/UNIT</th>
+                        <th class="px-2 py-2" style="width:500px">DESCRIPTION</th>
+                        <th class="px-2 py-2" style="width:500px">JUSTIFICATION</th>
+                        <th class="px-2 py-2" style="width:80px">REMOVE</th> <!-- Empty header for remove button -->
+                        <th class="px-2 py-2" style="width:80px">ATTATCHMENT</th> <!-- header for Attatchment button -->
+                    </tr>
+                </thead>
+                <tbody id="itemRows">
+                    <!-- Dynamically generated rows will be added here -->
+                </tbody>
+            </table>
+
+
+            <button type="button" class="btn btn-primary btn-add-item bg-blue-600">Add Item</button>
+        </fieldset>
+
+
+        <!-- Requestor Information -->
+        <fieldset class="mb-4 bg-blue-900 bg-opacity-50 shadow-md rounded p-4">
+            <legend class="font-bold text-white">Requestor Information</legend>
+            <table class="table-auto">
+                <tbody>
+                    <tr>
+                        <td class="text-white">Cluster:</td>
+                        <td class="p-1">
+                            <select id="cluster" name="cluster" class="form-control" required>
+                                <option>--Select Cluster--</option>
+                                <option value="Academic">Academic</option>
+                                <option value="Administrative">Administrative</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-white">Unit/Dept:</td>
+                        <td class="p-1">
+                            <input type="text" id="unit_dept_college" name="unit_dept_college" class="form-control" required placeholder="Unit/Dept">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Requested by:</td>
+                        <td class="p-1">
+                            <input type="text" id="printed_name" name="printed_name" class="form-control" required placeholder="Requestor Name">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-white">Unit Head:</td>
+                        <td class="p-1">
+                            <select id="unit_head" name="unit_head" class="form-control" required>
+                                <option value="">--Select Unit Head--</option>
+                                <?php
+                                $sql = "SELECT * FROM users WHERE role_as = '4'";
+                                $result = mysqli_query($con, $sql);
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo '<option value="' . $row['id'] . '">' . $row['fname'] . ' ' . $row['lname'] . '</option>';
+                                }
+                                ?>
+
+                            </select>
+                        </td>
+                    </tr>
+
+
+                    <tr class="text-white bold">
+                        <td>IPTel#/E-mail Address:</td>
+                        <td class="px-1">
+                            <input type="text" readonly id="iptel_email" name="iptel_email" class="form-control" required value="<?php echo $_SESSION['auth_user']['user_email']; ?>">
+                        </td>
+                    </tr>
+
+
+
+                </tbody>
+            </table>
+        </fieldset>
+
+
+
+
+
+        <button type="submit" name="request_add_btn_front" class="btn btn-primary bg-blue-600">Submit Request</button>
     </form>
-  </div>
+</div>
 
-  <script>
+<script>
     // jQuery noConflict mode to avoid conflicts with other libraries
     jQuery.noConflict();
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const itemRows = document.getElementById('itemRows');
         const addItemButton = document.querySelector('.btn-add-item');
         let itemNumber = 1; // Initialize item number
 
-        addItemButton.addEventListener('click', function () {
+        addItemButton.addEventListener('click', function() {
             const itemRow = document.createElement('tr');
             itemRow.classList.add('item-row', 'mb-2');
             itemRow.innerHTML = `
@@ -178,7 +197,7 @@ ob_end_flush();
             itemNumber++; // Increment item number
         });
 
-        itemRows.addEventListener('click', function (event) {
+        itemRows.addEventListener('click', function(event) {
             if (event.target.classList.contains('btn-remove-item')) {
                 event.target.closest('.item-row').remove();
                 itemNumber--; // Decrement item number
@@ -191,8 +210,11 @@ ob_end_flush();
             console.log(jQuery('#sigRequestor'));
 
             // SignaturePad initialization
-            var sigRequestor = jQuery('#sigRequestor').signature({syncField: '#signature64_Requestor', syncFormat:'PNG'});
-            jQuery('#clearRequestor').click(function(e){
+            var sigRequestor = jQuery('#sigRequestor').signature({
+                syncField: '#signature64_Requestor',
+                syncFormat: 'PNG'
+            });
+            jQuery('#clearRequestor').click(function(e) {
                 e.preventDefault();
                 sigRequestor.signature('clear');
                 jQuery("#signature64_Requestor").val('');
@@ -246,7 +268,7 @@ ob_end_flush();
 </script>
 
 
-  
+
 
 <!-- Dont Load Footer PHP (Causes Multiple Jquery js file conflicts), Use Hard coded footer instead -->
 <footer class="bg-dark text-white py-5">
@@ -261,10 +283,12 @@ ob_end_flush();
                 <h2 class="text-lg font-semibold mb-3">Help Desk</h2>
                 <p class="py-2">For assistance, contact:</p>
                 <div class="flex items-center">
-                    <span class="text-gray-400 mr-2"><i class="fas fa-envelope"></i></span><p class="py-2 mb-0">ciso@xu.edu.ph</p>
+                    <span class="text-gray-400 mr-2"><i class="fas fa-envelope"></i></span>
+                    <p class="py-2 mb-0">ciso@xu.edu.ph</p>
                 </div>
                 <div class="flex items-center mt-2">
-                    <span class="text-gray-400 mr-2"><i class="fas fa-phone-alt"></i></span><p class="py-2 mb-0 text-nowrap">(088) 853-9800</p>
+                    <span class="text-gray-400 mr-2"><i class="fas fa-phone-alt"></i></span>
+                    <p class="py-2 mb-0 text-nowrap">(088) 853-9800</p>
                 </div>
             </div>
         </div>

@@ -1,8 +1,8 @@
 <?php
-$host = "mysql"; // Docker Compose service name
+$host = "localhost:3306"; // Docker Compose service name
 $port = 3306; // MySQL port
 $username = "root"; // MySQL root username
-$password = "password"; // MySQL root password
+$password = ""; // MySQL root password
 $database = "cpu_db"; // MySQL database name
 
 // Create connection

@@ -256,6 +256,16 @@ if (mysqli_num_rows($request_query_run) > 0) {
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
+                            <td>Cluster:</td>
+                            <td>
+                            <select id="cluster" name="cluster" class="form-control" required>
+                                <option>--Select Cluster--</option>
+                                <option value="Academic" <?=$request_row['cluster'] == 'Academic' ? 'selected' : '' ?>>Academic</option>
+                                <option value="Administrative" <?=$request_row['cluster'] == 'Administrative' ? 'selected' : '' ?>>Administrative</option>
+                            </select>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Unit/Dept:</td>
                             <td>
                                 <input type="text" id="unit_dept_college" name="unit_dept_college" class="form-control" required placeholder="Unit/Dept" value="<?= $request_row['unit_dept_college'] ?>">

@@ -13,7 +13,7 @@ if(isset($_POST['logout_btn'])){
     //If signed in with google
     if(isset($_SESSION['access_token'])){
         unset($_SESSION['access_token']);
-        $gClient->revokeToken();
+        $google_client->revokeToken($accesstoken);
     }
     
     //Destroy entire session data.
@@ -34,6 +34,7 @@ if(isset($_POST['request_add_btn_front'])){
     $unit_dept_college = $_POST['unit_dept_college'];
     $iptel_email = $_POST['iptel_email'];
     $unit_head = $_POST['unit_head'];
+    $cluster = $_POST['cluster'];
 
     //Requestor User Information
     $requestor_user_id = $_POST['user_id'];
@@ -67,8 +68,8 @@ if(isset($_POST['request_add_btn_front'])){
     
   
     // Insert Purchase Request into the database
-    $sql_purchase_request = "INSERT INTO purchase_requests (requestor_user_id, requestor_user_name, requestor_user_email, unit_head ,printed_name, unit_dept_college, iptel_email) 
-            VALUES ('$requestor_user_id', '$requestor_user_name', '$requestor_user_email', '$unit_head' , '$printed_name','$unit_dept_college', '$iptel_email')";
+    $sql_purchase_request = "INSERT INTO purchase_requests (requestor_user_id, requestor_user_name, requestor_user_email, cluster, unit_head ,printed_name, unit_dept_college, iptel_email) 
+            VALUES ('$requestor_user_id', '$requestor_user_name', '$requestor_user_email', '$cluster', '$unit_head' , '$printed_name','$unit_dept_college', '$iptel_email')";
   
     // Execute Purchase Request query
     if ($con->query($sql_purchase_request) === TRUE) {

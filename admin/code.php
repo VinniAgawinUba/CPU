@@ -91,6 +91,9 @@ $item_status = $_POST['item_status'];
 $unit_head_approval_by  = $_POST['unit_head_approval_by'];
 $unit_head_approval = $_POST['unit_head_approval'];
 
+//cluster
+$cluster = $_POST['cluster'];
+
 // Signatures for Approvals
 $vice_president_remarks = $_POST['vice_president_remarks'];
 $vice_president_approved = $_POST['vice_president_approved'];
@@ -114,7 +117,8 @@ $office_of_the_president_approved = $_POST['office_of_the_president_approved'];
 $office_of_the_president_signature = $_POST['signed_5'];
 
 // Update Purchase Request into the database
-$sql_purchase_request = "UPDATE purchase_requests SET purchase_request_number = '$purchase_request_number', printed_name = '$printed_name', 
+$sql_purchase_request = "UPDATE purchase_requests SET purchase_request_number = '$purchase_request_number', printed_name = '$printed_name',
+cluster = '$cluster',
 signed_Requestor = '$requestor_signature', unit_dept_college = '$unit_dept_college', 
 iptel_email = '$iptel_email', above_50000 = '$above_50000', 
 unit_head_approval_by  = '$unit_head_approval_by ', unit_head_approval = '$unit_head_approval',
