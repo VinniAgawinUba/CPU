@@ -351,21 +351,19 @@ if (mysqli_num_rows($request_query_run) > 0) {
                             </td>
                         </tr>
 
-                        <?php if ($unit_head) { ?>
-                            <tr>
-                                <td>Unit Head Approval:</td>
-                                <td>
-                                    <!-- Dropdown To Change unit_head_approval to either pending, recommending-approval, rejected (ONLY UNIT HEAD) -->
-                                    <div class="col-md-12 mb-3 bg-white">
-                                        <select name="unit_head_approval" style="border: 2px solid;">
-                                            <option value="pending" <?= $request_row['unit_head_approval'] == 'pending' ? 'selected' : '' ?>>Pending</option>
-                                            <option value="approved" <?= $request_row['unit_head_approval'] == 'approved' ? 'selected' : '' ?>>Approved</option>
-                                            <option value="rejected" <?= $request_row['unit_head_approval'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php } ?>
+                        <tr>
+                            <td>Unit Head Approval:</td>
+                            <td>
+                                <!-- Dropdown To Change unit_head_approval to either pending, recommending-approval, rejected (ONLY UNIT HEAD) -->
+                                <div class="col-md-12 mb-3 bg-white">
+                                    <select name="unit_head_approval" style="border: 2px solid;" class="<?= !$unit_head && !$super_user ? 'readonly' : '' ?>">
+                                        <option value="pending" <?= $request_row['unit_head_approval'] == 'pending' ? 'selected' : '' ?>>Pending</option>
+                                        <option value="approved" <?= $request_row['unit_head_approval'] == 'approved' ? 'selected' : '' ?>>Approved</option>
+                                        <option value="rejected" <?= $request_row['unit_head_approval'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
 
                         <tr>
                             <td>IPTel#/E-mail Address:</td>
@@ -398,7 +396,7 @@ if (mysqli_num_rows($request_query_run) > 0) {
                                     <br>
                                     <!-- Dropdown To Change to either pending, recommending-approval, rejected -->
                                     <div class="col-md-12 mb-3 bg-white">
-                                        <select name="signed_1" class="status_dropdown <?= !$super_user && !$cluster_vp ? 'readonly' : '' ?>" data-signed-field="signed_1" style="border: 2px solid;" <?= !$super_user && !$cluster_vp ? 'disabled' : '' ?>>
+                                        <select name="signed_1" class="status_dropdown" data-signed-field="signed_1" style="border: 2px solid; <?= !$super_user && !$cluster_vp ? 'opacity: 0.3;' : '' ?>" <?= !$super_user && !$cluster_vp ? 'disabled' : '' ?>>
                                             <option value="pending" <?= $request_row['signed_1'] == 'pending' ? 'selected' : '' ?>>Pending</option>
                                             <option value="approved" <?= $request_row['signed_1'] == 'approved' ? 'selected' : '' ?>>Approved</option>
                                             <option value="rejected" <?= $request_row['signed_1'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
@@ -419,7 +417,7 @@ if (mysqli_num_rows($request_query_run) > 0) {
                                     <br>
                                     <!-- Dropdown To Change to either pending, recommending-approval, rejected -->
                                     <div class="col-md-12 mb-3 bg-white">
-                                        <select name="signed_3" class="status_dropdown <?= !$super_user && !$budget_controller ? 'readonly' : '' ?>" data-signed-field="signed_3" style="border: 2px solid;" <?= !$super_user && !$budget_controller ? 'disabled' : '' ?>>
+                                        <select name="signed_3" class="status_dropdown <?= !$super_user && !$budget_controller ? 'readonly' : '' ?>" data-signed-field="signed_3" style="border: 2px solid; <?= !$super_user && !$budget_controller ? 'opacity: 0.3;' : '' ?>" <?= !$super_user && !$budget_controller ? 'disabled' : '' ?>>
                                             <option value="pending" <?= $request_row['signed_3'] == 'pending' ? 'selected' : '' ?>>Pending</option>
                                             <option value="approved" <?= $request_row['signed_3'] == 'approved' ? 'selected' : '' ?>>Approved</option>
                                             <option value="rejected" <?= $request_row['signed_3'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
@@ -438,7 +436,7 @@ if (mysqli_num_rows($request_query_run) > 0) {
                                     <br>
                                     <!-- Dropdown To Change to either pending, recommending-approval, rejected -->
                                     <div class="col-md-12 mb-3 bg-white">
-                                        <select name="signed_4" class="status_dropdown <?= !$super_user && !$university_treasurer ? 'readonly' : '' ?>" data-signed-field="signed_4" style="border: 2px solid;" <?= !$super_user && !$university_treasurer ? 'disabled' : '' ?>>
+                                        <select name="signed_4" class="status_dropdown <?= !$super_user && !$university_treasurer ? 'readonly' : '' ?>" data-signed-field="signed_4" style="border: 2px solid; <?= !$super_user && !$university_treasurer ? 'opacity: 0.3;' : '' ?>" <?= !$super_user && !$university_treasurer ? 'disabled' : '' ?>>
                                             <option value="pending" <?= $request_row['signed_4'] == 'pending' ? 'selected' : '' ?>>Pending</option>
                                             <option value="approved" <?= $request_row['signed_4'] == 'approved' ? 'selected' : '' ?>>Approved</option>
                                             <option value="rejected" <?= $request_row['signed_4'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
