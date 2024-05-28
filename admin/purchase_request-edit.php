@@ -356,7 +356,7 @@ if (mysqli_num_rows($request_query_run) > 0) {
                             <td>
                                 <!-- Dropdown To Change unit_head_approval to either pending, recommending-approval, rejected (ONLY UNIT HEAD) -->
                                 <div class="col-md-12 mb-3 bg-white">
-                                    <select name="unit_head_approval" style="border: 2px solid;" class="<?= !$unit_head ? 'readonly' : '' ?>">
+                                    <select name="unit_head_approval" style="border: 2px solid;" class="<?= !$unit_head && !$super_user ? 'readonly' : '' ?>">
                                         <option value="pending" <?= $request_row['unit_head_approval'] == 'pending' ? 'selected' : '' ?>>Pending</option>
                                         <option value="approved" <?= $request_row['unit_head_approval'] == 'approved' ? 'selected' : '' ?>>Approved</option>
                                         <option value="rejected" <?= $request_row['unit_head_approval'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
