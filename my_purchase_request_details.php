@@ -89,10 +89,12 @@ $query_run = mysqli_query($con, $query);
                     if (mysqli_num_rows($result) > 0) {
                         $row = mysqli_fetch_assoc($result);
                         foreach ($row as $key => $value) {
+                            if(!empty($value)){
                             echo "<tr>";
                             echo "<td>" . ucwords(str_replace("_", " ", $key)) . "</td>";
                             echo "<td>$value</td>";
                             echo "</tr>";
+                            }
                         }
                     } else {
                         echo "<tr><td colspan='2'>No data found</td></tr>";
@@ -127,11 +129,22 @@ $query_run = mysqli_query($con, $query);
                         $query = "SELECT * FROM items WHERE purchase_request_id = $request_id";
                         $result = mysqli_query($con, $query);
                         foreach ($result as $row) {
-                            echo "<tr>";
+                    
+                            $hasValue = false;
                             foreach ($row as $key => $value) {
-                                echo "<td>$value</td>";
+                                if (!empty($value)) {
+                                    $hasValue = true;
+                                    break; // No need to check further
+                                }
                             }
-                            echo "</tr>";
+                            
+                            if ($hasValue) {
+                                echo "<tr>";
+                                foreach ($row as $key => $value) {
+                                    echo "<td>$value</td>";
+                                }
+                                echo "</tr>";
+                            }
                         }
                         ?>
                     </tbody>

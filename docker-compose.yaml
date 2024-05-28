@@ -1,0 +1,41 @@
+services:
+  web:
+    image: invinnicible/xucpu-docker
+    ports:
+      - "8080:80"
+    volumes:
+      - './:/var/www/html'
+    depends_on:
+      - mysql
+    networks:
+      - cpu
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'cpu_db'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'password'
+    ports:
+    - '3306:3306'
+    volumes:
+      - cpu-mysql:/var/lib/mysql
+    networks:
+      - cpu
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8001:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    networks:
+      - cpu
+
+networks:
+  cpu:
+
+volumes:
+  cpu-mysql:

@@ -1,4 +1,5 @@
 <?php
+ob_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include('authentication.php');
@@ -90,6 +91,10 @@ $item_status = $_POST['item_status'];
 $unit_head_approval_by  = $_POST['unit_head_approval_by'];
 $unit_head_approval = $_POST['unit_head_approval'];
 
+//cluster
+$cluster = $_POST['cluster'];
+$cluster_vp = $_POST['cluster_vp'];
+
 // Signatures for Approvals
 $vice_president_remarks = $_POST['vice_president_remarks'];
 $vice_president_approved = $_POST['vice_president_approved'];
@@ -113,7 +118,8 @@ $office_of_the_president_approved = $_POST['office_of_the_president_approved'];
 $office_of_the_president_signature = $_POST['signed_5'];
 
 // Update Purchase Request into the database
-$sql_purchase_request = "UPDATE purchase_requests SET purchase_request_number = '$purchase_request_number', printed_name = '$printed_name', 
+$sql_purchase_request = "UPDATE purchase_requests SET purchase_request_number = '$purchase_request_number', printed_name = '$printed_name',
+cluster = '$cluster', cluster_vp = '$cluster_vp', acknowledged_by_cpu = '$acknowledged_by_cpu',
 signed_Requestor = '$requestor_signature', unit_dept_college = '$unit_dept_college', 
 iptel_email = '$iptel_email', above_50000 = '$above_50000', 
 unit_head_approval_by  = '$unit_head_approval_by ', unit_head_approval = '$unit_head_approval',
@@ -127,6 +133,9 @@ signed_3 = '$budget_controller_signature', university_treasurer_remarks = '$univ
 university_treasurer_approved = '$university_treasurer_approved', signed_4 = '$university_treasurer_signature', 
 office_of_the_president_remarks = '$office_of_the_president_remarks', office_of_the_president_approved = '$office_of_the_president_approved', 
 signed_5 = '$office_of_the_president_signature' WHERE id = '$id'";
+
+$sql_purchase_request_run = mysqli_query($con, $sql_purchase_request);
+
 
 
 // Check if acknowledged by CPU and email hasn't been sent already
@@ -673,10 +682,9 @@ if(isset($_POST['add_user']))
     $email = $_POST['email'];
     $password = $_POST['password'];
     $role_as = $_POST['role_as'];
-    $status = $_POST['status'] == true ? '1' : '0';
 
     //Insert the user
-    $query = "INSERT INTO users (fname, lname, email, password, role_as, status) VALUES ('$fname', '$lname', '$email', '$password', '$role_as', '$status')";
+    $query = "INSERT INTO users (fname, lname, email, password, role_as) VALUES ('$fname', '$lname', '$email', '$password', '$role_as')";
     $query_run = mysqli_query($con, $query);
 
     if($query_run)
@@ -877,4 +885,5 @@ $mail->send();
     }
 }
 
+ob_end_flush();
 ?>
