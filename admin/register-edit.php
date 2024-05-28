@@ -66,6 +66,9 @@ include('includes/header.php');
                                         <option value="2"<?= $user['role_as'] =='2' ? 'selected': '' ; ?>>Super Admin</option>
                                         <option value="3"<?= $user['role_as'] =='3' ? 'selected': '' ; ?>>Department Editor</option>
                                         <option value="4"<?= $user['role_as'] =='4' ? 'selected': '' ; ?>>Unit Head</option>
+                                        <option value="5"<?= $user['role_as'] =='5' ? 'selected': '' ; ?>>Budget Controller</option>
+                                        <option value="6"<?= $user['role_as'] =='6' ? 'selected': '' ; ?>>University Treasurer</option>
+                                        <option value="7"<?= $user['role_as'] =='7' ? 'selected': '' ; ?>>Cluster Vice President</option>
 
                                     </select>
 

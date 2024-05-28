@@ -72,6 +72,19 @@ include('includes/header.php');
                                                 {
                                                     echo "Unit Head";
                                                 }
+                                                else if($row['role_as'] == '5')
+                                                {
+                                                    echo "Budget Controller";
+                                                }
+                                                else if($row['role_as'] == '6')
+                                                {
+                                                    echo "University Treasurer";
+                                                }
+                                                else if ($row['role_as'] == '7')
+                                                {
+                                                    echo "Cluster Vice President";
+                                                }
+
                                                 else
                                                 {
                                                     echo "Unknown Role";

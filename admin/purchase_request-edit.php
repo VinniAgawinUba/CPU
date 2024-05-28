@@ -8,27 +8,66 @@ $admin = null;
 $super_user = null;
 $department_editor = null;
 $unit_head = null;
+$budget_controller = null;
+$university_treasurer = null;
+$cluster_vp = null;
 //Check level
 if ($_SESSION['auth_role'] == 1) {
     $admin = true;
     $super_user = false;
     $department_editor = false;
     $unit_head = false;
+    $budget_controller = false;
+    $university_treasurer = false;
+    $cluster_vp = false;
 } elseif ($_SESSION['auth_role'] == 2) {
     $admin = false;
     $super_user = true;
     $department_editor = false;
     $unit_head = false;
+    $budget_controller = false;
+    $university_treasurer = false;
+    $cluster_vp = false;
 } elseif ($_SESSION['auth_role'] == 3) {
     $admin = false;
     $super_user = false;
     $department_editor = true;
     $unit_head = false;
+    $budget_controller = false;
+    $university_treasurer = false;
+    $cluster_vp = false;
 } elseif ($_SESSION['auth_role'] == 4) {
     $admin = false;
     $super_user = false;
     $department_editor = false;
     $unit_head = true;
+    $budget_controller = false;
+    $university_treasurer = false;
+    $cluster_vp = false;
+} elseif ($_SESSION['auth_role'] == 5) {
+    $admin = false;
+    $super_user = false;
+    $department_editor = false;
+    $unit_head = false;
+    $budget_controller = true;
+    $university_treasurer = false;
+    $cluster_vp = false;
+} elseif ($_SESSION['auth_role'] == 6) {
+    $admin = false;
+    $super_user = false;
+    $department_editor = false;
+    $unit_head = false;
+    $budget_controller = false;
+    $university_treasurer = true;
+    $cluster_vp = false;
+} elseif ($_SESSION['auth_role'] == 7) {
+    $admin = false;
+    $super_user = false;
+    $department_editor = false;
+    $unit_head = false;
+    $budget_controller = false;
+    $university_treasurer = false;
+    $cluster_vp = true;
 }
 //Query to get request details
 $request_id = $_GET['id'];
@@ -42,6 +81,13 @@ if (mysqli_num_rows($request_query_run) > 0) {
     $request_row = mysqli_fetch_array($request_query_run);
 }
 ?>
+<style>
+    .readonly {
+        opacity: 0.3;
+        pointer-events: none;
+        /* Prevent interaction */
+    }
+</style>
 
 
 
@@ -258,11 +304,32 @@ if (mysqli_num_rows($request_query_run) > 0) {
                         <tr>
                             <td>Cluster:</td>
                             <td>
-                            <select id="cluster" name="cluster" class="form-control" required>
-                                <option>--Select Cluster--</option>
-                                <option value="Academic" <?=$request_row['cluster'] == 'Academic' ? 'selected' : '' ?>>Academic</option>
-                                <option value="Administrative" <?=$request_row['cluster'] == 'Administrative' ? 'selected' : '' ?>>Administrative</option>
-                            </select>
+                                <select id="cluster" name="cluster" class="form-control" required>
+                                    <option>--Select Cluster--</option>
+                                    <option value="Administration" <?= $request_row['cluster'] == 'Administration' ? 'selected' : '' ?>>Administration</option>
+                                    <option value="Higher Education" <?= $request_row['cluster'] == 'Higher Education' ? 'selected' : '' ?>>Higher Education</option>
+                                    <option value="Basic Education" <?= $request_row['cluster'] == 'Basic Education' ? 'selected' : '' ?>>Basic Education</option>
+                                    <option value="Office of Mission & Ministry" <?= $request_row['cluster'] == 'Office of Mission & Ministry' ? 'selected' : '' ?>>Office of Mission & Ministry</option>
+                                    <option value="Social Development" <?= $request_row['cluster'] == 'Social Development' ? 'selected' : '' ?>>Social Development</option>
+                                </select>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Cluster Vice President:</td>
+                            <td>
+                                <select id="cluster_vp" name="cluster_vp" class="form-control" required>
+                                    <option value="">--Select Cluster Vice President--</option>
+                                    <?php
+                                    $sql = "SELECT * FROM users WHERE role_as = '7'";
+                                    $result = mysqli_query($con, $sql);
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        $selected = ($request_row['cluster_vp'] == $row['id']) ? 'selected' : '';
+                                        echo '<option value="' . $row['id'] . '" ' . $selected . '>' . $row['fname'] . ' ' . $row['lname'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+
                             </td>
                         </tr>
                         <tr>
@@ -283,10 +350,11 @@ if (mysqli_num_rows($request_query_run) > 0) {
                                 <input type="text" id="unit_head_approval_by" name="unit_head_approval_by" class="form-control" required placeholder="Unit Head Name" value="<?= isset($request_row['unit_head_approval_by']) ? $request_row['unit_head_approval_by'] : $_SESSION['auth_user']['user_name']; ?>">
                             </td>
                         </tr>
-                        <tr>
-                            <td>Unit Head Approval:</td>
-                            <td>
-                                <?php if ($unit_head) { ?>
+
+                        <?php if ($unit_head) { ?>
+                            <tr>
+                                <td>Unit Head Approval:</td>
+                                <td>
                                     <!-- Dropdown To Change unit_head_approval to either pending, recommending-approval, rejected (ONLY UNIT HEAD) -->
                                     <div class="col-md-12 mb-3 bg-white">
                                         <select name="unit_head_approval" style="border: 2px solid;">
@@ -295,9 +363,9 @@ if (mysqli_num_rows($request_query_run) > 0) {
                                             <option value="rejected" <?= $request_row['unit_head_approval'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
                                         </select>
                                     </div>
-                                <?php } ?>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                        <?php } ?>
 
                         <tr>
                             <td>IPTel#/E-mail Address:</td>
@@ -312,25 +380,25 @@ if (mysqli_num_rows($request_query_run) > 0) {
 
 
 
-            <!--AT THIS POINT ONLY SUPER USERS AND DEPARTMENT EDITORS CAN VIEW THE SIGNATURES-->
-            <?php if ($super_user || $department_editor) { ?>
+            <!--AT THIS POINT ONLY SUPER USERS AND DEPARTMENT EDITORS CAN VIEW THE APPROVALS-->
+            <?php if ($super_user || $budget_controller || $university_treasurer || $cluster_vp) { ?>
 
                 <!-- Signatures for Approvals -->
                 <fieldset class="mb-4 bg-white shadow-md rounded p-4">
                     <legend class="font-bold">Approvals</legend>
                     <table class="table table-bordered">
                         <tbody>
-                            <!-- Vice President -->
+                            <!-- Cluster Vice President -->
                             <tr>
                                 <td>1-Cluster Vice President (if above P50,000):</td>
                                 <td>
-                                    <input type="text" id="vice_president_remarks" name="vice_president_remarks" class="form-control" placeholder="Remarks" value="<?= $request_row['vice_president_remarks'] ?>">
+                                    <input type="text" id="vice_president_remarks" name="vice_president_remarks" class="form-control <?= !$super_user && !$cluster_vp ? 'readonly' : '' ?>" placeholder="Remarks" value="<?= $request_row['vice_president_remarks'] ?>" <?= !$super_user && !$cluster_vp ? 'readonly' : '' ?>>
                                     <br>
-                                    <input type="text" id="vice_president_approved" name="vice_president_approved" class="form-control" placeholder="Approved By" value="<?= $request_row['vice_president_approved'] ?>">
+                                    <input type="text" id="vice_president_approved" name="vice_president_approved" class="form-control <?= !$super_user && !$cluster_vp ? 'readonly' : '' ?>" placeholder="Approved By" value="<?= isset($request_row['signed_1_by']) ? $request_row['signed_1_by'] : $_SESSION['auth_user']['user_name']; ?>" <?= !$super_user && !$cluster_vp ? 'readonly' : '' ?>>
                                     <br>
                                     <!-- Dropdown To Change to either pending, recommending-approval, rejected -->
                                     <div class="col-md-12 mb-3 bg-white">
-                                        <select name="signed_1" class="status_dropdown" data-signed-field="signed_1" style="border: 2px solid;">
+                                        <select name="signed_1" class="status_dropdown <?= !$super_user && !$cluster_vp ? 'readonly' : '' ?>" data-signed-field="signed_1" style="border: 2px solid;" <?= !$super_user && !$cluster_vp ? 'disabled' : '' ?>>
                                             <option value="pending" <?= $request_row['signed_1'] == 'pending' ? 'selected' : '' ?>>Pending</option>
                                             <option value="approved" <?= $request_row['signed_1'] == 'approved' ? 'selected' : '' ?>>Approved</option>
                                             <option value="rejected" <?= $request_row['signed_1'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
@@ -338,37 +406,20 @@ if (mysqli_num_rows($request_query_run) > 0) {
                                     </div>
                                 </td>
                             </tr>
-                            <!-- Vice President for Administration -->
-                            <tr>
-                                <td>2-VICE PRESIDENT FOR ADMINISTRATION:</td>
-                                <td>
-                                    <input type="text" id="vice_president_administration_remarks" name="vice_president_administration_remarks" class="form-control" placeholder="Remarks" value="<?= $request_row['vice_president_administration_remarks'] ?>">
-                                    <br>
-                                    <input type="text" id="vice_president_administration_approved" name="vice_president_administration_approved" class="form-control" placeholder="Approved By" value="<?= $request_row['vice_president_administration_approved'] ?>">
-                                    <br>
-                                    <!-- Dropdown To Change to either pending, recommending-approval, rejected -->
-                                    <div class="col-md-12 mb-3 bg-white">
-                                        <select name="signed_2" class="status_dropdown" data-signed-field="signed_2" style="border: 2px solid;">
-                                            <option value="pending" <?= $request_row['signed_2'] == 'pending' ? 'selected' : '' ?>>Pending</option>
-                                            <option value="approved" <?= $request_row['signed_2'] == 'approved' ? 'selected' : '' ?>>Approved</option>
-                                            <option value="rejected" <?= $request_row['signed_2'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
+
                             <!-- Budget Controller -->
                             <tr>
-                                <td>3-BUDGET CONTROLLER:</td>
+                                <td>2-BUDGET CONTROLLER:</td>
                                 <td>
-                                    <input type="text" id="budget_controller_remarks" name="budget_controller_remarks" class="form-control" placeholder="Remarks" value="<?= $request_row['budget_controller_remarks'] ?>">
+                                    <input type="text" id="budget_controller_remarks" name="budget_controller_remarks" class="form-control <?= !$super_user && !$budget_controller ? 'readonly' : '' ?>" placeholder="Remarks" value="<?= $request_row['budget_controller_remarks'] ?>" <?= !$super_user && !$budget_controller ? 'readonly' : '' ?>>
                                     <br>
-                                    <input type="text" id="budget_controller_approved" name="budget_controller_approved" class="form-control" placeholder="Approved By" value="<?= $request_row['budget_controller_approved'] ?>">
+                                    <input type="text" id="budget_controller_approved" name="budget_controller_approved" class="form-control <?= !$super_user && !$budget_controller ? 'readonly' : '' ?>" placeholder="Approved By" value="<?= isset($request_row['signed_3_by']) ? $request_row['signed_3_by'] : $_SESSION['auth_user']['user_name']; ?>" <?= !$super_user && !$budget_controller ? 'readonly' : '' ?>>
                                     <br>
-                                    <input type="text" id="budget_controller_code" name="budget_controller_code" class="form-control" placeholder="Acct. Code" value="<?= $request_row['budget_controller_code'] ?>">
+                                    <input type="text" id="budget_controller_code" name="budget_controller_code" class="form-control <?= !$super_user && !$budget_controller ? 'readonly' : '' ?>" placeholder="Acct. Code" value="<?= $request_row['budget_controller_code'] ?>" <?= !$super_user && !$budget_controller ? 'readonly' : '' ?>>
                                     <br>
                                     <!-- Dropdown To Change to either pending, recommending-approval, rejected -->
                                     <div class="col-md-12 mb-3 bg-white">
-                                        <select name="signed_3" class="status_dropdown" data-signed-field="signed_3" style="border: 2px solid;">
+                                        <select name="signed_3" class="status_dropdown <?= !$super_user && !$budget_controller ? 'readonly' : '' ?>" data-signed-field="signed_3" style="border: 2px solid;" <?= !$super_user && !$budget_controller ? 'disabled' : '' ?>>
                                             <option value="pending" <?= $request_row['signed_3'] == 'pending' ? 'selected' : '' ?>>Pending</option>
                                             <option value="approved" <?= $request_row['signed_3'] == 'approved' ? 'selected' : '' ?>>Approved</option>
                                             <option value="rejected" <?= $request_row['signed_3'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
@@ -376,17 +427,18 @@ if (mysqli_num_rows($request_query_run) > 0) {
                                     </div>
                                 </td>
                             </tr>
+
                             <!-- University Treasurer -->
                             <tr>
-                                <td>4-UNIVERSITY TREASURER:</td>
+                                <td>3-UNIVERSITY TREASURER:</td>
                                 <td>
-                                    <input type="text" id="university_treasurer_remarks" name="university_treasurer_remarks" class="form-control" placeholder="Remarks" value="<?= $request_row['university_treasurer_remarks'] ?>">
+                                    <input type="text" id="university_treasurer_remarks" name="university_treasurer_remarks" class="form-control <?= !$super_user && !$university_treasurer ? 'readonly' : '' ?>" placeholder="Remarks" value="<?= $request_row['university_treasurer_remarks'] ?>" <?= !$super_user && !$university_treasurer ? 'readonly' : '' ?>>
                                     <br>
-                                    <input type="text" id="university_treasurer_approved" name="university_treasurer_approved" class="form-control" placeholder="Approved By" value="<?= $request_row['university_treasurer_approved'] ?>">
+                                    <input type="text" id="university_treasurer_approved" name="university_treasurer_approved" class="form-control <?= !$super_user && !$university_treasurer ? 'readonly' : '' ?>" placeholder="Approved By" value="<?= isset($request_row['signed_4_by']) ? $request_row['signed_4_by'] : $_SESSION['auth_user']['user_name']; ?>" <?= !$super_user && !$university_treasurer ? 'readonly' : '' ?>>
                                     <br>
                                     <!-- Dropdown To Change to either pending, recommending-approval, rejected -->
                                     <div class="col-md-12 mb-3 bg-white">
-                                        <select name="signed_4" class="status_dropdown" data-signed-field="signed_4" style="border: 2px solid;">
+                                        <select name="signed_4" class="status_dropdown <?= !$super_user && !$university_treasurer ? 'readonly' : '' ?>" data-signed-field="signed_4" style="border: 2px solid;" <?= !$super_user && !$university_treasurer ? 'disabled' : '' ?>>
                                             <option value="pending" <?= $request_row['signed_4'] == 'pending' ? 'selected' : '' ?>>Pending</option>
                                             <option value="approved" <?= $request_row['signed_4'] == 'approved' ? 'selected' : '' ?>>Approved</option>
                                             <option value="rejected" <?= $request_row['signed_4'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
@@ -394,61 +446,43 @@ if (mysqli_num_rows($request_query_run) > 0) {
                                     </div>
                                 </td>
                             </tr>
-                            <!-- OFFICE OF THE PRESIDENT -->
-                            <tr>
-                                <td>5-OFFICE OF THE PRESIDENT (for budget re-alignment only):</td>
-                                <td>
-                                    <input type="text" id="office_of_the_president_remarks" name="office_of_the_president_remarks" class="form-control" placeholder="Remarks" value="<?= $request_row['office_of_the_president_remarks'] ?>">
-                                    <br>
-                                    <input type="text" id="office_of_the_president_approved" name="office_of_the_president_approved" class="form-control" placeholder="Approved By" value="<?= $request_row['office_of_the_president_approved'] ?>">
-                                    <br>
-                                    <!-- Dropdown To Change to either pending, recommending-approval, rejected -->
-                                    <div class="col-md-12 mb-3 bg-white">
-                                        <select name="signed_5" class="status_dropdown" data-signed-field="signed_5" style="border: 2px solid;">
-                                            <option value="pending" <?= $request_row['signed_5'] == 'pending' ? 'selected' : '' ?>>Pending</option>
-                                            <option value="approved" <?= $request_row['signed_5'] == 'approved' ? 'selected' : '' ?>>Approved</option>
-                                            <option value="rejected" <?= $request_row['signed_5'] == 'rejected' ? 'selected' : '' ?>>Rejected</option>
-                                        </select>
-                                    </div>
-
-                                    <script>
-                                        $(document).ready(function() {
-                                            $('.status_dropdown').on('change', function() {
-                                                var newStatus = $(this).val();
-                                                var signedField = $(this).data('signed-field');
-                                                var SignedFieldBy = signedField + '_by';
-                                                var Request_id = '<?php echo $request_id; ?>';
-
-                                                // AJAX request
-                                                $.ajax({
-                                                    url: 'javascript-update_approval_status.php',
-                                                    method: 'POST',
-                                                    data: {
-                                                        current_user_email: '<?php echo $_SESSION['auth_user']['user_email']; ?>',
-                                                        new_status: newStatus,
-                                                        signed_field: signedField, // Pass the signed field identifier
-                                                        signed_field_by: SignedFieldBy, // Pass the signed by identifier
-                                                        request_id: Request_id
-                                                    },
-                                                    success: function(response) {
-                                                        // Update UI or show success message
-                                                        console.log(response);
-                                                    },
-                                                    error: function(xhr, status, error) {
-                                                        // Handle errors
-                                                        console.error(error);
-                                                    }
-                                                });
-                                            });
-                                        });
-                                    </script>
-
-
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </fieldset>
+
+                <script>
+                    $(document).ready(function() {
+                        $('.status_dropdown').on('change', function() {
+                            var newStatus = $(this).val();
+                            var signedField = $(this).data('signed-field');
+                            var SignedFieldBy = signedField + '_by';
+                            var Request_id = '<?php echo $request_id; ?>';
+
+                            // AJAX request
+                            $.ajax({
+                                url: 'javascript-update_approval_status.php',
+                                method: 'POST',
+                                data: {
+                                    current_user_email: '<?php echo $_SESSION['auth_user']['user_email']; ?>',
+                                    new_status: newStatus,
+                                    signed_field: signedField, // Pass the signed field identifier
+                                    signed_field_by: SignedFieldBy, // Pass the signed by identifier
+                                    request_id: Request_id
+                                },
+                                success: function(response) {
+                                    // Update UI or show success message
+                                    console.log(response);
+                                },
+                                error: function(xhr, status, error) {
+                                    // Handle errors
+                                    console.error(error);
+                                }
+                            });
+                        });
+                    });
+                </script>
+
+
 
             <?php } ?>
             <button type="submit" name="request_update_btn_front" class="btn btn-primary">Update Request Details</button>

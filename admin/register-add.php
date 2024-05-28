@@ -44,8 +44,14 @@ include('includes/header.php');
                                     <label for="">Role As</label>
                                     <select name="role_as" required class="form-control">
                                         <option value="">--Select Role--</option>
-                                        <option value="1">Admin</option>
                                         <option value="0">User</option>
+                                        <option value="1">Admin</option>
+                                        <option value="2">Super Admin</option>
+                                        <option value="3">Department Editor</option>
+                                        <option value="4">Unit Head</option>
+                                        <option value="5">Budget Controller</option>
+                                        <option value="6">University Treasurer</option>
+                                        <option value="7">Cluster Vice President</option>
                                     </select>
 
                                 </div>

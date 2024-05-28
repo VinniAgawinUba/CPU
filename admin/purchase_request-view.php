@@ -8,27 +8,69 @@ $admin = null;
 $super_user = null;
 $department_editor = null;
 $unit_head = null;
+$budget_controller = null;
+$university_treasurer = null;
+$cluster_vp = null;
 //Check level
 if ($_SESSION['auth_role'] == 1) {
     $admin = true;
     $super_user = false;
     $department_editor = false;
     $unit_head = false;
+    $budget_controller = false;
+    $university_treasurer = false;
+    $cluster_vp = false;
 } elseif ($_SESSION['auth_role'] == 2) {
     $admin = false;
     $super_user = true;
     $department_editor = false;
     $unit_head = false;
+    $budget_controller = false;
+    $university_treasurer = false;
+    $cluster_vp = false;
 } elseif ($_SESSION['auth_role'] == 3) {
     $admin = false;
     $super_user = false;
     $department_editor = true;
     $unit_head = false;
+    $budget_controller = false;
+    $university_treasurer = false;
+    $cluster_vp = false;
 } elseif ($_SESSION['auth_role'] == 4) {
     $admin = false;
     $super_user = false;
     $department_editor = false;
     $unit_head = true;
+    $budget_controller = false;
+    $university_treasurer = false;
+    $cluster_vp = false;
+}
+elseif ($_SESSION['auth_role'] == 5) {
+    $admin = false;
+    $super_user = false;
+    $department_editor = false;
+    $unit_head = false;
+    $budget_controller = true;
+    $university_treasurer = false;
+    $cluster_vp = false;
+}
+elseif ($_SESSION['auth_role'] == 6) {
+    $admin = false;
+    $super_user = false;
+    $department_editor = false;
+    $unit_head = false;
+    $budget_controller = false;
+    $university_treasurer = true;
+    $cluster_vp = false;
+}
+elseif ($_SESSION['auth_role'] == 7) {
+    $admin = false;
+    $super_user = false;
+    $department_editor = false;
+    $unit_head = false;
+    $budget_controller = false;
+    $university_treasurer = false;
+    $cluster_vp = true;
 }
 $current_user_email = $_SESSION['auth_user']['user_email'];
 $current_user_id = $_SESSION['auth_user']['user_id'];
@@ -121,7 +163,8 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                 <?php
                                 //If Super User, show all purchase requests
                                 if ($super_user) {
-                                    $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE status != 'completed' AND status != 'rejected' AND unit_head_approval = 'approved' ORDER BY id DESC";
+                                    $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE status != 'completed' AND status != 'rejected' AND unit_head_approval = 'approved' AND signed_1 = 'approved' AND signed_3 = 'approved' AND signed_4 = 'approved' ORDER BY id DESC";
+
                                     //$request = "SELECT * FROM purchase_requests ORDER BY id DESC";
                                 }
                                 //If Admin, show only purchase requests assigned to the logged in user
@@ -140,6 +183,22 @@ $current_user_id = $_SESSION['auth_user']['user_id'];
                                     // Retrieve the updated query from the URL, if not available use default query
                                     $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE unit_head_approval = 'pending' AND unit_head = '$current_user_id' ORDER BY id DESC";
                                 }
+                                //If Cluster VP, show only purchase requests where cluster_vp_approval = pending
+                                if ($cluster_vp) {
+                                    // Retrieve the updated query from the URL, if not available use default query
+                                    $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE signed_1 = 'pending' AND cluster_vp = '$current_user_id' AND unit_head_approval = 'approved' ORDER BY id DESC";
+                                }
+                                //If Budget Controller, show only purchase requests where budget_controller_approval = pending AND signed_1 = approved
+                                if ($budget_controller) {
+                                    // Retrieve the updated query from the URL, if not available use default query
+                                    $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE signed_3 = 'pending' AND signed_1 = 'approved'  ORDER BY id DESC";
+                                }
+                                //If University Treasurer, show only purchase requests where university_treasurer_approval = pending AND signed_3 = approved
+                                if ($university_treasurer) {
+                                    // Retrieve the updated query from the URL, if not available use default query
+                                    $request = $_GET['request'] ?? "SELECT * FROM purchase_requests WHERE signed_4 = 'pending' AND signed_3 = 'approved' AND signed_1 = 'approved' ORDER BY id DESC";
+                                }
+                                
                                 $request_run = mysqli_query($con, $request);
                                 if (mysqli_num_rows($request_run) > 0) {
                                     foreach ($request_run as $row) {
